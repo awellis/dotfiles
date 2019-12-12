@@ -1,0 +1,47 @@
+# Global aliases -- These do not have to be
+# at the beginning of the command line.
+alias -g M='|more'
+alias -g L='|less'
+alias -g H='|head'
+alias -g T='|tail'
+
+#------------------------------------------------------------------------
+alias zsh-config="mvim ~/.zshrc"
+alias zsh-source="source ~/.zshrc"
+alias updateTeXLiveManager='sudo tlmgr update --self'
+alias updateTeXLive='sudo tlmgr update --all'
+
+#alias ipythonqt='ipython qtconsole --ConsoleWidget.font_family="Source Code Pro" --ConsoleWidget.font_size=12'
+#alias clamscan='clamscan -vr --bell'
+# alias freshclam='freshclam -u clamav'
+# alias gvim='~/bin/mvim'
+# alias R64='R --arch x86_64'
+alias vcsi='vcs_info command; vcs_info_lastmsg'
+alias status='git status'
+alias qlf='qlmanage -p "$@" >& /dev/null'
+alias c=clear
+alias d='dirs -v'
+alias e=$EDITOR
+# alias grep=egrep
+
+alias julia='/Applications/Julia.app/Contents/Resources/julia/bin/julia'
+alias h=history
+alias j=jobs
+alias po=popd
+alias pu=pushd
+alias ss='screen -Rx'
+alias pbpath='echo `pwd` | pbcopy'
+
+alias ll='exa -ls modified'
+alias f='open -a Finder ./'
+alias ls='ls -G'
+
+# cd to the path of the front Finder window
+cdf() {
+	target=`osascript -e 'tell application "Finder" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)'`
+	if [ "$target" != "" ]; then
+		pushd "$target"; pwd
+	else
+		echo 'No Finder window found' >&2
+	fi
+}
