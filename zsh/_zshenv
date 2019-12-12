@@ -1,0 +1,13 @@
+#fpath=($fpath /usr/share/zsh/4.3.11/functions)
+fpath=($fpath /usr/local/share/zsh/functions)
+typeset -U fpath
+
+# export PATH=/usr/local/opt/curl/bin:/usr/local/bin:/usr/local/sbin:/Users/andrew/bin:/Users/andrew/opt/anaconda3/bin:~/.cabal/bin:/usr/texbin:$PATH
+
+# export PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:/usr/local/bin:/usr/local/sbin:/Users/andrew/bin:/usr/texbin:$PATH
+# export PATH=/usr/local/bin:/usr/local/sbin:/Users/andrew/bin:~/.cabal/bin:/usr/texbin:$PATH
+export EDITOR='mvim'
+export R_LIBS_USER='/Users/andrew/Library/R/current/library'
+export JULIA_HOME='/Applications/Julia.app/Contents/Resources/julia/bin/'
+export CMDSTAN_HOME='/Users/andrew/src/cmdstan'
+export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig/:
