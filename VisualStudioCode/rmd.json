@@ -1,0 +1,21 @@
+{
+
+	"chunk": {
+		"prefix": "`",
+		"body": [
+		  "```{${1:r}}",
+		  "$0",
+		  "```"
+		],
+		"description": "insert a code chunk"
+	  },
+    "chunkWithOptions": {
+	    "prefix": "```",
+	    "body": [
+	      "```{${1:r} ${2:TITLE}, eval=${3:TRUE}, include=${4:TRUE}, echo=${5:TRUE}}",
+	      "$0",
+	      "```"
+	    ],
+	    "description": "insert a code chunk with options"
+      }
+}
