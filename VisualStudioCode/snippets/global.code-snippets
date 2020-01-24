@@ -1,0 +1,16 @@
+{
+	"LeftArrow": {
+	    "scope": "r, rmd",
+	    "prefix": "=",
+	    "body": "<- ",
+	    "description": "Assignment"
+	},
+	"pipe": {
+		"scope": "r, rmd",
+		"prefix": ">",
+		"body": [
+			"%>% "
+		],
+		"description": "pipe operator"
+	}
+}
