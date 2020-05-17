@@ -1,31 +1,14 @@
-## .First() run at the start of every R session.
-## Use to load commonly used packages?
-.First <- function() {
-  options(
-    width=80,
+  if (interactive()) {
+      suppressMessages(require(devtools))
+      suppressMessages(require(magrittr))
+      rprofile::set_startup_options()
+  }
+
+options(
+    width = 80,
     mc.cores = parallel::detectCores(),
     repos = c(CRAN = "https://cran.rstudio.com/"),
     browserNLdisabled = TRUE,
     deparse.max.lines = 2)
 
-  .libPaths("/Users/andrew/Library/R/current/library")
-
-  if (interactive()) {
-      suppressMessages(require(devtools))
-      suppressMessages(require(magrittr))
-  }
-  # Sys.setenv("plotly_username"="awellis")
-  # Sys.setenv("plotly_api_key"="••••••••••")
-
-  # cat("\nSuccessfully loaded .Rprofile at", date(), "\n")
-}
-
-
-# Sys.setenv(PATH = paste("/Users/andrew/anaconda/bin",
-#    Sys.getenv("PATH"), sep=":"))
-
-## .Last() run at the end of the session
-# .Last <- function() {
-# 	# save command history here?
-# 	# cat("\nGoodbye at ", date(), "\n")
-# }
+.libPaths("/Users/andrew/Library/R/current/library")
