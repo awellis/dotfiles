@@ -1,0 +1,673 @@
+#+TITLE: Doom Emacs Configuration Documentation
+#+AUTHOR: Andrew Ellis
+#+EMAIL: andrewellis@pm.me
+#+LANGUAGE: en
+#+STARTUP: inlineimages nofold
+#+OPTIONS: toc:t H:3 num:t
+#+PROPERTY: header-args:shell :eval never
+
+* Table of Contents :toc:
+:PROPERTIES:
+:TOC:      :include all :ignore this
+:END:
+:CONTENTS:
+- [[#overview][Overview]]
+  - [[#target-users][Target Users]]
+- [[#quick-start][Quick Start]]
+  - [[#installation-requirements][Installation Requirements]]
+  - [[#first-time-setup][First-time Setup]]
+  - [[#daily-workflow][Daily Workflow]]
+- [[#essential-commands][Essential Commands]]
+  - [[#doom-management][Doom Management]]
+  - [[#configuration-workflow][Configuration Workflow]]
+- [[#configuration-structure][Configuration Structure]]
+  - [[#key-files][Key Files]]
+    - [[#configorg-main-configuration][config.org (Main Configuration)]]
+    - [[#configel-generated-configuration][config.el (Generated Configuration)]]
+    - [[#initel-doom-modules][init.el (Doom Modules)]]
+    - [[#packagesel-package-declarations][packages.el (Package Declarations)]]
+    - [[#customel-emacs-custom-variables][custom.el (Emacs Custom Variables)]]
+  - [[#literate-programming-approach][Literate Programming Approach]]
+- [[#features-and-configuration][Features and Configuration]]
+  - [[#appearance][Appearance]]
+    - [[#theme-catppuccin-mocha][Theme: Catppuccin Mocha]]
+    - [[#fonts-fira-code-with-ligatures][Fonts: Fira Code with Ligatures]]
+    - [[#visual-enhancements][Visual Enhancements]]
+  - [[#programming-languages][Programming Languages]]
+    - [[#multi-language-support][Multi-language Support]]
+    - [[#code-intelligence][Code Intelligence]]
+  - [[#org-mode-configuration][Org Mode Configuration]]
+    - [[#enhanced-productivity][Enhanced Productivity]]
+    - [[#research-and-documentation][Research and Documentation]]
+  - [[#ai-integrations][AI Integrations]]
+    - [[#claude-code][Claude Code]]
+    - [[#gptelopencode][GPTel/OpenCode]]
+    - [[#monet-ide-features][Monet IDE Features]]
+  - [[#development-tools][Development Tools]]
+    - [[#project-management][Project Management]]
+    - [[#version-control][Version Control]]
+    - [[#terminal-integration][Terminal Integration]]
+  - [[#completion-and-navigation][Completion and Navigation]]
+    - [[#vertico-ecosystem][Vertico Ecosystem]]
+    - [[#enhanced-navigation][Enhanced Navigation]]
+- [[#language-support][Language Support]]
+  - [[#r-and-statistics][R and Statistics]]
+    - [[#ess-emacs-speaks-statistics][ESS (Emacs Speaks Statistics)]]
+    - [[#features][Features]]
+  - [[#python][Python]]
+    - [[#modern-python-development][Modern Python Development]]
+    - [[#tools-integration][Tools Integration]]
+  - [[#julia][Julia]]
+    - [[#high-performance-computing][High-Performance Computing]]
+    - [[#features][Features]]
+  - [[#markdown-and-rmarkdown][Markdown and RMarkdown]]
+    - [[#polymode-integration][Polymode Integration]]
+    - [[#features][Features]]
+  - [[#quarto][Quarto]]
+    - [[#scientific-publishing][Scientific Publishing]]
+    - [[#features][Features]]
+- [[#package-management][Package Management]]
+  - [[#doom-package-system][Doom Package System]]
+    - [[#adding-packages][Adding Packages]]
+    - [[#custom-packages-in-this-configuration][Custom Packages in This Configuration]]
+    - [[#package-updates][Package Updates]]
+- [[#keybindings][Keybindings]]
+  - [[#leader-keys][Leader Keys]]
+  - [[#ai-assistant-commands][AI Assistant Commands]]
+    - [[#claude-code-spc-k][Claude Code (SPC k)]]
+    - [[#gptelopencode][GPTel/OpenCode]]
+    - [[#monet-ide][Monet IDE]]
+  - [[#org-mode-shortcuts][Org Mode Shortcuts]]
+    - [[#general-org][General Org]]
+    - [[#rmarkdownquarto-spc-m-f][RMarkdown/Quarto (SPC m f)]]
+  - [[#macos-integration][macOS Integration]]
+- [[#customization-guide][Customization Guide]]
+  - [[#adding-new-languages][Adding New Languages]]
+  - [[#customizing-themes][Customizing Themes]]
+  - [[#adding-custom-functions][Adding Custom Functions]]
+  - [[#modifying-ai-integration][Modifying AI Integration]]
+- [[#troubleshooting][Troubleshooting]]
+  - [[#common-issues][Common Issues]]
+    - [[#package-installation-failures][Package Installation Failures]]
+    - [[#configuration-errors][Configuration Errors]]
+    - [[#performance-issues][Performance Issues]]
+  - [[#rmarkdown-polymode-issues][RMarkdown Polymode Issues]]
+    - [[#reverse-typing-problem]["Reverse Typing" Problem]]
+    - [[#debug-commands][Debug Commands]]
+    - [[#manual-recovery][Manual Recovery]]
+  - [[#lsp-issues][LSP Issues]]
+- [[#development-workflow][Development Workflow]]
+  - [[#typical-data-science-session][Typical Data Science Session]]
+  - [[#research-workflow][Research Workflow]]
+  - [[#collaborative-workflow][Collaborative Workflow]]
+- [[#advanced-features][Advanced Features]]
+  - [[#org-babel-multi-language][Org-babel Multi-language]]
+  - [[#ai-enhanced-development][AI-Enhanced Development]]
+  - [[#integration-ecosystem][Integration Ecosystem]]
+  - [[#performance-optimizations][Performance Optimizations]]
+:END:
+
+- [[#overview][Overview]]
+  - [[#target-users][Target Users]]
+- [[#quick-start][Quick Start]]
+  - [[#installation-requirements][Installation Requirements]]
+  - [[#first-time-setup][First-time Setup]]
+  - [[#daily-workflow][Daily Workflow]]
+- [[#essential-commands][Essential Commands]]
+  - [[#doom-management][Doom Management]]
+  - [[#configuration-workflow][Configuration Workflow]]
+- [[#configuration-structure][Configuration Structure]]
+  - [[#key-files][Key Files]]
+  - [[#literate-programming-approach][Literate Programming Approach]]
+- [[#features-and-configuration][Features and Configuration]]
+  - [[#appearance][Appearance]]
+  - [[#programming-languages][Programming Languages]]
+  - [[#org-mode-configuration][Org Mode Configuration]]
+  - [[#ai-integrations][AI Integrations]]
+  - [[#development-tools][Development Tools]]
+  - [[#completion-and-navigation][Completion and Navigation]]
+- [[#language-support][Language Support]]
+  - [[#r-and-statistics][R and Statistics]]
+  - [[#python][Python]]
+  - [[#julia][Julia]]
+  - [[#markdown-and-rmarkdown][Markdown and RMarkdown]]
+  - [[#quarto][Quarto]]
+- [[#package-management][Package Management]]
+  - [[#doom-package-system][Doom Package System]]
+- [[#keybindings][Keybindings]]
+  - [[#leader-keys][Leader Keys]]
+  - [[#ai-assistant-commands][AI Assistant Commands]]
+  - [[#org-mode-shortcuts][Org Mode Shortcuts]]
+  - [[#macos-integration][macOS Integration]]
+- [[#customization-guide][Customization Guide]]
+  - [[#adding-new-languages][Adding New Languages]]
+  - [[#customizing-themes][Customizing Themes]]
+  - [[#adding-custom-functions][Adding Custom Functions]]
+  - [[#modifying-ai-integration][Modifying AI Integration]]
+- [[#troubleshooting][Troubleshooting]]
+  - [[#common-issues][Common Issues]]
+  - [[#rmarkdown-polymode-issues][RMarkdown Polymode Issues]]
+  - [[#lsp-issues][LSP Issues]]
+- [[#development-workflow][Development Workflow]]
+  - [[#typical-data-science-session][Typical Data Science Session]]
+  - [[#research-workflow][Research Workflow]]
+  - [[#collaborative-workflow][Collaborative Workflow]]
+- [[#advanced-features][Advanced Features]]
+  - [[#org-babel-multi-language][Org-babel Multi-language]]
+  - [[#ai-enhanced-development][AI-Enhanced Development]]
+  - [[#integration-ecosystem][Integration Ecosystem]]
+  - [[#performance-optimizations][Performance Optimizations]]
+
+* Overview
+
+This is a comprehensive Doom Emacs configuration designed for data science, statistical computing, and general programming with a focus on R, Python, Julia, and literate programming workflows. The configuration emphasizes:
+
+- **Modern tooling**: Integration with AI assistants (Claude Code, GPTel/OpenCode)
+- **Data science workflows**: Full support for R/ESS, RMarkdown, Quarto, and Jupyter notebooks
+- **Literate programming**: Org-babel support for multiple languages
+- **Beautiful interface**: Catppuccin theme with Fira Code ligatures
+- **Efficient navigation**: Vertico, Projectile, and enhanced completion
+- **Cross-platform compatibility**: Portable executable paths and macOS integration
+
+** Target Users
+- Data scientists and statisticians working with R
+- Researchers using RMarkdown and Quarto for reproducible research
+- Developers working with Python, Julia, and other languages
+- Users who prefer literate programming and org-mode workflows
+- Anyone seeking a modern, AI-enhanced Emacs experience
+
+* Quick Start
+
+** Installation Requirements
+- Doom Emacs (latest version)
+- R (for statistical computing)
+- Python 3 (preferably via Miniforge/Conda)
+- Julia (optional, for Julia support)
+- Hunspell (for spell checking)
+- Git (for version control)
+
+** First-time Setup
+1. Clone or copy this configuration to =~/.config/doom/=
+2. Run initial synchronization:
+   #+begin_src shell
+   doom sync
+   #+end_src
+3. Install packages and restart Emacs:
+   #+begin_src shell
+   doom emacs
+   #+end_src
+4. Verify configuration with:
+   #+begin_src shell
+   doom doctor
+   #+end_src
+
+** Daily Workflow
+1. Start Emacs: =doom emacs= or your preferred method
+2. Open project: =SPC p p= (projectile-switch-project)
+3. Find files: =SPC f f= (find-file) or =SPC p f= (project-find-file)
+4. Access AI assistance: =SPC k c= (Claude Code) or =SPC k g= (GPTel)
+5. Org capture: =SPC X= (org-capture)
+
+* Essential Commands
+
+** Doom Management
+| Command | Description |
+|---------|-------------|
+| =doom sync= | Synchronize configuration after changes |
+| =doom sync -u= | Update all packages |
+| =doom sync -b= | Rebuild packages unconditionally |
+| =doom info= | System information and diagnostics |
+| =doom gc= | Clean up orphaned packages |
+| =doom doctor= | Check for configuration issues |
+
+** Configuration Workflow
+1. Edit =config.org= for configuration changes (uses literate programming)
+2. Edit =init.el= to enable/disable Doom modules
+3. Edit =packages.el= to add/remove packages
+4. Run =doom sync= after any changes to packages or modules
+5. Restart Emacs to apply configuration changes
+
+* Configuration Structure
+
+** Key Files
+
+*** =config.org= (Main Configuration)
+The heart of this configuration using literate programming. Contains all customizations organized by topic:
+- Personal information and appearance
+- Programming language configurations
+- Tool integrations and AI assistants
+- Org-mode setup and templates
+- Custom functions and utilities
+
+*** =config.el= (Generated Configuration)
+Auto-generated from =config.org= - **DO NOT EDIT MANUALLY**. This file is tangled from the org source and will be overwritten.
+
+*** =init.el= (Doom Modules)
+Declares which Doom modules are enabled:
+- Completion frameworks (Vertico, Company, Corfu)
+- UI enhancements (themes, modeline, ligatures)
+- Editor features (Evil mode, snippets, multiple cursors)
+- Language support (LSP, tree-sitter, specific languages)
+- Tools (Git, project management, terminals)
+
+*** =packages.el= (Package Declarations)
+Declares additional packages beyond Doom's defaults:
+- =catppuccin-theme= - Modern dark theme
+- =claude-code= - AI assistant integration
+- =quarto-emacs= - Quarto document support
+- =opencode= - AI coding assistant
+- =indent-bars= - Visual indentation guides
+- And more...
+
+*** =custom.el= (Emacs Custom Variables)
+Auto-generated by Emacs's customization system - usually safe to ignore.
+
+** Literate Programming Approach
+
+This configuration uses org-mode's literate programming features:
+- All configuration lives in =config.org= with explanations
+- Code blocks are tangled to =config.el= automatically
+- Easy to document, understand, and maintain
+- Supports adding non-code documentation alongside configuration
+
+* Features and Configuration
+
+** Appearance
+
+*** Theme: Catppuccin Mocha
+- Modern dark theme with neon-inspired colors
+- High contrast for better readability
+- Consistent with popular development environments
+- Prevents white flash during startup
+
+*** Fonts: Fira Code with Ligatures
+- Main font: Fira Code 16pt for optimal readability
+- Full ligature support for programming symbols
+- Comprehensive symbol set for R (=%>%=, =%in%=), Julia, Python
+- Nerd Font integration for icons and special characters
+
+*** Visual Enhancements
+- Line numbers (absolute, configurable to relative)
+- Indent bars for better code structure visualization
+- Diff highlighting for Git integration
+- Custom modeline with useful information
+
+** Programming Languages
+
+*** Multi-language Support
+- Tree-sitter integration for modern syntax highlighting
+- LSP (Language Server Protocol) support where available
+- Consistent formatting and navigation across languages
+- Portable executable paths for cross-platform compatibility
+
+*** Code Intelligence
+- Real-time syntax checking
+- Intelligent completion with Corfu/Company
+- Jump to definition and references
+- Integrated debugging support
+
+** Org Mode Configuration
+
+*** Enhanced Productivity
+- Custom capture templates for projects, meetings, daily reviews
+- Dynamic agenda with time-based views (daily/weekly/monthly)
+- Automatic table of contents generation
+- Archive functionality for completed tasks
+
+*** Research and Documentation
+- Multi-language babel support (R, Python, Julia)
+- Session management for interactive development
+- Export to multiple formats
+- Integration with reference management
+
+** AI Integrations
+
+*** Claude Code
+- Direct integration with Anthropic's Claude
+- Stay-in-buffer workflow
+- Terminal backend support (eat/vterm)
+- Desktop notifications
+- Comprehensive keybinding system
+
+*** GPTel/OpenCode
+- OpenAI GPT integration
+- Coding-specific tools and agents
+- Org-mode based chat interface
+- Streaming responses
+
+*** Monet IDE Features
+- External terminal integration
+- Diff tools for code review
+- Session management
+- IDE-like features for AI development
+
+** Development Tools
+
+*** Project Management
+- Projectile for project navigation
+- Automatic project detection
+- Efficient file and buffer switching
+- Integration with version control
+
+*** Version Control
+- Magit for Git operations
+- Diff highlighting in buffers
+- Integration with project workflows
+- Support for Git hooks and workflows
+
+*** Terminal Integration
+- Vterm with fish shell support
+- Multiple terminal backends
+- Directory synchronization
+- Shell integration features
+
+** Completion and Navigation
+
+*** Vertico Ecosystem
+- Vertical completion interface
+- Orderless matching (fuzzy, initialism, flex)
+- Marginalia for rich annotations
+- Savehist for persistent history
+
+*** Enhanced Navigation
+- Which-key for keybinding discovery
+- Helpful for enhanced documentation
+- Efficient buffer and file switching
+- Context-aware completion
+
+* Language Support
+
+** R and Statistics
+
+*** ESS (Emacs Speaks Statistics)
+- Full R language support with modern ESS configuration
+- RStudio-style indentation and behavior
+- REPL integration with session management
+- Support for R packages and development workflows
+
+*** Features
+- Syntax highlighting and intelligent indentation
+- Object inspection and help integration
+- Package development tools
+- Integration with R documentation
+
+** Python
+
+*** Modern Python Development
+- Python 3 support with Miniforge integration
+- Virtual environment detection and activation
+- Jupyter notebook support via org-babel
+- Debugging and testing integration
+
+*** Tools Integration
+- Black for code formatting
+- Pylsp for language server features
+- Pytest integration for testing
+- Virtual environment management
+
+** Julia
+
+*** High-Performance Computing
+- Full Julia language support
+- Interactive REPL with session management
+- Package manager integration
+- Scientific computing workflows
+
+*** Features
+- Tree-sitter syntax highlighting
+- Performance profiling tools
+- Package development support
+- Integration with Julia documentation
+
+** Markdown and RMarkdown
+
+*** Polymode Integration
+- Multi-mode editing for RMarkdown documents
+- Seamless switching between Markdown and R code
+- Syntax highlighting in code chunks
+- Comprehensive "reverse typing" fixes for polymode quirks
+
+*** Features
+- Live preview capabilities
+- Export to multiple formats
+- Bibliography and citation support
+- Integration with pandoc
+
+** Quarto
+
+*** Scientific Publishing
+- Native Quarto document support
+- Multi-language code execution
+- Publication-ready output formats
+- Integration with research workflows
+
+*** Features
+- Syntax highlighting for .qmd files
+- Preview server integration
+- Cross-references and citations
+- Flexible output formats (HTML, PDF, Word, etc.)
+
+* Package Management
+
+** Doom Package System
+This configuration uses Doom's package management built on straight.el:
+
+*** Adding Packages
+Add to =packages.el=:
+#+begin_src elisp
+(package! package-name)
+#+end_src
+
+For packages not in MELPA:
+#+begin_src elisp
+(package! package-name
+  :recipe (:host github :repo "user/repo"))
+#+end_src
+
+*** Custom Packages in This Configuration
+- =catppuccin-theme= - Modern dark theme
+- =claude-code= - AI assistant integration
+- =quarto-emacs= - Quarto document support
+- =opencode= - AI coding tools
+- =indent-bars= - Visual indentation
+- =org-make-toc= - Automatic table of contents
+
+*** Package Updates
+#+begin_src shell
+doom sync -u    # Update all packages
+doom sync -b    # Rebuild if needed
+#+end_src
+
+* Keybindings
+
+** Leader Keys
+The configuration uses Doom's =SPC= leader key system:
+
+| Prefix | Category | Description |
+|--------|----------|-------------|
+| =SPC f= | File | File operations |
+| =SPC b= | Buffer | Buffer management |
+| =SPC p= | Project | Project operations |
+| =SPC g= | Git | Version control |
+| =SPC s= | Search | Search and replace |
+| =SPC w= | Window | Window management |
+| =SPC t= | Toggle | Toggle features |
+| =SPC o= | Open | Open applications |
+| =SPC k= | AI | AI assistant commands |
+
+** AI Assistant Commands
+
+*** Claude Code (=SPC k=)
+| Key | Command | Description |
+|-----|---------|-------------|
+| =SPC k c= | claude-code | Open Claude menu |
+| =SPC k r= | claude-code-send | Send region/buffer |
+| =SPC k e= | claude-code-send-error | Fix error |
+| =SPC k t= | claude-code-toggle | Toggle Claude window |
+| =SPC k o= | claude-code-send-file | Send file |
+| =SPC k k= | claude-code-kill | Kill session |
+
+*** GPTel/OpenCode
+| Key | Command | Description |
+|-----|---------|-------------|
+| =SPC k g= | gptel-quick | Quick GPTel chat |
+| =SPC k G= | gptel-menu | GPTel menu |
+| =SPC k s= | gptel-send | Send to GPTel |
+
+*** Monet IDE
+| Key | Command | Description |
+|-----|---------|-------------|
+| =SPC k S= | monet-start-server | Start Monet server |
+| =SPC k l= | monet-list-sessions | List sessions |
+| =SPC k d= | monet-show-diff | Show diff |
+
+** Org Mode Shortcuts
+
+*** General Org
+| Key | Command | Description |
+|-----|---------|-------------|
+| =SPC X= | org-capture | Quick capture |
+| =SPC n r f= | org-roam-node-find | Find note |
+| =SPC n r i= | org-roam-node-insert | Insert link |
+| =SPC o A= | archive-done-items | Archive completed |
+
+*** RMarkdown/Quarto (=SPC m f=)
+| Key | Command | Description |
+|-----|---------|-------------|
+| =SPC m f r= | rmd-sanitize-buffer | Fix reverse typing |
+| =SPC m f d= | rmd-debug-state | Debug buffer state |
+
+** macOS Integration
+| Key | Command | Description |
+|-----|---------|-------------|
+| =SPC m g l= | org-mac-link-get-link | Grab link from app |
+| =SPC m g g= | org-mac-grab-link | Choose app menu |
+
+* Customization Guide
+
+** Adding New Languages
+1. Check if Doom has a module: [[https://github.com/doomemacs/doomemacs/tree/master/modules/lang]]
+2. Add to =init.el= in the =:lang= section
+3. Add language-specific configuration to =config.org=
+4. Run =doom sync= and restart Emacs
+
+** Customizing Themes
+1. Browse available themes in =~/.config/doom/themes=
+2. Modify =doom-theme= variable in =config.org=
+3. Restart Emacs to apply
+
+** Adding Custom Functions
+1. Add to the "Custom Functions" section in =config.org=
+2. Use proper =after!= blocks for package-dependent code
+3. Add keybindings using =map!= macro
+
+** Modifying AI Integration
+1. Set API keys in environment variables
+2. Customize models in the respective configuration sections
+3. Modify keybindings in the "AI Integrations" section
+
+* Troubleshooting
+
+** Common Issues
+
+*** Package Installation Failures
+#+begin_src shell
+doom sync          # Try normal sync first
+doom sync -u        # Update packages if needed
+doom sync -b        # Force rebuild
+doom doctor         # Check for issues
+#+end_src
+
+*** Configuration Errors
+1. Check =*Messages*= buffer for error details
+2. Use =doom doctor= to diagnose issues
+3. Verify syntax in =config.org= code blocks
+4. Check that all required packages are installed
+
+*** Performance Issues
+1. Check startup time: =emacs --debug-init=
+2. Disable unnecessary packages in =packages.el=
+3. Use =doom clean= to remove unused packages
+4. Consider disabling heavy features temporarily
+
+** RMarkdown Polymode Issues
+
+*** "Reverse Typing" Problem
+This configuration includes comprehensive fixes for polymode issues:
+
+| Issue | Solution |
+|-------|----------|
+| Text types backward | =SPC m f r= to sanitize buffer |
+| Ligatures disappear | Automatic polymode integration |
+| Weird indentation | Electric indent disabled in chunks |
+| BiDi text issues | Forced left-to-right display |
+
+*** Debug Commands
+- =SPC m f d= - Show buffer debug state
+- =SPC m f r= - Manual buffer sanitization
+- Check modeline for " ⟲Rmd" indicator
+
+*** Manual Recovery
+If issues persist:
+1. Kill the buffer and reopen
+2. Run =doom reload=
+3. Check R executable path with =which R=
+4. Verify ESS configuration
+
+** LSP Issues
+1. Check if language server is installed
+2. Verify =lsp-doctor= output
+3. Check executable paths in configuration
+4. Consider using Eglot instead of lsp-mode for simpler setup
+
+* Development Workflow
+
+** Typical Data Science Session
+1. Open project: =SPC p p=
+2. Find or create RMarkdown file: =SPC p f=
+3. Start R session through code chunk evaluation
+4. Use AI assistance for code generation: =SPC k c=
+5. Export document: =C-c C-e= (org-export)
+
+** Research Workflow
+1. Capture ideas: =SPC X=
+2. Create project structure with templates
+3. Use org-babel for exploratory analysis
+4. Export to publication formats
+5. Version control with Magit: =SPC g s=
+
+** Collaborative Workflow
+1. Use Git for version control
+2. Export documents to shareable formats
+3. Use AI assistants for code review
+4. Integrate with external tools via org-links
+
+* Advanced Features
+
+** Org-babel Multi-language
+- Execute R, Python, Julia in same document
+- Session persistence across code blocks
+- Variable passing between languages
+- Inline results and graphics
+
+** AI-Enhanced Development
+- Context-aware code suggestions
+- Error diagnosis and fixing
+- Code explanation and documentation
+- Automated refactoring suggestions
+
+** Integration Ecosystem
+- macOS app link grabbing
+- Terminal integration with proper shell
+- External tool integration
+- Cross-platform executable detection
+
+** Performance Optimizations
+- Lazy loading of heavy packages
+- Efficient completion with minimal delay
+- Optimized startup sequence
+- Memory-conscious package management
+
+---
+
+*This documentation is automatically maintained. For the most current configuration details, refer to the =config.org= file itself.*

@@ -1,0 +1,9 @@
+[[plugin.deps]]
+use = "Reledia/glow"
+rev = "5ce76dc"
+hash = "52e5f5c602962e7cbf874da28f52ba45"
+
+[[flavor.deps]]
+use = "kmlupreti/ayu-dark"
+rev = "8ddf095"
+hash = "36d566ae42742592b62cb4f2eb68c1e9"

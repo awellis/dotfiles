@@ -1,0 +1,448 @@
+# Doom Emacs Comprehensive Shortcuts Guide
+
+This guide covers all essential keyboard shortcuts for Doom Emacs with Evil mode enabled.
+
+## Emacs vs Doom Comparison
+
+### Common Operations
+| Action | Standard Emacs | Doom Emacs |
+|--------|---------------|------------|
+| **File Operations** |
+| Open file | `C-x C-f` | `SPC f f` |
+| Save file | `C-x C-s` | `SPC f s` |
+| Save all | `C-x s` | `SPC f S` |
+| **Buffer Management** |
+| Switch buffer | `C-x b` | `SPC b b` |
+| Kill buffer | `C-x k` | `SPC b d` |
+| List buffers | `C-x C-b` | `SPC b B` |
+| **Window Management** |
+| Split vertical | `C-x 3` | `SPC w v` |
+| Split horizontal | `C-x 2` | `SPC w s` |
+| Close window | `C-x 0` | `SPC w c` |
+| Close others | `C-x 1` | `SPC w o` |
+| Switch window | `C-x o` | `SPC w w` |
+| **Search** |
+| Search forward | `C-s` | `/` or `SPC s s` |
+| Search backward | `C-r` | `?` (evil) |
+| Replace | `M-%` | `SPC s r` |
+| **Help** |
+| Describe key | `C-h k` | `SPC h k` |
+| Describe function | `C-h f` | `SPC h f` |
+| **Execute** |
+| M-x | `M-x` | `SPC :` or `SPC SPC` |
+| **Movement** |
+| Beginning of line | `C-a` | `0` (evil) |
+| End of line | `C-e` | `$` (evil) |
+| Top of file | `M-<` | `gg` (evil) |
+| Bottom of file | `M->` | `G` (evil) |
+
+Note: Doom uses Evil mode (Vim bindings) by default, so many navigation commands follow Vim conventions.
+
+---
+
+## Leader Keys & Navigation Philosophy
+
+**Leader Keys:**
+- `SPC` - Global leader key (normal/visual modes)
+- `M-SPC` - Alternative leader (insert/emacs modes)
+- `SPC m` - Local leader (mode-specific commands)
+- `M-SPC m` - Alternative local leader (insert/emacs modes)
+
+**Key Philosophy:**
+Doom uses a mnemonic system where key combinations make logical sense:
+- `SPC f` = **f**ile operations
+- `SPC b` = **b**uffer operations  
+- `SPC p` = **p**roject operations
+- `SPC g` = **g**it operations
+
+---
+
+## 🚀 Getting Started & Help
+
+| Key | Description |
+|-----|-------------|
+| `SPC h k` | Describe key - shows what any key combination does |
+| `SPC h f` | Describe function |
+| `SPC h v` | Describe variable |
+| `SPC h m` | Describe mode |
+| `SPC h b` | List all keybindings |
+| `SPC :` | Execute command (M-x equivalent) |
+| `SPC SPC` | M-x (alternative) |
+| `SPC h d h` | Doom help |
+
+---
+
+## 🔄 Movement & Navigation (Evil/Vim)
+
+### Basic Movement
+| Key | Description |
+|-----|-------------|
+| `h j k l` | Left, down, up, right |
+| `w` | Next word |
+| `b` | Previous word |
+| `e` | End of word |
+| `0` | Beginning of line |
+| `$` | End of line |
+| `gg` | Top of file |
+| `G` | Bottom of file |
+| `{ }` | Previous/next paragraph |
+| `%` | Jump to matching bracket |
+
+### Screen Movement
+| Key | Description |
+|-----|-------------|
+| `C-u` | Scroll up half page |
+| `C-d` | Scroll down half page |
+| `C-b` | Scroll up full page |
+| `C-f` | Scroll down full page |
+| `zt` | Center line at top |
+| `zz` | Center line in middle |
+| `zb` | Center line at bottom |
+
+### Jump & Search
+| Key | Description |
+|-----|-------------|
+| `/` | Search forward |
+| `?` | Search backward |
+| `n` | Next search result |
+| `N` | Previous search result |
+| `*` | Search for word under cursor |
+| `gd` | Go to definition |
+| `gD` | Go to references |
+| `C-o` | Jump back |
+| `C-i` | Jump forward |
+
+---
+
+## 📁 File Operations
+
+| Key | Description |
+|-----|-------------|
+| `SPC f f` | Find file |
+| `SPC f r` | Recent files |
+| `SPC f s` | Save file |
+| `SPC f S` | Save all files |
+| `SPC f d` | Find directory |
+| `SPC f D` | Delete current file |
+| `SPC f R` | Rename/move current file |
+| `SPC f c` | Copy current file |
+| `SPC f y` | Yank (copy) current file path |
+
+---
+
+## 📋 Buffer Management
+
+| Key | Description |
+|-----|-------------|
+| `SPC b b` | Switch buffer |
+| `SPC b d` | Kill current buffer |
+| `SPC b k` | Kill buffer |
+| `SPC b n` | Next buffer |
+| `SPC b p` | Previous buffer |
+| `SPC b r` | Revert buffer |
+| `SPC b s` | Save buffer |
+| `SPC b y` | Yank buffer path |
+| `SPC b ]` | Next buffer |
+| `SPC b [` | Previous buffer |
+
+---
+
+## 🪟 Window Management
+
+| Key | Description |
+|-----|-------------|
+| `SPC w v` | Split window vertically |
+| `SPC w s` | Split window horizontally |
+| `SPC w c` | Close window |
+| `SPC w o` | Close other windows |
+| `SPC w h` | Move to left window |
+| `SPC w j` | Move to window below |
+| `SPC w k` | Move to window above |
+| `SPC w l` | Move to right window |
+| `SPC w w` | Switch to next window |
+| `SPC w =` | Balance windows |
+
+---
+
+## 🏗️ Project Management (Projectile)
+
+| Key | Description |
+|-----|-------------|
+| `SPC p p` | Switch project |
+| `SPC p f` | Find file in project |
+| `SPC p r` | Recent project files |
+| `SPC p g` | Grep in project |
+| `SPC p s` | Search in project |
+| `SPC p R` | Replace in project |
+| `SPC p c` | Compile project |
+| `SPC p t` | Test project |
+| `SPC p k` | Kill project buffers |
+
+---
+
+## 🔍 Search & Replace
+
+| Key | Description |
+|-----|-------------|
+| `SPC s s` | Search buffer |
+| `SPC s p` | Search project |
+| `SPC s d` | Search directory |
+| `SPC s i` | Search for symbol |
+| `SPC s o` | Search online |
+| `SPC s r` | Query replace |
+| `SPC s R` | Query replace in project |
+
+---
+
+## 🗂️ Git Operations (Magit)
+
+| Key | Description |
+|-----|-------------|
+| `SPC g g` | Magit status |
+| `SPC g s` | Magit status |
+| `SPC g l` | Magit log |
+| `SPC g b` | Magit blame |
+| `SPC g d` | Magit diff |
+| `SPC g c` | Magit commit |
+| `SPC g p` | Magit push |
+| `SPC g P` | Magit pull |
+| `SPC g f` | Magit fetch |
+
+### In Magit Status Buffer
+| Key | Description |
+|-----|-------------|
+| `s` | Stage changes |
+| `u` | Unstage changes |
+| `c` | Commit |
+| `P` | Push menu |
+| `F` | Pull menu |
+| `b` | Branch menu |
+| `d` | Diff |
+| `q` | Quit |
+
+---
+
+## 📝 Editing & Text Manipulation
+
+### Basic Editing (Normal Mode)
+| Key | Description |
+|-----|-------------|
+| `i` | Insert before cursor |
+| `I` | Insert at beginning of line |
+| `a` | Append after cursor |
+| `A` | Append at end of line |
+| `o` | Open new line below |
+| `O` | Open new line above |
+| `x` | Delete character |
+| `dd` | Delete line |
+| `yy` | Copy line |
+| `p` | Paste below |
+| `P` | Paste above |
+
+### Text Objects & Motions
+| Key | Description |
+|-----|-------------|
+| `diw` | Delete inner word |
+| `daw` | Delete a word |
+| `ci"` | Change inside quotes |
+| `ca(` | Change around parentheses |
+| `yi{` | Yank inside braces |
+| `va[` | Visual select around brackets |
+| `dit` | Delete inside XML/HTML tag |
+| `gUiw` | Uppercase inner word |
+| `guiw` | Lowercase inner word |
+
+---
+
+## 📊 Org Mode Shortcuts
+
+### Basic Org Operations
+| Key | Description |
+|-----|-------------|
+| `SPC m t` | Toggle TODO state |
+| `SPC m d s` | Schedule task |
+| `SPC m d d` | Set deadline |
+| `SPC m e` | Export |
+| `SPC X` | Capture (global) |
+| `SPC m '` | Edit code block |
+| `SPC m r` | Refile |
+
+### Standard Emacs Bindings (also work)
+| Key | Description |
+|-----|-------------|
+| `C-c C-s` | Schedule task |
+| `C-c C-d` | Set deadline |
+| `C-c C-t` | Toggle TODO |
+| `C-c C-w` | Refile |
+
+### Org Structure
+| Key | Description |
+|-----|-------------|
+| `TAB` | Cycle visibility |
+| `S-TAB` | Global cycle visibility |
+| `SPC m h` | Insert heading |
+| `M-h` or `M-LEFT` | Promote heading |
+| `M-l` or `M-RIGHT` | Demote heading |
+| `M-j` or `M-DOWN` | Move subtree down |
+| `M-k` or `M-UP` | Move subtree up |
+
+### Archive & Refile
+| Key | Description |
+|-----|-------------|
+| `da` | Archive with confirmation |
+| `dA` | Archive without confirmation |
+| `SPC m r` | Refile |
+| `C-c C-w` | Refile (standard binding) |
+
+---
+
+## 📅 Org Agenda
+
+### Opening Agenda
+| Key | Description |
+|-----|-------------|
+| `SPC o a` | Open agenda |
+| `SPC o A` | Open agenda in current buffer |
+
+### In Agenda View
+| Key | Description |
+|-----|-------------|
+| `j/k` | Next/previous line |
+| `n/p` | Next/previous item |
+| `f/b` | Forward/backward in time |
+| `r` | Refresh agenda |
+| `gr` | Refresh agenda (evil) |
+| `gR` | Refresh all agenda views |
+
+### Agenda Actions
+| Key | Description |
+|-----|-------------|
+| `t` | Change TODO state |
+| `da` | Archive item |
+| `dd` | Kill item |
+| `RET` | Go to item |
+| `TAB` | Go to item in other window |
+| `SPC` | Show item details |
+
+### Bulk Actions
+| Key | Description |
+|-----|-------------|
+| `m` | Mark item |
+| `u` | Unmark item |
+| `*` | Mark all items |
+| `M` | Unmark all items |
+| `% DONE RET` | Mark all DONE items |
+| `x` | Execute bulk action |
+| `$` | Archive (after x) |
+
+---
+
+## 🎯 Code Features
+
+### LSP (Language Server)
+| Key | Description |
+|-----|-------------|
+| `gd` | Go to definition |
+| `gD` | Go to declaration |
+| `gr` | Find references |
+| `gi` | Go to implementation |
+| `SPC c a` | Code actions |
+| `SPC c r` | Rename symbol |
+| `SPC c f` | Format buffer |
+| `SPC c d` | Show documentation |
+
+### Completion
+| Key | Description |
+|-----|-------------|
+| `TAB` | Complete |
+| `C-j/C-k` | Navigate completions |
+| `C-SPC` | Trigger completion |
+| `RET` | Accept completion |
+
+---
+
+## 🎨 UI & Display
+
+### Themes & Display
+| Key | Description |
+|-----|-------------|
+| `SPC t t` | Toggle theme |
+| `SPC t f` | Toggle fullscreen |
+| `SPC t l` | Toggle line numbers |
+| `SPC t w` | Toggle word wrap |
+| `SPC t i` | Toggle indent guides |
+
+### Font Size
+| Key | Description |
+|-----|-------------|
+| `SPC t F` | Toggle big font mode |
+| `C-+` | Increase font size |
+| `C--` | Decrease font size |
+| `C-0` | Reset font size |
+
+---
+
+## 🔧 Advanced Features
+
+### Workspaces/Perspectives
+| Key | Description |
+|-----|-------------|
+| `SPC TAB TAB` | Switch workspace |
+| `SPC TAB n` | New workspace |
+| `SPC TAB r` | Rename workspace |
+| `SPC TAB d` | Delete workspace |
+| `SPC TAB l` | Load workspace layout |
+
+### Terminal
+| Key | Description |
+|-----|-------------|
+| `SPC o t` | Toggle terminal |
+| `SPC o T` | Open terminal here |
+
+### Capture System
+| Key | Description |
+|-----|-------------|
+| `SPC X` | Org capture |
+| `SPC n n` | Org capture |
+| `p` | New Project template |
+| `m` | Meeting Notes template |
+| `d` | Daily Review template |
+| `t` | Quick Task |
+| `n` | Quick Note |
+
+---
+
+## 🆘 Emergency & Recovery
+
+| Key | Description |
+|-----|-------------|
+| `C-g` | Cancel command |
+| `ESC` | Back to normal mode |
+| `SPC q q` | Quit Emacs |
+| `SPC q r` | Restart Emacs |
+| `C-z` | Toggle Evil mode |
+| `SPC h r r` | Reload Doom config |
+
+---
+
+## 💡 Tips & Best Practices
+
+### Learning Shortcuts
+1. **Use which-key**: Just press `SPC` and wait - it shows available options
+2. **Start with essentials**: Master file, buffer, and window operations first
+3. **Learn incrementally**: Add a few shortcuts to your workflow each day
+4. **Use describe-key**: `SPC h k` then press any key to learn what it does
+
+### Muscle Memory Building
+1. **File workflow**: `SPC f f` (find) → `SPC f s` (save) → `SPC b d` (close)
+2. **Git workflow**: `SPC g g` (status) → stage/commit → `SPC g p` (push)
+3. **Project workflow**: `SPC p p` (switch) → `SPC p f` (find file)
+
+### Customization
+- Edit `~/.config/doom/config.org` for personal config
+- Run `doom sync` after changes
+- Use `SPC h r r` to reload without restarting
+
+---
+
+**Remember**: In Doom Emacs, almost everything is discoverable. Press `SPC` and let which-key guide you to the command you need!

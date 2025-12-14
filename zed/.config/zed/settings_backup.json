@@ -1,0 +1,113 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run the `open default settings` command
+// from the command palette or from `Zed` application menu.
+{
+  "icon_theme": "Catppuccin Macchiato",
+  "autosave": "on_focus_change",
+  "edit_predictions": {
+    "mode": "subtle",
+    "enabled_in_text_threads": true
+  },
+  "features": {
+    "edit_prediction_provider": "zed"
+  },
+  "file_types": {
+    "Markdown": ["qmd"]
+  },
+  "agent": {
+    "always_allow_tool_actions": true,
+    "profiles": {
+      "manual": {
+        "name": "Manual",
+        "tools": {
+          "code_actions": true
+        },
+        "enable_all_context_servers": false,
+        "context_servers": {}
+      }
+    },
+    "inline_assistant_model": {
+      "provider": "anthropic",
+      "model": "claude-3-7-sonnet-latest"
+    },
+    "default_profile": "ask",
+    "default_model": {
+      "provider": "zed.dev",
+      "model": "claude-sonnet-4-thinking"
+    },
+    "version": "2"
+  },
+  "telemetry": {
+    "metrics": false
+  },
+  "theme": "Catppuccin Macchiato",
+  "relative_line_numbers": true,
+  "vim_mode": true,
+  "vim": {
+    "toggle_relative_line_numbers": true,
+    "cursor_shape": {
+      // "normal": "hollow",
+      // "insert": "bar",
+      "replace": "block",
+      "visual": "underline"
+    }
+  },
+  "agent_font_size": 18,
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
+  "buffer_font_family": "FiraCode Nerd Font",
+  // "buffer_font_fallbacks": ["FiraCode Nerd Font"],
+  "buffer_font_features": {
+    "calt": true
+  },
+  "ui_font_features": {
+    "calt": true
+  },
+  "indent_guides": {
+    "enabled": true,
+    "line_width": 1,
+    "active_line_width": 1,
+    "coloring": "indent_aware",
+    "background_coloring": "disabled"
+  },
+  "restore_on_startup": "last_session",
+  "terminal": {
+    "alternate_scroll": "off",
+    "blinking": "terminal_controlled",
+    "copy_on_select": false,
+    "dock": "bottom",
+    "default_width": 640,
+    "default_height": 320,
+    "detect_venv": {
+      "on": {
+        "directories": [".env", "env", ".venv", "venv"],
+        "activate_script": "fish"
+      }
+    },
+    "env": {},
+    "font_family": "FiraCode Nerd Font",
+    "font_features": {
+      "calt": true
+    },
+    "font_size": null,
+    "line_height": "comfortable",
+    "option_as_meta": false,
+    "button": true,
+    "shell": {
+      "program": "/opt/homebrew/bin/fish"
+    },
+    "toolbar": {
+      "breadcrumbs": true
+    },
+    "working_directory": "current_project_directory",
+    "scrollbar": {
+      "show": null
+    }
+  }
+}
+//

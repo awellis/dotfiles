@@ -1,0 +1,22 @@
+{
+  // Each snippet must have a name and body, but the prefix and description are optional.
+  // The prefix is used to trigger the snippet, but when omitted then the name is used.
+  // Use placeholders like $1, $2 or ${1:defaultValue} to define tab stops.
+  // The $0 determines the final cursor position.
+  // Placeholders with the same value are linked.
+  "Insert cell delimiter": {
+    "prefix": "cell",
+    "body": ["# %%", "$0"],
+    "description": "Inserts a cell delimiter"
+  },
+  "Default function": {
+    "prefix": "def",
+    "body": ["def ${1:function_name}(${2:args}):", "    ${3:pass}", "$0"],
+    "description": "Inserts a default function"
+  },
+  "Default class": {
+    "prefix": "class",
+    "body": ["class ${1:ClassName}:", "    ${2:pass}", "$0"],
+    "description": "Inserts a default class"
+  }
+}
