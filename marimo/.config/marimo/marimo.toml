@@ -1,0 +1,44 @@
+[display]
+code_editor_font_size = 14
+dataframes = "rich"
+cell_output = "above"
+default_width = "medium"
+theme = "light"
+
+[formatting]
+line_length = 79
+
+[save]
+autosave_delay = 1000
+autosave = "after_delay"
+format_on_save = false
+
+[completion]
+copilot = "github"
+activate_on_typing = true
+
+[package_management]
+manager = "pip"
+
+[ai.google]
+
+[ai.open_ai]
+model = "gpt-4o"
+api_key = ""
+
+[ai.anthropic]
+
+[experimental]
+
+[runtime]
+auto_reload = "off"
+on_cell_change = "autorun"
+auto_instantiate = true
+
+[server]
+follow_symlink = false
+browser = "default"
+
+[keymap]
+preset = "default"
+[keymap.overrides]

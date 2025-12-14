@@ -50,3 +50,6 @@ rsconnect/
 
 # MacOS
 .DS_Store
+
+# Sensitive files
+gh/.config/gh/hosts.yml

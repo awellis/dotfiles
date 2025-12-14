@@ -1,0 +1,4 @@
+theme = "nord-night"
+
+[keys.normal]
+d = { d = ["extend_to_line_bounds", "delete_selection"] }

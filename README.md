@@ -45,10 +45,15 @@ This creates a symlink from `~/.config/fish` pointing to `~/dotfiles/fish/.confi
 |---------|-------------|
 | `doom` | [Doom Emacs](https://github.com/doomemacs/doomemacs) configuration |
 | `fish` | [Fish shell](https://fishshell.com/) with Starship, fzf, zoxide, eza |
+| `gh` | [GitHub CLI](https://cli.github.com/) |
 | `ghostty` | [Ghostty](https://ghostty.org/) terminal emulator |
+| `helix` | [Helix](https://helix-editor.com/) editor |
 | `karabiner` | [Karabiner-Elements](https://karabiner-elements.pqrs.org/) keyboard customization |
+| `lazygit` | [Lazygit](https://github.com/jesseduffield/lazygit) terminal UI for git |
+| `marimo` | [marimo](https://marimo.io/) reactive Python notebooks |
 | `nvim` | [Neovim](https://neovim.io/) with LazyVim |
 | `radian` | [radian](https://github.com/randy3k/radian) R console |
+| `rstudio` | [RStudio](https://posit.co/products/open-source/rstudio/) IDE |
 | `starship` | [Starship](https://starship.rs/) prompt |
 | `yazi` | [Yazi](https://yazi-rs.github.io/) file manager |
 | `zed` | [Zed](https://zed.dev/) editor |
