@@ -1,0 +1,25 @@
+# Ignore fish shell generated files and macOS system files
+
+# Fish shell history and cache
+fish_history
+fishd.*
+fish_variables
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS folder attributes
+._*
+.Spotlight-V100
+.Trashes
+
+# macOS volume info
+.VolumeIcon.icns
+
+# macOS backup files
+*.swp
+*.swo
+*.tmp
+*.bak
