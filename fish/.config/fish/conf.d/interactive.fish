@@ -40,3 +40,17 @@ end
 if type -q starship
     starship init fish | source
 end
+
+# --- Aliases and abbreviations ---
+# radian R console
+function r
+    radian $argv
+end
+
+# yazi file manager
+function y
+    yazi $argv
+end
+
+# eza list view sorted by modified
+abbr -a ll 'eza -l --sort=modified'

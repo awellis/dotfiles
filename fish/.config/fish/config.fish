@@ -56,14 +56,20 @@ if status is-interactive
     end
 end
 
-# --- Conda / Mamba integration ---
-if test -f /opt/homebrew/Caskroom/miniforge/base/bin/conda
-    eval (/opt/homebrew/Caskroom/miniforge/base/bin/conda "shell.fish" hook)
-end
+# --- Conda / Mamba integration (macOS only) ---
+if test (uname) = Darwin
+    if test -f /opt/homebrew/Caskroom/miniforge/base/bin/conda
+        eval (/opt/homebrew/Caskroom/miniforge/base/bin/conda "shell.fish" hook)
+    end
 
-if test -f "/opt/homebrew/Caskroom/miniforge/base/etc/fish/conf.d/mamba.fish"
-    source "/opt/homebrew/Caskroom/miniforge/base/etc/fish/conf.d/mamba.fish"
+    if test -f "/opt/homebrew/Caskroom/miniforge/base/etc/fish/conf.d/mamba.fish"
+        source "/opt/homebrew/Caskroom/miniforge/base/etc/fish/conf.d/mamba.fish"
+    end
 end
 
 # --- LM Studio CLI ---
-set -gx PATH $PATH /Users/andrew/.cache/lm-studio/bin
+if test (uname) = Darwin
+    set -gx PATH $PATH /Users/andrew/.cache/lm-studio/bin
+else
+    set -gx PATH $PATH /home/andrew/.lmstudio/bin
+end
