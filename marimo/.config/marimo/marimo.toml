@@ -1,44 +1,89 @@
-[display]
-code_editor_font_size = 14
-dataframes = "rich"
-cell_output = "above"
-default_width = "medium"
-theme = "light"
+[ai]
+inline_tooltip = true
+rules = ""
+mode = "manual"
+
+[ai.models]
+custom_models = []
+edit_model = "openai/gpt-5"
+chat_model = "openai/gpt-5"
+displayed_models = []
+
+[ai.open_ai]
+
+[ai.github]
 
 [formatting]
 line_length = 79
 
+[language_servers.basedpyright]
+
+[language_servers.pylsp]
+enable_mypy = true
+enabled = false
+enable_pydocstyle = false
+enable_flake8 = false
+enable_pyflakes = false
+enable_pylint = false
+enable_ruff = true
+
+[language_servers.ty]
+
+[diagnostics]
+sql_linter = true
+
+[datasources]
+
 [save]
+format_on_save = false
 autosave_delay = 1000
 autosave = "after_delay"
-format_on_save = false
+
+[keymap]
+preset = "default"
+destructive_delete = true
+
+[keymap.overrides]
+
+[display]
+default_table_max_columns = 50
+code_editor_font_size = 14
+default_table_page_size = 10
+default_width = "medium"
+dataframes = "rich"
+cell_output = "below"
+reference_highlighting = false
+theme = "light"
 
 [completion]
 copilot = "github"
 activate_on_typing = true
 
-[package_management]
-manager = "pip"
-
-[ai.google]
-
-[ai.open_ai]
-model = "gpt-4o"
-api_key = ""
-
-[ai.anthropic]
-
-[experimental]
-
 [runtime]
+default_auto_download = []
+default_sql_output = "auto"
+auto_instantiate = false
+output_max_bytes = 8000000
 auto_reload = "off"
 on_cell_change = "autorun"
-auto_instantiate = true
+watcher_on_save = "lazy"
+std_stream_max_bytes = 1000000
+reactive_tests = true
+
+[package_management]
+manager = "uv"
 
 [server]
-follow_symlink = false
 browser = "default"
+follow_symlink = false
 
-[keymap]
-preset = "default"
-[keymap.overrides]
+[mcp]
+presets = []
+
+[mcp.mcpServers]
+
+[snippets]
+custom_paths = []
+include_default_snippets = true
+
+[experimental]
