@@ -48,11 +48,10 @@ set -gx XDG_CONFIG_HOME $HOME/.config
 # Interactive configuration moved to conf.d/interactive.fish
 # to avoid false syntax errors with fish -n
 
-# --- fzf integration (must be in config.fish for proper loading) ---
+# --- fzf integration (native, by junegunn) ---
 if status is-interactive
     if type -q fzf
         fzf --fish | source
-        fzf_key_bindings
     end
 end
 
