@@ -68,7 +68,7 @@ end
 
 # --- LM Studio CLI ---
 if test (uname) = Darwin
-    set -gx PATH $PATH /Users/andrew/.cache/lm-studio/bin
+    fish_add_path -g /Users/andrew/.cache/lm-studio/bin
 else
-    set -gx PATH $PATH /home/andrew/.lmstudio/bin
+    fish_add_path -g /home/andrew/.lmstudio/bin
 end
