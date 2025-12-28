@@ -1,4 +1,5 @@
 {
+    "global": { "show_additional_menu_items": true },
     "profiles": [
         {
             "complex_modifications": {
