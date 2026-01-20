@@ -52,10 +52,14 @@
 (package! eat :recipe (:host codeberg :repo "akib/emacs-eat"))  ; Terminal emulator for claude-code
 (package! aider :recipe (:host github :repo "tninja/aider.el"))
 (package! quarto-emacs :recipe (:host github :repo "quarto-dev/quarto-emacs"))
-(package! claude-code
-  :recipe (:host github :repo "stevemolitor/claude-code.el"))
-(package! monet
-  :recipe (:host github :repo "stevemolitor/monet"))
+;; Claude Code IDE - MCP-based integration with LSP, treesitter, and ediff
+(package! claude-code-ide
+  :recipe (:host github :repo "manzaltu/claude-code-ide.el"))
+
+;; (package! claude-code
+;;   :recipe (:host github :repo "stevemolitor/claude-code.el"))
+;; (package! monet
+;;   :recipe (:host github :repo "stevemolitor/monet"))
 (package! indent-bars
   :recipe (:host github :repo "jdtsmith/indent-bars"))
 (package! opencode
