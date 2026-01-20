@@ -72,3 +72,5 @@ if test (uname) = Darwin
 else
     fish_add_path -g /home/andrew/.lmstudio/bin
 end
+# Added by Antigravity
+fish_add_path /Users/andrew/.antigravity/antigravity/bin
