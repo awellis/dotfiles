@@ -66,11 +66,11 @@ if test (uname) = Darwin
     end
 end
 
-# --- LM Studio CLI ---
+# --- macOS-only paths ---
 if test (uname) = Darwin
     fish_add_path -g /Users/andrew/.cache/lm-studio/bin
+    fish_add_path /Users/andrew/.antigravity/antigravity/bin
+    fish_add_path /Applications/Obsidian.app/Contents/MacOS
 else
     fish_add_path -g /home/andrew/.lmstudio/bin
 end
-# Added by Antigravity
-fish_add_path /Users/andrew/.antigravity/antigravity/bin
