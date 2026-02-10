@@ -7,19 +7,21 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "icon_theme": "Catppuccin Macchiato",
+  "helix_mode": false,
+  "icon_theme": "Catppuccin Mocha",
   "autosave": "on_focus_change",
   "edit_predictions": {
     "mode": "subtle",
     "enabled_in_text_threads": true
   },
   "features": {
-    "edit_prediction_provider": "zed"
+    "edit_prediction_provider": "copilot"
   },
   "file_types": {
     "Markdown": ["qmd"]
   },
   "agent": {
+    "use_modifier_to_send": true,
     "always_allow_tool_actions": true,
     "profiles": {
       "manual": {
@@ -37,12 +39,12 @@
     },
     "default_profile": "ask",
     "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-sonnet-4-thinking"
+      "provider": "anthropic",
+      "model": "claude-opus-4-1-thinking-latest"
     },
-    "version": "2"
   },
   "telemetry": {
+    "diagnostics": false,
     "metrics": false
   },
   "theme": "Catppuccin Macchiato",
