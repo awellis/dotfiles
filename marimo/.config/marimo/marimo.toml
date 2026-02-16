@@ -1,43 +1,73 @@
-[ai]
-inline_tooltip = true
-rules = ""
-mode = "manual"
-
-[ai.models]
-custom_models = []
-edit_model = "openai/gpt-5"
-chat_model = "openai/gpt-5"
-displayed_models = []
-
-[ai.open_ai]
-
-[ai.github]
-
-[formatting]
-line_length = 79
-
-[language_servers.basedpyright]
-
-[language_servers.pylsp]
-enable_mypy = true
-enabled = false
-enable_pydocstyle = false
-enable_flake8 = false
-enable_pyflakes = false
-enable_pylint = false
-enable_ruff = true
-
-[language_servers.ty]
-
-[diagnostics]
-sql_linter = true
-
-[datasources]
+[server]
+follow_symlink = false
+browser = "default"
 
 [save]
 format_on_save = false
 autosave_delay = 1000
 autosave = "after_delay"
+
+[experimental]
+external_agents = true
+
+[ai]
+inline_tooltip = true
+rules = ""
+mode = "manual"
+
+[ai.custom_providers]
+
+[ai.anthropic]
+api_key = ""
+
+[ai.models]
+displayed_models = ["anthropic/claude-opus-4-6", "anthropic/claude-sonnet-4-5", "ollama/gpt-oss:20b"]
+edit_model = "anthropic/claude-sonnet-4-5"
+custom_models = []
+chat_model = "anthropic/claude-sonnet-4-5"
+
+[ai.open_ai]
+
+[ai.github]
+
+[package_management]
+manager = "uv"
+
+[display]
+default_width = "medium"
+theme = "light"
+cell_output = "below"
+default_table_max_columns = 50
+dataframes = "rich"
+reference_highlighting = true
+code_editor_font_size = 14
+default_table_page_size = 10
+
+[runtime]
+default_csv_encoding = "utf-8"
+default_auto_download = []
+default_sql_output = "auto"
+auto_instantiate = false
+on_cell_change = "autorun"
+output_max_bytes = 8000000
+auto_reload = "off"
+watcher_on_save = "lazy"
+std_stream_max_bytes = 1000000
+reactive_tests = true
+
+[snippets]
+custom_paths = []
+include_default_snippets = true
+
+[completion]
+copilot = "github"
+activate_on_typing = true
+signature_hint_on_typing = false
+
+[mcp]
+presets = []
+
+[mcp.mcpServers]
 
 [keymap]
 preset = "default"
@@ -45,45 +75,23 @@ destructive_delete = true
 
 [keymap.overrides]
 
-[display]
-default_table_max_columns = 50
-code_editor_font_size = 14
-default_table_page_size = 10
-default_width = "medium"
-dataframes = "rich"
-cell_output = "below"
-reference_highlighting = false
-theme = "light"
+[formatting]
+line_length = 79
 
-[completion]
-copilot = "github"
-activate_on_typing = true
+[diagnostics]
+sql_linter = true
 
-[runtime]
-default_auto_download = []
-default_sql_output = "auto"
-auto_instantiate = false
-output_max_bytes = 8000000
-auto_reload = "off"
-on_cell_change = "autorun"
-watcher_on_save = "lazy"
-std_stream_max_bytes = 1000000
-reactive_tests = true
+[datasources]
 
-[package_management]
-manager = "uv"
+[language_servers.ty]
 
-[server]
-browser = "default"
-follow_symlink = false
+[language_servers.pylsp]
+enabled = false
+enable_pyflakes = false
+enable_pylint = false
+enable_mypy = true
+enable_pydocstyle = false
+enable_ruff = true
+enable_flake8 = false
 
-[mcp]
-presets = []
-
-[mcp.mcpServers]
-
-[snippets]
-custom_paths = []
-include_default_snippets = true
-
-[experimental]
+[language_servers.basedpyright]
