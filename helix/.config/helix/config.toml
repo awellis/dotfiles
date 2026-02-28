@@ -7,6 +7,9 @@ theme = "catppuccin_macchiato"
 "C-k" = "jump_view_up"
 "C-l" = "jump_view_right"
 
+[keys.normal.space]
+q = { q = ":quit-all" }
+
 [editor.soft-wrap]
 enable = true
 max-wrap = 25        # maximum free space left on the right side
