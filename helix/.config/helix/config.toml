@@ -7,8 +7,12 @@ theme = "catppuccin_macchiato"
 "C-k" = "jump_view_up"
 "C-l" = "jump_view_right"
 "C-s" = ":write"
-"[b" = ":buffer-previous"
-"]b" = ":buffer-next"
+
+[keys.normal."["]
+b = ":buffer-previous"
+
+[keys.normal."]"]
+b = ":buffer-next"
 
 [keys.insert]
 "C-s" = ["normal_mode", ":write"]
