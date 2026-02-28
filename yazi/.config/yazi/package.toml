@@ -1,12 +1,12 @@
 [[plugin.deps]]
-use = "Reledia/glow"
-rev = "bd3eaa5"
-hash = "92b5c58159a51c567f82b618cee2b78"
+use = "yazi-rs/flavors:tokyo-night"
+rev = "3001521"
+hash = "99aa06d3014798d86001c324468d497f"
 
 [[plugin.deps]]
-use = "yazi-rs/flavors:tokyo-night"
-rev = "4c57537"
-hash = "99aa06d3014798d86001c324468d497f"
+use = "yazi-rs/plugins:piper"
+rev = "b224ddf"
+hash = "384464b6df8cb807425c521f8cd790f3"
 
 [[flavor.deps]]
 use = "kmlupreti/ayu-dark"

@@ -1,4 +1,10 @@
-theme = "nord-night"
+theme = "catppuccin_macchiato"
 
 [keys.normal]
-d = { d = ["extend_to_line_bounds", "delete_selection"] }
+"A-z" = ":toggle soft-wrap.enable"
+
+[editor.soft-wrap]
+enable = true
+max-wrap = 25        # maximum free space left on the right side
+max-indent-retain = 40
+wrap-indicator = "↪ " # indicator shown at the start of wrapped lines

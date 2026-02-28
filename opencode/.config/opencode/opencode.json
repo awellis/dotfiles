@@ -46,5 +46,16 @@
     "prune": true
   },
   "share": "manual",
-  "autoupdate": true
+  "autoupdate": true,
+  "mcp": {
+    "pencil": {
+      "command": [
+        "/Users/andrew/.vscode/extensions/highagency.pencildev-0.6.28/out/mcp-server-darwin-arm64",
+        "--app",
+        "visual_studio_code"
+      ],
+      "enabled": true,
+      "type": "local"
+    }
+  }
 }
