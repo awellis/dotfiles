@@ -6,9 +6,17 @@ theme = "catppuccin_macchiato"
 "C-j" = "jump_view_down"
 "C-k" = "jump_view_up"
 "C-l" = "jump_view_right"
+"C-s" = ":write"
+"[b" = ":buffer-previous"
+"]b" = ":buffer-next"
+
+[keys.insert]
+"C-s" = ["normal_mode", ":write"]
 
 [keys.normal.space]
-q = { q = ":quit-all" }
+q = { q = ":quit-all", w = ":quit" }
+"|" = ":vsplit"
+"-" = ":hsplit"
 
 [editor.soft-wrap]
 enable = true
