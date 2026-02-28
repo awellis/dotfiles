@@ -54,6 +54,5 @@ rsconnect/
 # Sensitive files
 gh/.config/gh/hosts.yml
 
-# LMDB database files (runtime artifacts)
-lock.mdb
-data.mdb
+# LMDB database directories (runtime artifacts)
+*.mdb/
