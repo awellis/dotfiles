@@ -1100,8 +1100,7 @@ GitHub Copilot integration for AI-powered code completion and suggestions.
 #+begin_src emacs-lisp
 ;; GitHub Copilot configuration
 (use-package! copilot
-  :hook ((prog-mode . copilot-mode)
-         (org-mode . copilot-mode))  ;; Enable copilot in org-mode too
+  :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
@@ -1261,6 +1260,7 @@ Citation management using citar with org-mode and org-roam integration.
   (require 'oc-biblatex))  ; biblatex support
 #+end_src
 
+#+begin_src emacs-lisp
 ;;; Flyspell "global" toggle for Doom (:checkers spell +flyspell)
 
 (defvar my/spell-global-enabled nil
@@ -1337,11 +1337,11 @@ Enable automatic reloading of buffers when files change on disk.
 ;; Also auto-revert dired buffers
 (setq global-auto-revert-non-file-buffers t)
 
-;; Disable file notifications to avoid errors - use polling instead
-(setq auto-revert-use-notify nil)
+;; Use file notifications (faster and less CPU than polling)
+(setq auto-revert-use-notify t)
 
-;; Set polling interval (in seconds)
-(setq auto-revert-interval 2)
+;; Fallback polling interval when notifications unavailable (in seconds)
+(setq auto-revert-interval 5)
 
 ;; Suppress auto-revert messages
 (setq auto-revert-verbose nil)

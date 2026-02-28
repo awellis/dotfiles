@@ -772,8 +772,7 @@
 
 ;; GitHub Copilot configuration
 (use-package! copilot
-  :hook ((prog-mode . copilot-mode)
-         (org-mode . copilot-mode))  ;; Enable copilot in org-mode too
+  :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
@@ -926,17 +925,81 @@
   (require 'oc-csl)  ; citation style language support
   (require 'oc-biblatex))  ; biblatex support
 
+;;; Flyspell "global" toggle for Doom (:checkers spell +flyspell)
+
+(defvar my/spell-global-enabled nil
+  "Whether spell checking is enabled globally across text and prog buffers.")
+
+(defun my/spell--text-like-buffer-p ()
+  "Return non-nil if current buffer is a text/document buffer (full spell)."
+  ;; Most doc modes derive from text-mode; list extras if you use nonstandard modes.
+  (or (derived-mode-p 'text-mode)
+      (memq major-mode
+            '(org-mode markdown-mode gfm-mode
+              rst-mode adoc-mode
+              latex-mode LaTeX-mode tex-mode
+              message-mode mu4e-compose-mode))))
+
+(defun my/apply-spell-to-buffer ()
+  "Enable/disable Flyspell in the current buffer to match `my/spell-global-enabled`."
+  (cond
+   ;; Document-like buffers: full spell checking on words everywhere
+   ((my/spell--text-like-buffer-p)
+    (if my/spell-global-enabled
+        (flyspell-mode 1)
+      (when (bound-and-true-p flyspell-mode)
+        (flyspell-mode -1))))
+   ;; Programming buffers: only comments/strings with flyspell-prog-mode
+   ((derived-mode-p 'prog-mode)
+    (if my/spell-global-enabled
+        (when (fboundp 'flyspell-prog-mode) (flyspell-prog-mode))
+      (when (bound-and-true-p flyspell-mode)
+        (flyspell-mode -1))))
+   ;; Everything else: keep it off
+   (t
+    (when (bound-and-true-p flyspell-mode)
+      (flyspell-mode -1)))))
+
+(defun my/toggle-spell-checking ()
+  "Toggle Flyspell for all current and future buffers (text=full, code=prog)."
+  (interactive)
+  (setq my/spell-global-enabled (not my/spell-global-enabled))
+  ;; Apply to existing buffers
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (my/apply-spell-to-buffer)))
+  ;; Ensure future buffers follow suit
+  (if my/spell-global-enabled
+      (add-hook 'after-change-major-mode-hook #'my/apply-spell-to-buffer)
+    (remove-hook 'after-change-major-mode-hook #'my/apply-spell-to-buffer))
+  (message "Spell checking %s globally (%s in text, %s in code)"
+           (if my/spell-global-enabled "ENABLED" "disabled")
+           (if my/spell-global-enabled "full" "off")
+           (if my/spell-global-enabled "comments/strings" "off")))
+
+;; Optional: start disabled on launch
+(add-hook 'after-init-hook
+          (lambda ()
+            (setq my/spell-global-enabled nil)
+            (remove-hook 'text-mode-hook #'flyspell-mode)
+            (remove-hook 'prog-mode-hook #'flyspell-prog-mode)
+            (remove-hook 'after-change-major-mode-hook #'my/apply-spell-to-buffer)))
+
+(map! :leader
+      (:prefix ("t" . "toggle")
+       :desc "Toggle spell checking globally" "S" #'my/toggle-spell-checking))
+
 ;; Auto-revert buffers when files change on disk
 (global-auto-revert-mode 1)
 
 ;; Also auto-revert dired buffers
 (setq global-auto-revert-non-file-buffers t)
 
-;; Disable file notifications to avoid errors - use polling instead
-(setq auto-revert-use-notify nil)
+;; Use file notifications (faster and less CPU than polling)
+(setq auto-revert-use-notify t)
 
-;; Set polling interval (in seconds)
-(setq auto-revert-interval 2)
+;; Fallback polling interval when notifications unavailable (in seconds)
+(setq auto-revert-interval 5)
 
 ;; Suppress auto-revert messages
 (setq auto-revert-verbose nil)
