@@ -362,6 +362,9 @@
 ;; Claude Code IDE - MCP-based integration with bidirectional Emacs communication
 (use-package! claude-code-ide
   :config
+  ;; CLI path (not on Emacs exec-path by default on macOS)
+  (setq claude-code-ide-cli-path (expand-file-name "~/.local/bin/claude"))
+
   ;; Terminal backend (choose one: 'eat or 'vterm)
   (setq claude-code-ide-terminal-backend 'eat)
 
