@@ -1,4 +1,5 @@
 {
+  "icon_theme": "Catppuccin Macchiato",
   "agent_servers": {
     "opencode": {
       "type": "registry"
