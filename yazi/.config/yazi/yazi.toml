@@ -16,7 +16,7 @@ tab_size = 2
 [plugin]
 prepend_previewers = [
   { url = "*.md", run = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"' },
-  { url = "*.qmd", run = "code" },
+  { url = "*.qmd", run = 'piper -- bat -pp --color=always --wrap=character --terminal-width=$w --language=markdown "$1"' },
 ]
 
 [input]
