@@ -1,16 +1,15 @@
 return {
-  { "giuxtaposition/blink-cmp-copilot" },
   {
     "saghen/blink.cmp",
     optional = true,
-    dependencies = { "giuxtaposition/blink-cmp-copilot" },
+    dependencies = { "fang2hou/blink-copilot" },
     opts = {
       sources = {
         default = { "copilot" },
         providers = {
           copilot = {
             name = "copilot",
-            module = "blink-cmp-copilot",
+            module = "blink-copilot",
             kind = "Copilot",
             score_offset = 100,
             async = true,
