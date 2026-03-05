@@ -1,7 +1,7 @@
 function zotero-clear-autoexports --description "Remove all Better BibTeX auto-exports from Zotero prefs"
     set -l prefs_file "$HOME/Library/Application Support/Zotero/Profiles/97kaa36k.default/prefs.js"
 
-    if pgrep -x zotero-bin >/dev/null 2>&1; or pgrep -xf ".*Zotero.*" >/dev/null 2>&1
+    if pgrep -if zotero >/dev/null 2>&1
         echo "Error: Zotero is still running. Quit Zotero first."
         return 1
     end
