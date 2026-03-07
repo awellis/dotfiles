@@ -1,27 +1,28 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "anthropic/claude-sonnet-4-5",
-  "provider": {
-    "lmstudio": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "LM Studio (local)",
-      "options": {
-        "baseURL": "http://localhost:1234/v1"
-      },
-      "models": {
-        "openai/gpt-oss-20b": {
-          "name": "gpt-oss-20b"
-        },
-        "qwen/qwen3-coder-30b": {
-          "name": "qwen3-coder-30b"
-        }
-      }
-    }
-  },
+  "share": "manual",
+  "autoupdate": true,
+  "disabled_providers": [],
+  "model": "lmstudio/qwen/qwen3.5-9b",
   "agent": {
-    "build": {
+    "plan": {
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
+      },
+      "description": "Planning agent - read-only exploration and design",
       "mode": "primary",
+      "options": {},
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      }
+    },
+    "build": {
       "description": "Primary coding agent with full tool access",
+      "mode": "primary",
+      "options": {},
       "permission": {
         "bash": {
           "*": "ask",
@@ -30,32 +31,38 @@
           "git log *": "allow"
         }
       }
-    },
-    "plan": {
-      "mode": "primary",
-      "description": "Planning agent - read-only exploration and design",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false
+    }
+  },
+  "provider": {
+    "lmstudio": {
+      "name": "LMStudio",
+      "npm": "@ai-sdk/openai-compatible",
+      "models": {
+        "openai/gpt-oss-20b": {
+          "name": "gpt-oss-20b"
+        },
+        "qwen/qwen3.5-9b": {
+          "name": "Qwen 3.5 9B"
+        }
+      },
+      "options": {
+        "baseURL": "http://127.0.0.1:1234/v1"
       }
     }
   },
-  "compaction": {
-    "auto": true,
-    "prune": true
-  },
-  "share": "manual",
-  "autoupdate": true,
   "mcp": {
     "pencil": {
       "command": [
-        "/Users/andrew/.vscode/extensions/highagency.pencildev-0.6.28/out/mcp-server-darwin-arm64",
+        "/Users/andrew/.vscode/extensions/highagency.pencildev-0.6.30/out/mcp-server-darwin-arm64",
         "--app",
         "visual_studio_code"
       ],
       "enabled": true,
       "type": "local"
     }
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true
   }
 }
