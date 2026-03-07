@@ -101,9 +101,6 @@
 ;; (setq org-directory "~/org/")
 (setq org-directory "~/Dropbox/org/")
 
-;; Explicitly set org-roam-directory to prevent initialization errors
-(setq org-roam-directory (expand-file-name "roam/" org-directory))
-
 ;; General org-babel session management
 (after! org
   ;; Keep sessions alive and don't kill them immediately
@@ -122,20 +119,35 @@
   
   ;; Don't kill sessions on errors
   (setq org-babel-error-buffer-name "*Org-Babel Error Output*")
-  
+
   ;; Keep inferior processes alive
   (setq org-babel-persistent-session t)
-  
+
+  ;; TODO keywords (beorg-compatible)
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+
+  (setq org-todo-keyword-faces
+        '(("INPROGRESS" . (:foreground "#f9e2af" :weight bold))
+          ("WAITING"    . (:foreground "#a6adc8" :weight bold))
+          ("CANCELLED"  . (:foreground "#6c7086" :weight bold :strike-through t))))
+
+  ;; Tag taxonomy
+  (setq org-tag-alist
+        '((:startgroup)
+          ("@home" . ?h) ("@work" . ?w) ("@out" . ?o) ("@phone" . ?p)
+          (:endgroup)
+          ("errand" . ?e) ("meeting" . ?m) ("read" . ?r)
+          ("statistics" . ?s) ("note" . ?n)
+          ("thisweek" . ?W) ("thismonth" . ?M)))
+
   ;; Org refile targets configuration - dynamically find all .org files
   (setq org-refile-targets
         `(,@(mapcar (lambda (file) (list file :maxlevel 2))
-                    (directory-files-recursively 
+                    (directory-files-recursively
                      (expand-file-name "areas/" org-directory) "\\.org$"))
           ,@(mapcar (lambda (file) (list file :maxlevel 2))
-                    (directory-files-recursively 
-                     (expand-file-name "resources/" org-directory) "\\.org$"))
-          ,@(mapcar (lambda (file) (list file :maxlevel 2))
-                    (directory-files-recursively 
+                    (directory-files-recursively
                      (expand-file-name "projects/" org-directory) "\\.org$"))
           (,(expand-file-name "inbox.org" org-directory) :maxlevel . 2)
           (nil :maxlevel . 9)))
@@ -164,8 +176,15 @@
             (tags-todo "+thismonth|+monthly"
                        ((org-agenda-overriding-header "Do This Month")))
             (tags-todo "DEADLINE>=\"<today>\"+DEADLINE<=\"<+1m>\""
-                       ((org-agenda-overriding-header "Due This Month")))))))
-  
+                       ((org-agenda-overriding-header "Due This Month")))))
+          ("s" "Stuck/Stale"
+           ((tags-todo "TODO=\"TODO\""
+                       ((org-agenda-overriding-header "Unscheduled TODOs")
+                        (org-agenda-skip-function
+                         '(org-agenda-skip-entry-if 'scheduled 'deadline))))
+            (tags-todo "DEADLINE<=\"<today>\""
+                       ((org-agenda-overriding-header "Overdue")))))))
+
   ;; Configure deadline warning days for different time windows
   (setq org-deadline-warning-days 7)  ; Start warning 7 days before deadline
   
@@ -199,10 +218,10 @@
 
 (after! org
   (setq org-capture-templates
-        '(("p" "New Project" plain
-           (file (lambda () (read-file-name "Project file: " 
+        `(("p" "New Project" plain
+           (file (lambda () (read-file-name "Project file: "
                                            (expand-file-name "projects/" org-directory))))
-           (file "templates/project-template.org")
+           "#+title: %^{Project Name}\n\n* Tasks\n** TODO %?\n\n* Notes\n"
            :unnarrowed t
            :kill-buffer t)
           ("m" "Meeting Notes" entry
@@ -210,8 +229,8 @@
            "* Meeting: %^{Meeting Title} :meeting:\n:PROPERTIES:\n:DATE: %U\n:ATTENDEES: %^{Attendees}\n:END:\n\n** Agenda\n%^{Agenda items}\n\n** Discussion Points\n- %?\n\n** Action Items\n- [ ] \n\n** Follow-up\n- \n"
            :prepend t)
           ("d" "Daily Review" entry
-           (file+olp+datetree "journal/2025.org")
-           "* Daily Review\n** Morning Planning\n*** Today's Priority\n1. %?\n2. \n3. \n\n*** Energy Level\n[1-10]: \n\n** Work Log\n*** Accomplished\n- \n\n*** In Progress\n- \n\n*** Blocked/Deferred\n- \n\n** Evening Review\n*** What went well?\n- \n\n*** What could be improved?\n- \n\n*** Tomorrow's Top 3\n1. \n2. \n3. \n\n** Gratitude\n- \n\n** Health & Habits\n- [ ] Exercise\n- [ ] Meditation\n- [ ] Reading\n- [ ] Water intake\n- [ ] Sleep quality (last night): /10\n"
+           (file+olp+datetree ,(format-time-string "journal/%Y.org"))
+           "* Daily Review\n** Top 3\n1. %?\n2. \n3. \n\n** Notes\n"
            :tree-type week)
           ("t" "Quick Task" entry
            (file+headline "inbox.org" "Tasks")
