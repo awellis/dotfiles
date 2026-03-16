@@ -1,0 +1,13 @@
+layout {
+    pane split_direction="vertical" {
+        pane size="65%" {
+            command "nvim"
+        }
+        pane size="35%" split_direction="horizontal" {
+            pane size="70%" {
+                command "claude"
+            }
+            pane size="30%"
+        }
+    }
+}
