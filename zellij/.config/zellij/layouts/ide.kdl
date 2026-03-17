@@ -5,7 +5,8 @@ layout {
         }
         pane size="35%" split_direction="horizontal" {
             pane size="70%" {
-                command "claude"
+                command "fish"
+                args "-c" "claude-ide"
             }
             pane size="30%"
         }
