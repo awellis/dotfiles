@@ -35,6 +35,9 @@ end
 # --- Environment variables ---
 set -gx EDITOR nvim
 set -gx VISUAL nvim
+if type -q gh
+    set -gx GITHUB_TOKEN (gh auth token 2>/dev/null)
+end
 alias vim='nvim'
 alias vi='nvim'
 
