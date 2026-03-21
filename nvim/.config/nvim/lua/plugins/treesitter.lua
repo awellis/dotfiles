@@ -24,8 +24,6 @@ return {
         "luap",
         "markdown",
         "markdown_inline",
-        "norg",
-        "org",
         "printf",
         "python",
         "query",
