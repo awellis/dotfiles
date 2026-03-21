@@ -1,5 +1,5 @@
 function note --description "Quick capture to Obsidian vault"
-    set -l vault ~/vaults/work
+    set -l vault ~/vault
 
     switch $argv[1]
         case todo t

@@ -1,6 +1,16 @@
 {
+  "context_servers": {
+    "mcp-server-github": {
+      "enabled": true,
+      "remote": false,
+      "settings": {}
+    }
+  },
   "icon_theme": "Catppuccin Macchiato",
   "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    },
     "opencode": {
       "type": "registry"
     }

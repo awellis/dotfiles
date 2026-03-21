@@ -23,8 +23,8 @@ return {
 
       workspaces = {
         {
-          name = "work",
-          path = "~/vaults/work",
+          name = "vault",
+          path = "~/vault",
         },
       },
 

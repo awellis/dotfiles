@@ -43,6 +43,11 @@ if type -q zoxide
     zoxide init fish | source
 end
 
+# --- tv (television fuzzy finder) ---
+if type -q tv
+    tv init fish | source
+end
+
 # --- starship prompt ---
 if type -q starship
     starship init fish | source

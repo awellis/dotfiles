@@ -1,4 +1,8 @@
+[language-server.iwe]
+command = "iwes"
+
 [[language]]
 name = "markdown"
 file-types = ["md", "markdown", "mkd", "mkdn", "mdwn", "mdown", "markdn", "mdtxt", "mdtext", "qmd"]
-language-servers = ["marksman"]
+language-servers = ["marksman", "iwe"]
+auto-format = true

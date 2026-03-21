@@ -1,5 +1,5 @@
 function vault-backup --description "Git commit vault changes"
-    pushd ~/vaults/work
+    pushd ~/vault
     git add -A
     set -l msg (date +"%Y-%m-%d %H:%M")
     git commit -m "backup: $msg" --quiet 2>/dev/null
