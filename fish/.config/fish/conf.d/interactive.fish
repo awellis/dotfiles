@@ -10,6 +10,11 @@ fish_vi_key_bindings
 # Additional vi mode bindings (after fzf to not override)
 bind -M insert \cf forward-bigword
 
+# In tmux, free Ctrl-H/L for vim-tmux-navigator pane navigation
+if set -q TMUX
+    bind -M insert \cl ''
+end
+
 # Use eza for directory preview
 set -gx fzf_preview_dir_cmd eza --all --color=always
 
@@ -20,7 +25,9 @@ bind -M insert \x7f backward-delete-char  # DEL fallback
 
 # Ctrl+Backspace = delete previous word
 bind -M insert -k sbackspace backward-kill-word 2>/dev/null
-bind -M insert \b   backward-kill-word    # ^H
+if not set -q TMUX
+    bind -M insert \b backward-kill-word  # ^H (skip in tmux so Ctrl-H reaches vim-tmux-navigator)
+end
 bind -M insert \x17 backward-kill-word    # Ctrl+W sequence
 
 # Alt+Backspace = delete previous word
