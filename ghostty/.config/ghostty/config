@@ -1,32 +1,39 @@
+# Appearance
 theme = Catppuccin Mocha
 # theme = tokyonight_moon
 font-family = FiraCode Nerd Font Mono
 # font-family = Hack Nerd Font
-config-file = ?linux
-config-file = ?macos
 background-opacity = 0.97
 background-blur-radius = 20
 cursor-style = block
-mouse-hide-while-typing = true
+
+# Window
 unfocused-split-opacity = 0.6
 window-padding-balance = true
 window-save-state = always
 window-decoration = true
-# auto-update-channel = tip 
-auto-update-channel = stable
+
+# Behavior
 shell-integration = fish
+mouse-hide-while-typing = true
+# auto-update-channel = tip
+auto-update-channel = stable
 link-url = true
 link-previews = true
 
-# macOS-specific
+# macOS
 macos-titlebar-style = transparent
 macos-option-as-alt = left
 macos-icon = holographic
 
-# Linux/GTK-specific
+# Linux/GTK
 gtk-single-instance = true
 gtk-titlebar-style = tabs
 gtk-titlebar-hide-when-maximized = true
 gtk-toolbar-style = raised-border
 
+# Keybinds
 keybind = shift+enter=text:\x1b\r
+
+# Machine-specific overrides (not in git)
+config-file = ?local

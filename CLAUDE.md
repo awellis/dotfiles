@@ -41,13 +41,7 @@ if test (uname) = Darwin
 end
 ```
 
-**Ghostty** uses separate stow packages with optional config file includes:
-
-- `ghostty/` - shared config (always stow)
-- `ghostty-macos/` - macOS-specific (font-size: 14)
-- `ghostty-linux/` - Linux-specific (font-size: 12)
-
-Usage: `stow ghostty ghostty-macos` or `stow ghostty ghostty-linux`
+**Ghostty** uses a single stow package with a `config-file = ?local` include for machine-specific overrides (e.g. font-size). The `local` file is created per-machine and not tracked in git.
 
 ## Key Configurations
 
