@@ -3,7 +3,7 @@
   "share": "manual",
   "autoupdate": true,
   "disabled_providers": [],
-  "model": "lmstudio/qwen/qwen3.5-9b",
+  "model": "opencode-go/kimi-k2.5",
   "small_model": "github-copilot-enterprise/gpt-5.4-mini",
   "agent": {
     "plan": {
