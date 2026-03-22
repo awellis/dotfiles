@@ -8,6 +8,7 @@ return {
         enable_inlay_hints = true,
       },
       mappings = {
+        leader = "<leader>i",
         enable_markdown_mappings = true,
         enable_picker_keybindings = true,
         enable_lsp_keybindings = true,
