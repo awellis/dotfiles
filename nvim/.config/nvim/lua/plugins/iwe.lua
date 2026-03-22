@@ -16,6 +16,9 @@ return {
       picker = {
         backend = "snacks",
       },
+      telescope = {
+        enabled = false,
+      },
     })
   end,
 }
