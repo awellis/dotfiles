@@ -52,11 +52,11 @@ set -gx XDG_CONFIG_HOME $HOME/.config
 # to avoid false syntax errors with fish -n
 
 # --- fzf integration (native, by junegunn) ---
-if status is-interactive
-    if type -q fzf
-        fzf --fish | source
-    end
-end
+# if status is-interactive
+#     if type -q fzf
+#         fzf --fish | source
+#     end
+# end
 
 # --- Conda / Mamba integration (macOS only) ---
 if test (uname) = Darwin
