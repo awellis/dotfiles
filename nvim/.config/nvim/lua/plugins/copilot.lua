@@ -1,21 +1,23 @@
-return {
-  {
-    "saghen/blink.cmp",
-    optional = true,
-    dependencies = { "fang2hou/blink-copilot" },
-    opts = {
-      sources = {
-        default = { "copilot" },
-        providers = {
-          copilot = {
-            name = "copilot",
-            module = "blink-copilot",
-            kind = "Copilot",
-            score_offset = 100,
-            async = true,
-          },
-        },
-      },
-    },
-  },
-}
+-- Disabled: using Copilot ghost text (copilot-core.lua) instead of blink menu source
+-- return {
+--   {
+--     "saghen/blink.cmp",
+--     optional = true,
+--     dependencies = { "fang2hou/blink-copilot" },
+--     opts = {
+--       sources = {
+--         default = { "copilot" },
+--         providers = {
+--           copilot = {
+--             name = "copilot",
+--             module = "blink-copilot",
+--             kind = "Copilot",
+--             score_offset = 100,
+--             async = true,
+--           },
+--         },
+--       },
+--     },
+--   },
+-- }
+return {}
