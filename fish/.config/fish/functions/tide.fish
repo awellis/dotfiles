@@ -2,7 +2,7 @@ function tide
     set -l session_name (basename (pwd))
 
     # Create new tmux session with nvim in the first pane
-    tmux new-session -d -s $session_name -x "$(tput cols)" -y "$(tput lines)" "nvim"
+    tmux new-session -d -s $session_name -x (tput cols) -y (tput lines) "nvim"
 
     # Split right (35%) for Claude Code
     tmux split-window -h -t $session_name -p 35 "fish -c 'claude-ide'"
