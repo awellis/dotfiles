@@ -35,6 +35,15 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
+-- Enable line wrap in Octo PR buffers
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "octo",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+  end,
+})
+
 -- Jump to previous/next shell prompt with [[ and ]] (:h shell-prompt)
 vim.api.nvim_create_autocmd("TermOpen", {
   desc = "Setup shell prompt navigation",

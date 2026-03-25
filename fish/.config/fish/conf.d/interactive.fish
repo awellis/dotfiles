@@ -9,6 +9,7 @@ fish_vi_key_bindings
 
 # Additional vi mode bindings (after fzf to not override)
 bind -M insert \cf forward-bigword
+bind -M insert \cy accept-autosuggestion
 
 # In tmux, free Ctrl-H/L for vim-tmux-navigator pane navigation
 if set -q TMUX
