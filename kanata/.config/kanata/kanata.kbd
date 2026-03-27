@@ -1,0 +1,25 @@
+;; Minimal Kanata Configuration
+;; Caps Lock: tap for ESC, hold for Control
+;; Left Control: Hyper key (Shift+Ctrl+Alt+Super)
+
+(defcfg
+  linux-dev-names-include ("AT Translated Set 2 keyboard")
+  process-unmapped-keys yes
+)
+
+(defsrc
+  caps lctl
+)
+
+(defalias
+  ;; Caps Lock: tap for ESC, hold for Control
+  ;; Increase the tap window so you can release more slowly and still get ESC
+  cap-esc (tap-hold 200 200 esc lctl)
+
+  ;; Left Control: becomes Hyper key (Shift+Ctrl+Alt+Super)
+  hyper (multi lsft lctl lalt lmet)
+)
+
+(deflayer base
+  @cap-esc @hyper
+)
