@@ -44,6 +44,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Better writing experience in markdown
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.linebreak = true
+    vim.opt_local.breakindent = true
+  end,
+})
+
 -- Jump to previous/next shell prompt with [[ and ]] (:h shell-prompt)
 vim.api.nvim_create_autocmd("TermOpen", {
   desc = "Setup shell prompt navigation",

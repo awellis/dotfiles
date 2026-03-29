@@ -19,6 +19,8 @@ return {
     scroll = { enabled = true },
     statuscolumn = { enabled = true },
     words = { enabled = true },
+    zen = { enabled = true },
+    dim = { enabled = true },
     styles = {
       notification = {
         wo = { wrap = true }, -- Wrap notifications
@@ -72,6 +74,7 @@ return {
         Snacks.toggle.inlay_hints():map("<leader>uh")
         Snacks.toggle.indent():map("<leader>ug")
         Snacks.toggle.dim():map("<leader>uD")
+        Snacks.toggle.zen():map("<leader>z")
 
         -- Add Copilot toggle
         local copilot_exists = pcall(require, "copilot")
