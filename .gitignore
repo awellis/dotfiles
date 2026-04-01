@@ -57,3 +57,6 @@ fish/.config/fish/conf.d/secrets.fish
 
 # LMDB database directories (runtime artifacts)
 *.mdb/
+
+# Memory
+.remember/*
