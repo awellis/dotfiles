@@ -1,8 +1,13 @@
 return {
   {
     "R-nvim/R.nvim",
-    -- Only required if you also set defaults.lazy = true
     lazy = false,
+    opts = {
+      R_app = "radian",
+      R_cmd = "R",
+      bracketed_paste = true,
+      min_editor_width = 72,
+    },
   },
   {
     "nvim-treesitter/nvim-treesitter",
