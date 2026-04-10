@@ -29,7 +29,10 @@
   cap-back (tap-hold 200 200 (multi esc (layer-switch base)) lctl)
 
   ;; Left Control: tap=Leader layer, hold=Hyper (Shift+Ctrl+Alt+Super)
-  ldr-hyper (tap-hold 200 200 (layer-switch leader) (multi lsft lctl lalt lmet))
+  ;; tap-hold-press: Hyper fires immediately when any other key is pressed while
+  ;; LeftCtrl is held, so fast Hyper+Key shortcuts work first try. Plain tap-hold
+  ;; waits out the 200 ms timer and mis-routes fast shortcuts into the leader layer.
+  ldr-hyper (tap-hold-press 200 200 (layer-switch leader) (multi lsft lctl lalt lmet))
 
   ;; Prefix key → switch to window sub-layer (stays until a key is pressed)
   wnd-pfx  (layer-switch window)
