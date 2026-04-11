@@ -67,3 +67,13 @@
   home end
   C-right C-left
 )
+
+;; ---------------------------------------------------------------------------
+;; Window tiling sequences (prefix: w)
+;; GNOME mutter binds Super+arrow for tiling; Super+q for close.
+;; ---------------------------------------------------------------------------
+(t! seq win-tile-left  (w h) M-left)
+(t! seq win-unmaximize (w j) M-down)
+(t! seq win-maximize   (w k) M-up)
+(t! seq win-tile-right (w l) M-right)
+(t! seq win-close      (w q) M-q)
