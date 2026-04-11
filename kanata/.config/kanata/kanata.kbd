@@ -1,13 +1,14 @@
 ;; Kanata Configuration
 ;; =====================
 ;; Caps Lock: tap=ESC, hold=Control
-;; Left Control: tap=Leader layer, hold=Hyper (Shift+Ctrl+Alt+Super)
+;; Left Control: tap=Nav layer, hold=Hyper (Shift+Ctrl+Alt+Super)
 ;;
-;; Leader layer (persists until ESC):
+;; Nav layer (persists until ESC):
 ;;   h/j/k/l    → arrows
 ;;   u/d        → pgup/pgdn
 ;;   w/b        → word nav (ctrl+arrow)
 ;;   a/4        → home/end
+;;   space      → enter sequence capture (drops to base)
 
 (defcfg
   linux-dev-names-include ("AT Translated Set 2 keyboard")
@@ -26,10 +27,17 @@
   ;; Caps Lock in leader: tap=ESC+exit to base, hold=Control
   cap-back (tap-hold 200 200 (multi esc (layer-switch base)) lctl)
 
-  ;; Left Control: tap=enter leader layer, hold=Hyper (Shift+Ctrl+Alt+Super)
+  ;; Left Control: tap=enter nav layer, hold=Hyper (Shift+Ctrl+Alt+Super)
   ;; tap-hold-press: Hyper fires immediately when any other key is pressed while
   ;; LeftCtrl is held, so fast Hyper+Key shortcuts work first try.
-  ldr-hyper (tap-hold-press 200 200 (layer-switch leader) (multi lsft lctl lalt lmet))
+  ldr-hyper (tap-hold-press 200 200 (layer-switch nav) (multi lsft lctl lalt lmet))
+
+  ;; From nav layer, space enters sequence capture mode and drops to base.
+  ;; kanata's multi+sldr warning applies when sldr is the FIRST element
+  ;; (subsequent actions interact badly with an already-capturing sldr).
+  ;; Here sldr is last, so the layer-switch fires first, then sldr activates.
+  ;; macro is rejected outright because it doesn't accept layer-switch.
+  sld-entry (multi (layer-switch base) sldr)
 )
 
 ;; ---------------------------------------------------------------------------
@@ -41,11 +49,11 @@
 )
 
 ;; ---------------------------------------------------------------------------
-;; Leader layer (tap Left Control to enter, ESC to exit)
-;; Nav keys are immediate and repeatable.
+;; Nav layer (tap Left Control to enter, ESC to exit)
+;; Nav keys are immediate and repeatable. Tap space to enter sequence capture.
 ;; ---------------------------------------------------------------------------
-(deflayer leader
-  @cap-back @cap-back @ldr-hyper ralt spc
+(deflayer nav
+  @cap-back @cap-back @ldr-hyper ralt @sld-entry
   left down up right
   pgup pgdn
   home end
