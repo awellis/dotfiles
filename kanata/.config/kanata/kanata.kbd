@@ -77,3 +77,12 @@
 (t! seq win-maximize   (w k) M-up)
 (t! seq win-tile-right (w l) M-right)
 (t! seq win-close      (w q) M-q)
+
+;; ---------------------------------------------------------------------------
+;; Application launch sequences (prefix: a)
+;; These emit F13-F24 keystrokes caught by GNOME custom keybindings.
+;; F-keys are used as "virtual signals" between kanata and GNOME because
+;; they're unreachable from any physical keyboard and therefore can't
+;; collide with Hyper holds (hold-LeftCtrl fires Shift+Ctrl+Alt+Super).
+;; ---------------------------------------------------------------------------
+(t! seq launch-ghostty (a t) f24)
