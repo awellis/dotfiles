@@ -4,14 +4,10 @@
 ;; Left Control: tap=Leader layer, hold=Hyper (Shift+Ctrl+Alt+Super)
 ;;
 ;; Leader layer (persists until ESC):
-;;   h/j/k/l    → arrows       (nav, immediate)
+;;   h/j/k/l    → arrows
 ;;   u/d        → pgup/pgdn
-;;   w/b/e      → word nav     (ctrl+arrow)
-;;   a/0        → home, 4 → end
-;;   x          → window sub-layer (then c/h/j/k/l/f)
-;;
-;; Window sub-layer emits Super+arrow for tiling, Alt+F4 for close.
-;; After firing, sub-layers switch back to base.
+;;   w/b        → word nav (ctrl+arrow)
+;;   a/4        → home/end
 
 (defcfg
   linux-dev-names-include ("AT Translated Set 2 keyboard")
@@ -20,35 +16,20 @@
   sequence-input-mode hidden-delay-type
 )
 
-;;            esc caps lctl ralt spc | h j k l | u d | a e w b | 0 4 | x c f
-(defsrc       esc  caps lctl ralt spc   h j k l   u d   a e w b   0 4   x c f)
+;;            esc caps lctl ralt spc | h j k l | u d | a 4 | w b
+(defsrc       esc  caps lctl ralt spc   h j k l   u d   a 4   w b)
 
 (defalias
   ;; Caps Lock: tap=ESC, hold=Control (base layer)
   cap-esc (tap-hold 200 200 esc lctl)
 
-  ;; Caps Lock in sub-layers: tap=ESC+exit to base, hold=Control
+  ;; Caps Lock in leader: tap=ESC+exit to base, hold=Control
   cap-back (tap-hold 200 200 (multi esc (layer-switch base)) lctl)
 
-  ;; Left Control: tap=Leader layer, hold=Hyper (Shift+Ctrl+Alt+Super)
+  ;; Left Control: tap=enter leader layer, hold=Hyper (Shift+Ctrl+Alt+Super)
   ;; tap-hold-press: Hyper fires immediately when any other key is pressed while
-  ;; LeftCtrl is held, so fast Hyper+Key shortcuts work first try. Plain tap-hold
-  ;; waits out the 200 ms timer and mis-routes fast shortcuts into the leader layer.
+  ;; LeftCtrl is held, so fast Hyper+Key shortcuts work first try.
   ldr-hyper (tap-hold-press 200 200 (layer-switch leader) (multi lsft lctl lalt lmet))
-
-  ;; Prefix key → switch to window sub-layer (stays until a key is pressed)
-  wnd-pfx  (layer-switch window)
-
-  ;; Window sub-layer actions: fire the combo, then switch back to base
-  do-cls (multi (layer-switch base) A-f4)
-  do-tl  (multi (layer-switch base) M-left)
-  do-td  (multi (layer-switch base) M-down)
-  do-tu  (multi (layer-switch base) M-up)
-  do-tr  (multi (layer-switch base) M-right)
-  do-H-w (multi (layer-switch base) (multi lsft lctl lalt lmet w))
-
-  ;; Escape from sub-layer back to base (for any unmapped key)
-  back (layer-switch base)
 )
 
 ;; ---------------------------------------------------------------------------
@@ -56,30 +37,17 @@
 ;; ---------------------------------------------------------------------------
 (deflayer base
   esc @cap-esc @ldr-hyper ralt spc
-  h j k l   u d   a e w b   0 4   x c f
+  h j k l   u d   a 4   w b
 )
 
 ;; ---------------------------------------------------------------------------
 ;; Leader layer (tap Left Control to enter, ESC to exit)
-;; Nav keys are immediate. x switches to window sub-layer.
+;; Nav keys are immediate and repeatable.
 ;; ---------------------------------------------------------------------------
 (deflayer leader
-  @back @cap-back @ldr-hyper ralt spc
+  @cap-back @cap-back @ldr-hyper ralt spc
   left down up right
   pgup pgdn
-  home C-right C-right C-left
   home end
-  @wnd-pfx _ _
-)
-
-;; ---------------------------------------------------------------------------
-;; Window sub-layer (tap Left Control, press x, then press action key)
-;; ---------------------------------------------------------------------------
-(deflayer window
-  @back @cap-back @ldr-hyper ralt spc
-  @do-tl @do-td @do-tu @do-tr
-  @back @back
-  @back @back @back @back
-  @back @back
-  @back @do-cls @do-H-w
+  C-right C-left
 )
