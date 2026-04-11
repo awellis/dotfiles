@@ -16,6 +16,8 @@
 (defcfg
   linux-dev-names-include ("AT Translated Set 2 keyboard")
   process-unmapped-keys yes
+  sequence-timeout 1500
+  sequence-input-mode hidden-delay-type
 )
 
 ;;            esc caps lctl ralt spc | h j k l | u d | a e w b | 0 4 | x c f
