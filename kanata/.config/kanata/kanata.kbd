@@ -41,6 +41,14 @@
 )
 
 ;; ---------------------------------------------------------------------------
+;; Sequence shorthand: (t! seq vk-name (keys) action) expands to a
+;; paired defvirtualkeys + defseq entry.
+;; ---------------------------------------------------------------------------
+(deftemplate seq (vk in out)
+  (defvirtualkeys $vk $out)
+  (defseq $vk $in))
+
+;; ---------------------------------------------------------------------------
 ;; Base layer — everything passes through normally
 ;; ---------------------------------------------------------------------------
 (deflayer base
