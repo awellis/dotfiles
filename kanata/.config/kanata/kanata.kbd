@@ -32,11 +32,12 @@
   ;; LeftCtrl is held, so fast Hyper+Key shortcuts work first try.
   ldr-hyper (tap-hold-press 200 200 (layer-switch nav) (multi lsft lctl lalt lmet))
 
-  ;; From nav layer, space enters sequence capture mode and drops to base.
-  ;; kanata's multi+sldr warning applies when sldr is the FIRST element
-  ;; (subsequent actions interact badly with an already-capturing sldr).
-  ;; Here sldr is last, so the layer-switch fires first, then sldr activates.
-  ;; macro is rejected outright because it doesn't accept layer-switch.
+  ;; From nav layer, space drops to base and activates sldr sequence capture.
+  ;; The spec warned about multi+sldr having "surprising ordering" but
+  ;; empirically this pattern works: layer-switch fires, sldr activates,
+  ;; subsequent keys are captured in base layer and matched against defseq
+  ;; entries below. Sequence keys must be pressed fairly promptly — a
+  ;; hesitant press can land outside the sldr activation window.
   sld-entry (multi (layer-switch base) sldr)
 )
 
