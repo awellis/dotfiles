@@ -86,3 +86,11 @@
 ;; collide with Hyper holds (hold-LeftCtrl fires Shift+Ctrl+Alt+Super).
 ;; ---------------------------------------------------------------------------
 (t! seq launch-ghostty (a t) f24)
+
+;; ---------------------------------------------------------------------------
+;; Typography sequences
+;; ---------------------------------------------------------------------------
+(t! seq em-dash  (- -)   (unicode —))
+(t! seq ellipsis (. .)   (unicode …))
+(t! seq rarrow   (- S-.) (unicode →))
+(t! seq larrow   (S-, -) (unicode ←))
