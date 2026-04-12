@@ -1,25 +1,97 @@
-;; Minimal Kanata Configuration
-;; Caps Lock: tap for ESC, hold for Control
-;; Left Control: Hyper key (Shift+Ctrl+Alt+Super)
+;; Kanata Configuration
+;; =====================
+;; Caps Lock: tap=ESC, hold=Control
+;; Left Control: tap=Nav layer, hold=Hyper (Shift+Ctrl+Alt+Super)
+;;
+;; Nav layer (persists until ESC):
+;;   h/j/k/l    → arrows
+;;   u/d        → pgup/pgdn
+;;   w/b        → word nav (ctrl+arrow)
+;;   a/4        → home/end
+;;   space      → enter sequence capture (drops to base)
 
 (defcfg
   linux-dev-names-include ("AT Translated Set 2 keyboard")
   process-unmapped-keys yes
+  sequence-timeout 1500
+  sequence-input-mode hidden-delay-type
 )
 
-(defsrc
-  caps lctl
-)
+;;            esc caps lctl ralt spc | h j k l | u d | a 4 | w b
+(defsrc       esc  caps lctl ralt spc   h j k l   u d   a 4   w b)
 
 (defalias
-  ;; Caps Lock: tap for ESC, hold for Control
-  ;; Increase the tap window so you can release more slowly and still get ESC
+  ;; Caps Lock: tap=ESC, hold=Control (base layer)
   cap-esc (tap-hold 200 200 esc lctl)
 
-  ;; Left Control: becomes Hyper key (Shift+Ctrl+Alt+Super)
-  hyper (multi lsft lctl lalt lmet)
+  ;; Caps Lock in leader: tap=ESC+exit to base, hold=Control
+  cap-back (tap-hold 200 200 (multi esc (layer-switch base)) lctl)
+
+  ;; Left Control: tap=enter nav layer, hold=Hyper (Shift+Ctrl+Alt+Super)
+  ;; tap-hold-press: Hyper fires immediately when any other key is pressed while
+  ;; LeftCtrl is held, so fast Hyper+Key shortcuts work first try.
+  ldr-hyper (tap-hold-press 200 200 (layer-switch nav) (multi lsft lctl lalt lmet))
+
+  ;; From nav layer, space drops to base and activates sldr sequence capture.
+  ;; The spec warned about multi+sldr having "surprising ordering" but
+  ;; empirically this pattern works: layer-switch fires, sldr activates,
+  ;; subsequent keys are captured in base layer and matched against defseq
+  ;; entries below. Sequence keys must be pressed fairly promptly — a
+  ;; hesitant press can land outside the sldr activation window.
+  sld-entry (multi (layer-switch base) sldr)
 )
 
+;; ---------------------------------------------------------------------------
+;; Sequence shorthand: (t! seq vk-name (keys) action) expands to a
+;; paired defvirtualkeys + defseq entry.
+;; ---------------------------------------------------------------------------
+(deftemplate seq (vk in out)
+  (defvirtualkeys $vk $out)
+  (defseq $vk $in))
+
+;; ---------------------------------------------------------------------------
+;; Base layer — everything passes through normally
+;; ---------------------------------------------------------------------------
 (deflayer base
-  @cap-esc @hyper
+  esc @cap-esc @ldr-hyper ralt spc
+  h j k l   u d   a 4   w b
 )
+
+;; ---------------------------------------------------------------------------
+;; Nav layer (tap Left Control to enter, ESC to exit)
+;; Nav keys are immediate and repeatable. Tap space to enter sequence capture.
+;; ---------------------------------------------------------------------------
+(deflayer nav
+  @cap-back @cap-back @ldr-hyper ralt @sld-entry
+  left down up right
+  pgup pgdn
+  home end
+  C-right C-left
+)
+
+;; ---------------------------------------------------------------------------
+;; Window tiling sequences (prefix: w)
+;; GNOME mutter binds Super+arrow for tiling; Super+q for close.
+;; ---------------------------------------------------------------------------
+(t! seq win-tile-left  (w h) M-left)
+(t! seq win-unmaximize (w j) M-down)
+(t! seq win-maximize   (w k) M-up)
+(t! seq win-tile-right (w l) M-right)
+(t! seq win-close      (w q) M-q)
+
+;; ---------------------------------------------------------------------------
+;; Application launch sequences (prefix: a)
+;; These emit F13-F24 keystrokes caught by GNOME custom keybindings.
+;; F-keys are used as "virtual signals" between kanata and GNOME because
+;; they're unreachable from any physical keyboard and therefore can't
+;; collide with Hyper holds (hold-LeftCtrl fires Shift+Ctrl+Alt+Super).
+;; ---------------------------------------------------------------------------
+(t! seq launch-ghostty (a t) f24)
+
+;; ---------------------------------------------------------------------------
+;; Typography sequences
+;; ---------------------------------------------------------------------------
+(t! seq em-dash  (- -)   (unicode —))
+(t! seq ellipsis (. .)   (unicode …))
+(t! seq rarrow   (- S-.) (unicode →))
+(t! seq larrow   (S-, -) (unicode ←))
