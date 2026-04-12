@@ -1,0 +1,37 @@
+# Custom keybindings
+
+if not status is-interactive
+    return
+end
+
+# tv (television) fuzzy finder
+if functions -q tv_shell_history
+    for mode in default insert
+        bind --mode $mode ctrl-r tv_shell_history
+        bind --mode $mode ctrl-t tv_smart_autocomplete
+    end
+end
+
+# bang-bang: !! repeats last command, !$ inserts last argument
+function __bang_bang_previous_command
+    switch (commandline -t)
+        case "!"
+            commandline -t $history[1]
+            commandline -f repaint
+        case "*"
+            commandline -i !
+    end
+end
+
+function __bang_bang_previous_arguments
+    switch (commandline -t)
+        case "!"
+            commandline -t ""
+            commandline -f history-token-search-backward
+        case "*"
+            commandline -i '$'
+    end
+end
+
+bind --mode insert ! __bang_bang_previous_command
+bind --mode insert '$' __bang_bang_previous_arguments
