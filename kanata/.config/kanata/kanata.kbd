@@ -14,7 +14,12 @@
   linux-dev-names-include ("AT Translated Set 2 keyboard")
   process-unmapped-keys yes
   sequence-timeout 1500
-  sequence-input-mode hidden-delay-type
+  ;; hidden-suppressed: keys typed during sldr capture are hidden, and any
+  ;; key that doesn't match a defined sequence is silently dropped — so esc
+  ;; (or any other stray keypress) aborts the sequence without leaking to
+  ;; the focused window. hidden-delay-type would replay buffered keys on
+  ;; mismatch, which forwards esc to the terminal and kills processes.
+  sequence-input-mode hidden-suppressed
 )
 
 ;;            esc caps lctl ralt spc | h j k l | u d | a 4 | w b
@@ -24,8 +29,11 @@
   ;; Caps Lock: tap=ESC, hold=Control (base layer)
   cap-esc (tap-hold 200 200 esc lctl)
 
-  ;; Caps Lock in leader: tap=ESC+exit to base, hold=Control
-  cap-back (tap-hold 200 200 (multi esc (layer-switch base)) lctl)
+  ;; Caps Lock / Esc in nav layer: tap=exit to base, hold=Control.
+  ;; Tap action is ONLY a layer-switch — do not multi in `esc`, because that
+  ;; emits a real escape keystroke to the focused window (and e.g. kills
+  ;; running terminal processes). Exiting the nav layer should be silent.
+  cap-back (tap-hold 200 200 (layer-switch base) lctl)
 
   ;; Left Control: tap=enter nav layer, hold=Hyper (Shift+Ctrl+Alt+Super)
   ;; tap-hold-press: Hyper fires immediately when any other key is pressed while
