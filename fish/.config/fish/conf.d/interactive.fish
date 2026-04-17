@@ -45,6 +45,7 @@ if type -q zoxide
 end
 
 # --- tv (television fuzzy finder) ---
+# Source tv for functions/completions; keybindings are in conf.d/keybindings.fish
 if type -q tv
     tv init fish | source
 end
