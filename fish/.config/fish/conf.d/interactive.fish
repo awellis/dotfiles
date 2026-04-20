@@ -7,9 +7,17 @@ end
 # --- Vi keybindings ---
 fish_vi_key_bindings
 
+# macOS: free ^Y from the tty's deferred-suspend (dsusp) so fish can bind it.
+# Why: on Darwin stty sets dsusp=^Y by default, intercepting Ctrl-Y before
+# fish sees it and suspending the shell instead of accepting the autosuggestion.
+if test (uname) = Darwin
+    stty dsusp undef 2>/dev/null
+end
+
 # Additional vi mode bindings (after fzf to not override)
 bind -M insert \cf forward-bigword
 bind -M insert \cy accept-autosuggestion
+bind -M default \cy accept-autosuggestion
 
 # In tmux, free Ctrl-H/L for vim-tmux-navigator pane navigation
 if set -q TMUX
