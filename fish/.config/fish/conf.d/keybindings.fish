@@ -19,6 +19,13 @@ if functions -q tv_zoxide
     end
 end
 
+# fzf + zoxide: alternative fuzzy-jump (for comparison with tv_zoxide)
+if functions -q fzf_zoxide
+    for mode in default insert
+        bind --mode $mode ctrl-o fzf_zoxide
+    end
+end
+
 # bang-bang: !! repeats last command, !$ inserts last argument
 function __bang_bang_previous_command
     switch (commandline -t)
