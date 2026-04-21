@@ -12,6 +12,13 @@ if functions -q tv_shell_history
     end
 end
 
+# tv + zoxide: fuzzy-jump between frecency-ranked directories
+if functions -q tv_zoxide
+    for mode in default insert
+        bind --mode $mode ctrl-g tv_zoxide
+    end
+end
+
 # bang-bang: !! repeats last command, !$ inserts last argument
 function __bang_bang_previous_command
     switch (commandline -t)

@@ -1,0 +1,6 @@
+[metadata]
+name = "fish-history"
+description = "Search through fish shell history"
+
+[source]
+command = "grep '^- cmd: ' ~/.local/share/fish/fish_history | sed 's/^- cmd: //' | tac"
