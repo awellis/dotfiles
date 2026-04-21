@@ -7,7 +7,7 @@ function fzf_zoxide --description "Fuzzy-jump to a zoxide directory via fzf"
               --nth=2.. \
               --preview 'eza --all --color=always --icons {2..}' \
               --preview-window=right:50% \
-        | string replace -r '^\s*\d+\s+' '')
+        | string replace -r '^\s*\S+\s+' '')
     or return 0
     test -n "$dir"; or return 0
 
