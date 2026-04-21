@@ -13,6 +13,9 @@ function tide
     # Focus the nvim pane
     tmux select-pane -t $session_name:1.1
 
+    # Hide the status bar for this session (toggle with prefix + S)
+    tmux set-option -t $session_name status off
+
     # Attach
     tmux attach-session -t $session_name
 end
