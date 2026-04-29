@@ -6,6 +6,8 @@
 local opt = vim.opt
 -- opt.colorcolumn = "80"
 opt.wrap = true
+opt.linebreak = true
+opt.breakindent = true
 
 -- Vimtex PDF viewer (OS-dependent)
 if vim.fn.has("mac") == 1 then
