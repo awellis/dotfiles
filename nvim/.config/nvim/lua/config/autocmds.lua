@@ -53,6 +53,24 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Re-enable line wrap in diff mode (Vim's diff forces wrap=off per window)
+local function enable_diff_wrap()
+  if vim.wo.diff then
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.breakindent = true
+  end
+end
+
+vim.api.nvim_create_autocmd("OptionSet", {
+  pattern = "diff",
+  callback = enable_diff_wrap,
+})
+
+vim.api.nvim_create_autocmd({ "VimEnter", "WinEnter" }, {
+  callback = enable_diff_wrap,
+})
+
 -- Jump to previous/next shell prompt with [[ and ]] (:h shell-prompt)
 vim.api.nvim_create_autocmd("TermOpen", {
   desc = "Setup shell prompt navigation",
