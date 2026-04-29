@@ -24,6 +24,9 @@ end
 -- Autosave: automatically write all buffers when leaving or losing focus
 opt.autowriteall = true
 
+-- Diff: better line matching within hunks, ignore whitespace-only changes
+opt.diffopt:append({ "linematch:60", "iwhite" })
+
 -- Enable experimental external UI for cmdline/messages (Nvim 0.12+)
 -- Eliminates "Press ENTER" prompts
 vim.g._extui = true
