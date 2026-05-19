@@ -3,7 +3,7 @@
 </div>
 
 <h3 align="center">
-	Tokyo Night Flavor for <a href="https://github.com/sxyazi/yazi">Yazi</a>
+	Catppuccin Mocha Flavor for <a href="https://github.com/sxyazi/yazi">Yazi</a>
 </h3>
 
 ## 👀 Preview
@@ -12,25 +12,22 @@
 
 ## 🎨 Installation
 
-```bash
-# Linux/macOS
-git clone https://github.com/BennyOe/tokyo-night.yazi.git ~/.config/yazi/flavors/tokyo-night.yazi
-
-# Windows
-git clone https://github.com/BennyOe/tokyo-night.yazi.git %AppData%\yazi\config\flavors\tokyo-night.yazi
+```sh
+ya pkg add yazi-rs/flavors:catppuccin-mocha
 ```
 
 ## ⚙️ Usage
 
-Add the these lines to your `theme.toml` configuration file to use it:
-
+Set the content of your `theme.toml` to enable it as your _dark_ flavor:
 
 ```toml
 [flavor]
-use = "tokyo-night"
-# For Yazi 0.4 and above
-dark = "tokyo-night"
+dark = "catppuccin-mocha"
 ```
+
+Make sure your `theme.toml` doesn't contain anything other than `[flavor]`, unless you want to override certain styles of this flavor.
+
+See the [Yazi flavor documentation](https://yazi-rs.github.io/docs/flavors/overview) for more details.
 
 ## 📜 License
 

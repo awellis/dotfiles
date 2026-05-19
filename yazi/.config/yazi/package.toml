@@ -1,14 +1,9 @@
 [[plugin.deps]]
-use = "yazi-rs/flavors:tokyo-night"
-rev = "3001521"
-hash = "99aa06d3014798d86001c324468d497f"
-
-[[plugin.deps]]
 use = "yazi-rs/plugins:piper"
-rev = "b224ddf"
+rev = "5d5c480"
 hash = "384464b6df8cb807425c521f8cd790f3"
 
 [[flavor.deps]]
-use = "kmlupreti/ayu-dark"
-rev = "8ddf095"
-hash = "36d566ae42742592b62cb4f2eb68c1e9"
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "54ab389"
+hash = "7dfe41c9c3d9be76da8a844263d0bbed"
