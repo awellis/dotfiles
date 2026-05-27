@@ -1,4 +1,22 @@
 {
+  "language_models": {
+    "lmstudio": {
+      "api_url": "http://127.0.0.1:1234"
+    }
+  },
+  "preferred_line_length": 64,
+  "cli_default_open_behavior": "new_window",
+  "edit_predictions": {
+    "open_ai_compatible_api": {
+      "model": "google/gemma-4-e4b",
+      "api_url": "http://127.0.0.1:1234"
+    },
+    "provider": "open_ai_compatible_api",
+    "allow_data_collection": "no",
+    "ollama": {
+      "model": "qwen2.5-coder:7b-base"
+    }
+  },
   "project_panel": {
     "dock": "right"
   },
@@ -9,6 +27,12 @@
     "dock": "right"
   },
   "agent": {
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-5-mini",
+      "enable_thinking": true,
+      "effort": "high"
+    },
     "dock": "left",
     "favorite_models": [],
     "model_parameters": []
@@ -17,18 +41,24 @@
     "dock": "right"
   },
   "context_servers": {
-    "mcp-server-github": {
+    "mcp-server-brave-search": {
       "enabled": true,
       "remote": false,
       "settings": {}
+    },
+    "mcp-server-github": {
+      "enabled": true,
+      "command": "/Users/andrew/.local/bin/zed-github-mcp.sh",
+      "args": ["stdio"],
+      "env": {}
     }
   },
-  "icon_theme": "Catppuccin Macchiato",
+  "icon_theme": "Catppuccin Mocha",
   "agent_servers": {
     "claude-acp": {
       "type": "registry"
     },
-    "opencode": {
+    "pi-acp": {
       "type": "registry"
     }
   },
@@ -56,6 +86,6 @@
     "metrics": false,
   },
   "base_keymap": "VSCode",
-  "vim_mode": true,
-  "helix_mode": false,
+  "vim_mode": false,
+  "helix_mode": true,
 }
