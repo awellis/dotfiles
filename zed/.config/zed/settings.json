@@ -1,5 +1,30 @@
 {
+  "toolbar": {
+    "code_actions": true
+  },
+  "use_smartcase_search": true,
   "language_models": {
+    "openai_compatible": {
+      "oMLX": {
+        "api_url": "http://127.0.0.1:8000/v1",
+        "available_models": [
+          {
+            "name": "gemma-4-26B-A4B-it-OptiQ-4bit",
+            "max_tokens": 200000,
+            "max_output_tokens": 32000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+              "interleaved_reasoning": false
+            }
+          }
+        ]
+      }
+    },
     "lmstudio": {
       "api_url": "http://127.0.0.1:1234"
     }
@@ -27,6 +52,11 @@
     "dock": "right"
   },
   "agent": {
+    "inline_assistant_model": {
+      "provider": "oMLX",
+      "model": "gemma-4-26B-A4B-it-OptiQ-4bit",
+      "enable_thinking": false
+    },
     "default_model": {
       "provider": "copilot_chat",
       "model": "gpt-5-mini",
@@ -56,6 +86,9 @@
   "icon_theme": "Catppuccin Mocha",
   "agent_servers": {
     "claude-acp": {
+      "default_config_options": {
+        "model": "claude-opus-4-7"
+      },
       "type": "registry"
     },
     "pi-acp": {
