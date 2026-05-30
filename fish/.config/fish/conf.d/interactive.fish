@@ -69,10 +69,8 @@ function r
     radian $argv
 end
 
-# yazi file manager
-function y
-    yazi $argv
-end
+# yazi file manager: `y` is autoloaded from functions/y.fish (cd's to the
+# directory you quit from via --cwd-file)
 
 # eza list view sorted by modified
 abbr -a ll 'eza -l --sort=modified'
