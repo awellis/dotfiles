@@ -15,11 +15,14 @@ return {
         },
       },
       panel = { enabled = false },
+      -- Disable Copilot for prose/commit buffers. Avoids the LSP
+      -- "Document for URI could not be found" desync that auto_trigger
+      -- causes on markdown manuscripts, and keeps ghost text out of prose.
       filetypes = {
-        markdown = true,
-        help = true,
-        gitcommit = true,
-        ["*"] = true,
+        markdown = false,
+        gitcommit = false,
+        help = false,
+        yaml = false,
       },
     },
   },
