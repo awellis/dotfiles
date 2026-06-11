@@ -1,6 +1,8 @@
 return {
   {
     "CopilotC-Nvim/CopilotChat.nvim",
+    -- Turned off alongside copilot.lua. Re-enable by removing this line + :Lazy sync.
+    enabled = false,
     dependencies = {
       { "zbirenbaum/copilot.lua" },
       { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions

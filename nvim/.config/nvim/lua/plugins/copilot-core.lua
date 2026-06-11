@@ -1,6 +1,9 @@
 return {
   {
     "zbirenbaum/copilot.lua",
+    -- Turned off: no inline ghost text and the Copilot LSP client won't start.
+    -- Re-enable by removing this line and running :Lazy sync (extra still in lazyvim.json).
+    enabled = false,
     opts = {
       suggestion = {
         enabled = true,

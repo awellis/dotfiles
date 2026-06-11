@@ -1,4 +1,7 @@
 {
+  "preview_tabs": {
+    "enable_preview_from_file_finder": true
+  },
   "diff_view_style": "split",
   "toolbar": {
     "code_actions": true,
