@@ -1,6 +1,7 @@
 {
+  "diff_view_style": "split",
   "toolbar": {
-    "code_actions": true
+    "code_actions": true,
   },
   "use_smartcase_search": true,
   "language_models": {
@@ -19,100 +20,101 @@
               "parallel_tool_calls": false,
               "prompt_cache_key": false,
               "chat_completions": true,
-              "interleaved_reasoning": false
-            }
-          }
-        ]
-      }
+              "interleaved_reasoning": false,
+            },
+          },
+        ],
+      },
     },
     "lmstudio": {
-      "api_url": "http://127.0.0.1:1234"
-    }
+      "api_url": "http://127.0.0.1:1234",
+    },
   },
   "preferred_line_length": 64,
   "cli_default_open_behavior": "new_window",
   "edit_predictions": {
     "open_ai_compatible_api": {
       "model": "google/gemma-4-e4b",
-      "api_url": "http://127.0.0.1:1234"
+      "api_url": "http://127.0.0.1:1234",
     },
     "provider": "open_ai_compatible_api",
     "allow_data_collection": "no",
     "ollama": {
-      "model": "qwen2.5-coder:7b-base"
-    }
+      "model": "qwen2.5-coder:7b-base",
+    },
   },
   "project_panel": {
-    "dock": "right"
+    "dock": "right",
   },
   "outline_panel": {
-    "dock": "right"
+    "dock": "right",
   },
   "collaboration_panel": {
-    "dock": "right"
+    "dock": "right",
   },
   "agent": {
     "inline_assistant_model": {
       "provider": "oMLX",
       "model": "gemma-4-26B-A4B-it-OptiQ-4bit",
-      "enable_thinking": false
+      "enable_thinking": false,
     },
     "default_model": {
       "provider": "copilot_chat",
       "model": "gpt-5-mini",
       "enable_thinking": true,
-      "effort": "high"
+      "effort": "high",
     },
     "dock": "left",
     "favorite_models": [],
-    "model_parameters": []
+    "model_parameters": [],
   },
   "git_panel": {
-    "dock": "right"
+    "dock": "right",
   },
   "context_servers": {
     "mcp-server-brave-search": {
       "enabled": true,
       "remote": false,
-      "settings": {}
+      "settings": {},
     },
     "mcp-server-github": {
       "enabled": true,
       "command": "/Users/andrew/.local/bin/zed-github-mcp.sh",
       "args": ["stdio"],
-      "env": {}
-    }
+      "env": {},
+    },
   },
   "icon_theme": "Catppuccin Mocha",
   "agent_servers": {
     "claude-acp": {
       "default_config_options": {
-        "model": "claude-opus-4-7"
+        "mode": "auto",
+        "model": "claude-opus-4-7",
       },
-      "type": "registry"
+      "type": "registry",
     },
     "pi-acp": {
-      "type": "registry"
-    }
+      "type": "registry",
+    },
   },
   "languages": {
     "Quarto": {
       "colorize_brackets": false,
-      "soft_wrap": "editor_width"
-    }
+      "soft_wrap": "editor_width",
+    },
   },
   "vim": {
-    "toggle_relative_line_numbers": true
+    "toggle_relative_line_numbers": true,
   },
   "relative_line_numbers": "enabled",
   "which_key": {
-    "enabled": true
+    "enabled": true,
   },
   "buffer_font_family": "FiraCode Nerd Font",
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "Catppuccin Mocha"
+    "dark": "Catppuccin Mocha",
   },
   "telemetry": {
     "diagnostics": false,
