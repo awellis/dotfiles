@@ -77,3 +77,6 @@ if test (uname) = Darwin
 else
     fish_add_path -g /home/andrew/.lmstudio/bin
 end
+
+# Azure OpenAI (legacy endpoint for gpt-5.4-pro)
+set -gx AZURE_OPENAI_BASE_URL "https://ela3-2973-resource.cognitiveservices.azure.com"

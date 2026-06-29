@@ -34,7 +34,7 @@ gtk-toolbar-style = raised-border
 
 # Keybinds
 keybind = shift+enter=text:\x1b\r
-keybind = global:cmd+ctrl+alt+shift+g=toggle_quick_terminal
+# keybind = global:cmd+ctrl+alt+shift+g=toggle_quick_terminal
 
 # Machine-specific overrides (not in git)
 config-file = ?local
