@@ -123,4 +123,4 @@ The `init.el` file uses Doom's declarative module system:
 - Configuration uses literate programming - edit `config.org` not `config.el`
 - Custom executable paths are defined for R, Python, and Julia
 - Evil mode is enabled globally with extensive keybinding customizations
-- Org-directory is set to use iCloud sync via Beorg app
+- `org-directory` is `~/Syncthing/org/` (synced via Syncthing)
