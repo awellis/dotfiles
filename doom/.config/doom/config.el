@@ -99,7 +99,7 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 ;; (setq org-directory "~/org/")
-(setq org-directory "~/Dropbox/org/")
+(setq org-directory "~/Syncthing/org/")
 
 ;; General org-babel session management
 (after! org
@@ -933,7 +933,7 @@
 ;; Citar - Citation management
 (after! citar
   ;; Set bibliography files
-  (setq citar-bibliography '("~/Dropbox/org/bibliography.bib"))
+  (setq citar-bibliography '("~/Syncthing/org/bibliography.bib"))
 
   ;; Set default cite format
   (setq org-cite-global-bibliography citar-bibliography)
