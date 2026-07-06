@@ -459,6 +459,11 @@
 ;;   )
 ;; ----------------------------------------------------------------------------------
 
+(use-package! agent-shell
+  :commands (agent-shell-pi-start-agent)
+  :config
+  (setq agent-shell-pi-command '("pi-acp")))
+
 ;; Vertico configuration
 (after! vertico
   ;; Show more candidates

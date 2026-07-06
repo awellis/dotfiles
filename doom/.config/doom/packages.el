@@ -72,3 +72,8 @@
            :files (:defaults "*.el" "*.sh")))
 (package! copilot
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
+(package! acp :recipe (:host github :repo "xenodium/acp.el"))
+;; shell-maker pulls in let-completion, which is newly on MELPA; pin it
+;; explicitly so straight doesn't rely on a stale local recipe cache.
+(package! let-completion :recipe (:host github :repo "gggion/let-completion.el"))
+(package! agent-shell :recipe (:host github :repo "xenodium/agent-shell"))

@@ -727,6 +727,20 @@ Features: LSP/xref integration, tree-sitter, imenu, ediff for reviewing changes,
 ;; ----------------------------------------------------------------------------------
 #+end_src
 
+** pi
+
+pi coding agent via ACP, using [[https://github.com/xenodium/agent-shell][agent-shell]].
+Same bridge as the LazyVim setup: =agent-shell-pi= drives the =pi-acp= adapter
+(=npm i -g pi-acp=), which spawns =pi --mode rpc= and uses =~/.pi/agent/settings.json=
+for provider/model config, so no API key is set here.
+
+#+begin_src emacs-lisp
+(use-package! agent-shell
+  :commands (agent-shell-pi-start-agent)
+  :config
+  (setq agent-shell-pi-command '("pi-acp")))
+#+end_src
+
 ** Vertico
 
 Vertico provides a performant and minimalistic vertical completion UI. It's already enabled in init.el.
