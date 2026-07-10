@@ -48,6 +48,9 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
 (package! catppuccin-theme :recipe (:host github :repo "catppuccin/emacs")) 
+;; Disable the dead `nose' Python test runner Doom bundles; its unmaintained
+;; nose.el does (require 'cl), triggering "Package cl is deprecated". Use pytest.
+(package! nose :disable t)
 (package! transient)  ; Ensure transient is available
 (package! eat :recipe (:host codeberg :repo "akib/emacs-eat"))  ; Terminal emulator for claude-code
 (package! aider :recipe (:host github :repo "tninja/aider.el"))
