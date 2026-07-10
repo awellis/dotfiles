@@ -96,9 +96,6 @@
 (use-package! org-make-toc
   :hook (org-mode . org-make-toc-mode))
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-;; (setq org-directory "~/org/")
 (setq org-directory "~/Syncthing/org/")
 
 ;; General org-babel session management
@@ -378,6 +375,207 @@
         ess-eval-visibly-p 'nowait
         ess-nuke-trailing-whitespace-p t))
 
+;;
+;;; RMarkdown Support (poly-R)
+
+(use-package! poly-R
+  :after polymode
+  :config
+  ;; Associate .Rmd files with poly-markdown+r-mode
+  (add-to-list 'auto-mode-alist '("\\.[rR]md\\'" . poly-markdown+r-mode)))
+
+;;
+;;; Quarto Support (quarto-mode)
+
+(use-package! quarto-mode
+  :after polymode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.qmd\\'" . poly-quarto-mode)))
+
+;;
+;;; Popup rules for R/Help buffers
+(with-eval-after-load 'ess
+  (set-popup-rule! "^\\*R.*\\*$" :side 'bottom :height 0.3 :select nil :ttl nil :quit nil)
+  (set-popup-rule! "^\\*help\\*$" :side 'right :width 0.33 :select t :ttl nil :quit t))
+
+;;; --- Polymode Rmd "reverse typing" hardening ------------------------------
+
+;; Predicate: are we in an *indirect* R code chunk buffer (not the host .Rmd)?
+(defun +rmd/inner-r-chunk-p ()
+  (and (buffer-base-buffer)
+       (derived-mode-p 'ess-r-mode)))
+
+;; Minor mode to mark buffers we've sanitized (gives a modeline cue, too)
+(define-minor-mode +rmd-sanitized-mode
+  "Minor mode indicating this buffer has been sanitized for Rmd chunk quirks."
+  :init-value nil
+  :lighter " ⟲Rmd"
+  :keymap nil)
+
+(defun +rmd/echo-debug-state ()
+  "Quick debug: show bidi/input-method/indent/composition state."
+  (interactive)
+  (message "im:%s bidi-dir:%s bidi-reorder:%s vis-cursor:%s comp:%s elect-indent:%s trunc:%s"
+           current-input-method
+           bidi-paragraph-direction
+           bidi-display-reordering
+           visual-order-cursor-movement
+           (if (boundp 'auto-composition-mode) auto-composition-mode 'n/a)
+           (if (local-variable-p 'electric-indent-inhibit) electric-indent-inhibit 'n/a)
+           truncate-lines))
+
+;; 1) Reworked sanitizer (idempotent, more thorough, with redisplay)
+(defun +rmd/sanitize-buffer (&rest _)
+  "Enforce LTR, tame indentation/composition/input methods in Rmd chunk buffers."
+  (when (+rmd/inner-r-chunk-p)
+    ;; Don't re-apply every switch
+    (unless +rmd-sanitized-mode
+      ;; Input methods
+      (when current-input-method (deactivate-input-method))
+      (setq-local input-method-function nil)
+      (setq-local default-input-method nil)
+
+      ;; BiDi (strict LTR)
+      (setq-local bidi-paragraph-direction 'left-to-right)
+      (setq-local bidi-display-reordering nil)
+      (setq-local bidi-inhibit-bpa t)
+      (setq-local right-to-left-display nil)
+      (setq-local visual-order-cursor-movement nil)
+
+      ;; Composition / ligatures
+      (when (fboundp 'auto-composition-mode) (auto-composition-mode -1))
+      (setq-local composition-function-table nil)
+      (when (boundp 'ligature-mode) (ignore-errors (ligature-mode -1)))
+
+      ;; Electric indent (prevents odd newline/backtick behavior)
+      (setq-local electric-indent-inhibit t)
+      (when (fboundp 'electric-indent-local-mode)
+        (ignore-errors (electric-indent-local-mode -1)))
+
+      ;; Keep layout predictable
+      (setq-local truncate-lines t)
+
+      ;; Make backtick purely punctuation in code chunks (optional but helps)
+      ;; (You can comment this out if you prefer ESS's native backtick semantics.)
+      (let ((st (syntax-table)))
+        (when (syntax-table-p st)
+          (modify-syntax-entry ?` "." st))) ; "." = punctuation
+
+      ;; Mark and refresh
+      (+rmd-sanitized-mode 1)
+      (force-mode-line-update)
+      (redisplay))))
+
+;; 2) ESS syntax-table workaround (optional but recommended)
+;; Some setups treat backticks in ways that interact with Markdown chunk fences.
+;; This ensures backticks don't start strings or quoting in inner R chunk buffers.
+(defun +rmd/ess-syntax-workaround (&rest _)
+  (when (+rmd/inner-r-chunk-p)
+    (let ((st (syntax-table)))
+      (when (syntax-table-p st)
+        ;; Treat backtick as punctuation here; ESS still handles evaluation fine
+        (modify-syntax-entry ?` "." st)))))
+
+;; 3) Multi-hook strategy (init, switch, and on-mode)
+(after! polymode
+  ;; When the inner buffer initializes
+  (add-hook 'polymode-init-inner-hook #'+rmd/sanitize-buffer)
+  (add-hook 'polymode-init-inner-hook #'+rmd/ess-syntax-workaround)
+  ;; Whenever polymode switches host<->chunk
+  (add-hook 'polymode-after-switch-buffer-hook #'+rmd/sanitize-buffer))
+
+;; Keep Evil sane on switches (ignore hook args)
+(defun +pm/evil-normalize (&rest _)
+  (when (bound-and-true-p evil-local-mode)
+    (evil-normal-state)))
+(after! polymode
+  (add-hook 'polymode-after-switch-buffer-hook #'+pm/evil-normalize))
+
+;; Also catch when the chunk's major mode turns on (extra safety net)
+(add-hook 'ess-r-mode-hook
+          (defun +rmd/sanitize-on-ess-enter ()
+            (when (+rmd/inner-r-chunk-p)
+              (+rmd/sanitize-buffer)
+              (+rmd/ess-syntax-workaround))))
+
+;; 4) User controls: manual fix & quick debug
+(map! :map poly-markdown+r-mode-map
+      :localleader
+      (:prefix ("f" . "fix")
+       :desc "Rmd fix: sanitize now" "r" #'+rmd/sanitize-buffer
+       :desc "Rmd fix: echo debug state" "d" #'+rmd/echo-debug-state))
+
+;; Only disable single-backtick pairing in R code (leave Markdown backticks alone)
+(with-eval-after-load 'ess-r-mode
+  (when (bound-and-true-p smartparens-mode)
+    (sp-local-pair 'ess-r-mode "`" "`" :actions nil)))
+
+(defun my/insert-r-assignment (&optional n)
+  "Insert the R assignment operator '<-'. With prefix N, insert N copies.
+Spaces are added around the operator when appropriate."
+  (interactive "p")
+  (let ((count (max 1 (or n 1))))
+    (dotimes (_ count)
+      (let* ((space-before (if (or (bolp)
+                                   (looking-back "[ \t\n<]" 1))
+                               "" " "))
+             (space-after  (if (looking-at "[ \t\n]")
+                               "" " ")))
+        (insert (concat space-before "<-" space-after))))))
+
+(defun my/org-in-r-src-block-p ()
+  "Return non-nil if point is inside an Org src block of language R."
+  (when (and (derived-mode-p 'org-mode)
+             (org-in-src-block-p t))
+    (let* ((info (org-babel-get-src-block-info 'light))
+           (lang (downcase (car info))))
+      (member lang '("r" "rscript")))))
+
+(defun my/org-r-assignment-dwim ()
+  "If in an Org R src block, insert '<-'; otherwise, fall back to `negative-argument'."
+  (interactive)
+  (if (my/org-in-r-src-block-p)
+      (call-interactively #'my/insert-r-assignment)
+    (call-interactively #'negative-argument)))
+
+;; Keybindings
+(after! ess-r-mode
+  (map! :map ess-r-mode-map
+        :i "M--" #'my/insert-r-assignment))
+
+(after! org
+  (map! :map org-mode-map
+        :i "M--" #'my/org-r-assignment-dwim))
+
+(after! polymode
+  ;; Rmd (poly-markdown+r)
+  (map! :map poly-markdown+r-mode-map
+        :n "]r" #'polymode-next-chunk
+        :n "[r" #'polymode-previous-chunk
+        :n "M-n" #'polymode-next-chunk
+        :n "M-p" #'polymode-previous-chunk
+        :i "M-n" #'polymode-next-chunk
+        :i "M-p" #'polymode-previous-chunk)
+  ;; Qmd (poly-quarto)
+  (after! quarto-mode
+    (when (boundp 'poly-quarto-mode-map)
+      (map! :map poly-quarto-mode-map
+            :n "]r" #'polymode-next-chunk
+            :n "[r" #'polymode-previous-chunk
+            :n "M-n" #'polymode-next-chunk
+            :n "M-p" #'polymode-previous-chunk
+            :i "M-n" #'polymode-next-chunk
+            :i "M-p" #'polymode-previous-chunk))))
+
+(after! org
+  (map! :map org-mode-map
+        :n "]r" #'org-babel-next-src-block
+        :n "[r" #'org-babel-previous-src-block
+        :n "M-n" #'org-babel-next-src-block
+        :n "M-p" #'org-babel-previous-src-block
+        :i "M-n" #'org-babel-next-src-block
+        :i "M-p" #'org-babel-previous-src-block))
+
 ;; Claude Code IDE - MCP-based integration with bidirectional Emacs communication
 (use-package! claude-code-ide
   :config
@@ -398,66 +596,6 @@
 
   ;; Enable diagnostics integration (Flycheck/Flymake)
   (setq claude-code-ide-enable-diagnostics t))
-
-;; Previous claude-code + monet setup (commented out - can re-enable if needed)
-;; ----------------------------------------------------------------------------------
-;; ;; Claude Code - Stay in your buffer while working with Claude
-;; (use-package! claude-code
-;;   :config
-;;   ;; Optional: Set custom Claude Code CLI path if needed
-;;   ;; (setq claude-code-executable "claude-code")
-;;
-;;   ;; Terminal backend (choose one: 'eat or 'vterm)
-;;   (setq claude-code-terminal 'eat)
-;;
-;;   ;; Enable desktop notifications
-;;   (setq claude-code-use-notifications t)
-;;
-;;   ;; Set the prefix key for Claude commands
-;;   (setq claude-code-prefix-key "C-c c")
-;;
-;;   ;; Set the default model (optional)
-;;   ;; (setq claude-code-model "claude-3.5-sonnet")
-;;
-;;   ;; Enable read-only mode for better text selection
-;;   (setq claude-code-read-only-mode t)
-;;
-;;   ;; Bind the transient menu
-;;   :bind ("C-c c m" . claude-code))
-;;
-;; ;; Display Claude buffer in vertical split on the right
-;; (after! claude-code
-;;   ;; Override the display function to show Claude on the right side
-;;   (defun my/claude-code-display-right (buffer)
-;;     "Display BUFFER in a window on the right side."
-;;     (display-buffer buffer '((display-buffer-in-side-window)
-;;                              (side . right)
-;;                              (window-width . 0.5))))
-;;
-;;   (setq claude-code-display-window-fn #'my/claude-code-display-right))
-;;
-;; ;; Monet - IDE integration for Claude Code
-;; (use-package! monet
-;;   :config
-;;   ;; Enable Monet mode globally
-;;   (monet-mode 1)
-;;
-;;   ;; Configure diff handling
-;;   (setq monet-diff-tool 'monet-ediff-tool)  ; Use ediff for interactive diffs
-;;
-;;   ;; Set custom keybindings for Monet
-;;   (setq monet-prefix-key "C-c m")
-;;
-;;   ;; Optional: Configure logging
-;;   ;; (setq monet-log-level 'debug)
-;;
-;;   ;; For external terminal integration (like Ghostty):
-;;   ;; 1. Start Monet server: C-c m s (or SPC k S)
-;;   ;; 2. Note the port number shown
-;;   ;; 3. In Ghostty, run:
-;;   ;;    ENABLE_IDE_INTEGRATION=t CLAUDE_CODE_SSE_PORT=<port> claude
-;;   )
-;; ----------------------------------------------------------------------------------
 
 (use-package! agent-shell
   :commands (agent-shell-pi-start-agent)
@@ -756,23 +894,6 @@
        :desc "GPTel chat" "g" #'my/gptel-quick
        :desc "GPTel menu" "G" #'gptel-menu
        :desc "GPTel send" "s" #'gptel-send))
-
-       ;; Previous claude-code + monet keybindings (commented out)
-       ;; :desc "Claude menu" "c" #'claude-code
-       ;; :desc "Send region/buffer" "r" #'claude-code-send-region
-       ;; :desc "Fix error" "e" #'claude-code-fix-error-at-point
-       ;; :desc "Toggle Claude window" "t" #'claude-code-toggle
-       ;; :desc "Send file" "o" #'claude-code-send-file
-       ;; :desc "Kill Claude session" "k" #'claude-code-kill
-       ;; :desc "Start Claude" "C" #'claude-code-start-in-directory
-       ;; :desc "Switch buffer" "b" #'claude-code-switch-to-buffer
-       ;; :desc "Continue conversation" "x" #'claude-code-continue
-       ;; :desc "Cycle mode" "M" #'claude-code-cycle-mode
-       ;; :desc "Kill all sessions" "K" #'claude-code-kill-all
-       ;; :desc "Send command" "/" #'claude-code-send-command
-       ;; :desc "Monet server" "S" #'monet-start-server
-       ;; :desc "Monet list" "l" #'monet-list-sessions
-       ;; :desc "Monet diff" "d" #'monet-show-diff
 
 ;; Also set up the global Claude prefix key binding
 (map! :n "C-c c m" #'claude-code-ide
@@ -1075,224 +1196,5 @@
   (setq ispell-program-name "hunspell")
   (setq ispell-dictionary "en_US")
   (setq ispell-personal-dictionary "~/.hunspell_personal"))
-
-;;
-;;; RMarkdown Support (poly-R)
-
-(use-package! poly-R
-  :after polymode
-  :config
-  ;; Associate .Rmd files with poly-markdown+r-mode
-  (add-to-list 'auto-mode-alist '("\\.[rR]md\\'" . poly-markdown+r-mode)))
-
-;;
-;;; Quarto Support (quarto-mode)
-
-(use-package! quarto-mode
-  :after polymode
-  :config
-  (add-to-list 'auto-mode-alist '("\\.qmd\\'" . poly-quarto-mode)))
-
-;;
-;;; Popup rules for R/Help buffers
-(with-eval-after-load 'ess
-  (set-popup-rule! "^\\*R.*\\*$" :side 'bottom :height 0.3 :select nil :ttl nil :quit nil)
-  (set-popup-rule! "^\\*help\\*$" :side 'right :width 0.33 :select t :ttl nil :quit t))
-
-;;; --- Polymode Rmd "reverse typing" hardening ------------------------------
-
-;; Predicate: are we in an *indirect* R code chunk buffer (not the host .Rmd)?
-(defun +rmd/inner-r-chunk-p ()
-  (and (buffer-base-buffer)
-       (derived-mode-p 'ess-r-mode)))
-
-;; Minor mode to mark buffers we've sanitized (gives a modeline cue, too)
-(define-minor-mode +rmd-sanitized-mode
-  "Minor mode indicating this buffer has been sanitized for Rmd chunk quirks."
-  :init-value nil
-  :lighter " ⟲Rmd"
-  :keymap nil)
-
-(defun +rmd/echo-debug-state ()
-  "Quick debug: show bidi/input-method/indent/composition state."
-  (interactive)
-  (message "im:%s bidi-dir:%s bidi-reorder:%s vis-cursor:%s comp:%s elect-indent:%s trunc:%s"
-           current-input-method
-           bidi-paragraph-direction
-           bidi-display-reordering
-           visual-order-cursor-movement
-           (if (boundp 'auto-composition-mode) auto-composition-mode 'n/a)
-           (if (local-variable-p 'electric-indent-inhibit) electric-indent-inhibit 'n/a)
-           truncate-lines))
-
-;; 1) Reworked sanitizer (idempotent, more thorough, with redisplay)
-(defun +rmd/sanitize-buffer (&rest _)
-  "Enforce LTR, tame indentation/composition/input methods in Rmd chunk buffers."
-  (when (+rmd/inner-r-chunk-p)
-    ;; Don't re-apply every switch
-    (unless +rmd-sanitized-mode
-      ;; Input methods
-      (when current-input-method (deactivate-input-method))
-      (setq-local input-method-function nil)
-      (setq-local default-input-method nil)
-
-      ;; BiDi (strict LTR)
-      (setq-local bidi-paragraph-direction 'left-to-right)
-      (setq-local bidi-display-reordering nil)
-      (setq-local bidi-inhibit-bpa t)
-      (setq-local right-to-left-display nil)
-      (setq-local visual-order-cursor-movement nil)
-
-      ;; Composition / ligatures
-      (when (fboundp 'auto-composition-mode) (auto-composition-mode -1))
-      (setq-local composition-function-table nil)
-      (when (boundp 'ligature-mode) (ignore-errors (ligature-mode -1)))
-
-      ;; Electric indent (prevents odd newline/backtick behavior)
-      (setq-local electric-indent-inhibit t)
-      (when (fboundp 'electric-indent-local-mode)
-        (ignore-errors (electric-indent-local-mode -1)))
-
-      ;; Keep layout predictable
-      (setq-local truncate-lines t)
-
-      ;; Make backtick purely punctuation in code chunks (optional but helps)
-      ;; (You can comment this out if you prefer ESS's native backtick semantics.)
-      (let ((st (syntax-table)))
-        (when (syntax-table-p st)
-          (modify-syntax-entry ?` "." st))) ; "." = punctuation
-
-      ;; Mark and refresh
-      (+rmd-sanitized-mode 1)
-      (force-mode-line-update)
-      (redisplay))))
-
-;; 2) ESS syntax-table workaround (optional but recommended)
-;; Some setups treat backticks in ways that interact with Markdown chunk fences.
-;; This ensures backticks don't start strings or quoting in inner R chunk buffers.
-(defun +rmd/ess-syntax-workaround (&rest _)
-  (when (+rmd/inner-r-chunk-p)
-    (let ((st (syntax-table)))
-      (when (syntax-table-p st)
-        ;; Treat backtick as punctuation here; ESS still handles evaluation fine
-        (modify-syntax-entry ?` "." st)))))
-
-;; 3) Multi-hook strategy (init, switch, and on-mode)
-(after! polymode
-  ;; When the inner buffer initializes
-  (add-hook 'polymode-init-inner-hook #'+rmd/sanitize-buffer)
-  (add-hook 'polymode-init-inner-hook #'+rmd/ess-syntax-workaround)
-  ;; Whenever polymode switches host<->chunk
-  (add-hook 'polymode-after-switch-buffer-hook #'+rmd/sanitize-buffer))
-
-;; Keep Evil sane on switches (ignore hook args)
-(defun +pm/evil-normalize (&rest _)
-  (when (bound-and-true-p evil-local-mode)
-    (evil-normal-state)))
-(after! polymode
-  (add-hook 'polymode-after-switch-buffer-hook #'+pm/evil-normalize))
-
-;; Also catch when the chunk's major mode turns on (extra safety net)
-(add-hook 'ess-r-mode-hook
-          (defun +rmd/sanitize-on-ess-enter ()
-            (when (+rmd/inner-r-chunk-p)
-              (+rmd/sanitize-buffer)
-              (+rmd/ess-syntax-workaround))))
-
-;; 4) User controls: manual fix & quick debug
-(map! :map poly-markdown+r-mode-map
-      :localleader
-      (:prefix ("f" . "fix")
-       :desc "Rmd fix: sanitize now" "r" #'+rmd/sanitize-buffer
-       :desc "Rmd fix: echo debug state" "d" #'+rmd/echo-debug-state))
-
-;; Only disable single-backtick pairing in R code (leave Markdown backticks alone)
-(with-eval-after-load 'ess-r-mode
-  (when (bound-and-true-p smartparens-mode)
-    (sp-local-pair 'ess-r-mode "`" "`" :actions nil)))
-
-(defun my/insert-r-assignment (&optional n)
-  "Insert the R assignment operator '<-'. With prefix N, insert N copies.
-Spaces are added around the operator when appropriate."
-  (interactive "p")
-  (let ((count (max 1 (or n 1))))
-    (dotimes (_ count)
-      (let* ((space-before (if (or (bolp)
-                                   (looking-back "[ \t\n<]" 1))
-                               "" " "))
-             (space-after  (if (looking-at "[ \t\n]")
-                               "" " ")))
-        (insert (concat space-before "<-" space-after))))))
-
-(defun my/org-in-r-src-block-p ()
-  "Return non-nil if point is inside an Org src block of language R."
-  (when (and (derived-mode-p 'org-mode)
-             (org-in-src-block-p t))
-    (let* ((info (org-babel-get-src-block-info 'light))
-           (lang (downcase (car info))))
-      (member lang '("r" "rscript")))))
-
-(defun my/org-r-assignment-dwim ()
-  "If in an Org R src block, insert '<-'; otherwise, fall back to `negative-argument'."
-  (interactive)
-  (if (my/org-in-r-src-block-p)
-      (call-interactively #'my/insert-r-assignment)
-    (call-interactively #'negative-argument)))
-
-;; Keybindings
-(after! ess-r-mode
-  (map! :map ess-r-mode-map
-        :i "M--" #'my/insert-r-assignment))
-
-(after! org
-  (map! :map org-mode-map
-        :i "M--" #'my/org-r-assignment-dwim))
-
-;; Preferred: Eglot (simple & stable with polymode)
-(when (featurep 'eglot)
-  (after! eglot
-    (add-to-list 'eglot-server-programs
-                 '(ess-r-mode . ("R" "--slave" "-e" "languageserver::run()")))
-    (add-hook 'ess-r-mode-hook #'eglot-ensure)))
-
-;; If you use lsp-mode instead: harden it in indirect buffers
-(defun +rmd/disable-lsp-in-indirect-buffers-h ()
-  (when (buffer-base-buffer) (lsp-managed-mode -1)))
-
-(when (featurep 'lsp-mode)
-  (after! lsp-mode
-    (add-hook 'lsp-mode-hook #'+rmd/disable-lsp-in-indirect-buffers-h)
-    (with-eval-after-load 'lsp-ui
-      (setq lsp-ui-doc-enable nil
-            lsp-ui-sideline-enable nil))))
-
-(after! polymode
-  ;; Rmd (poly-markdown+r)
-  (map! :map poly-markdown+r-mode-map
-        :n "]r" #'polymode-next-chunk
-        :n "[r" #'polymode-previous-chunk
-        :n "M-n" #'polymode-next-chunk
-        :n "M-p" #'polymode-previous-chunk
-        :i "M-n" #'polymode-next-chunk
-        :i "M-p" #'polymode-previous-chunk)
-  ;; Qmd (poly-quarto)
-  (after! quarto-mode
-    (when (boundp 'poly-quarto-mode-map)
-      (map! :map poly-quarto-mode-map
-            :n "]r" #'polymode-next-chunk
-            :n "[r" #'polymode-previous-chunk
-            :n "M-n" #'polymode-next-chunk
-            :n "M-p" #'polymode-previous-chunk
-            :i "M-n" #'polymode-next-chunk
-            :i "M-p" #'polymode-previous-chunk))))
-
-(after! org
-  (map! :map org-mode-map
-        :n "]r" #'org-babel-next-src-block
-        :n "[r" #'org-babel-previous-src-block
-        :n "M-n" #'org-babel-next-src-block
-        :n "M-p" #'org-babel-previous-src-block
-        :i "M-n" #'org-babel-next-src-block
-        :i "M-p" #'org-babel-previous-src-block))
 
 ;; Place your custom functions here
