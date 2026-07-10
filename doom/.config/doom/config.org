@@ -58,48 +58,6 @@
 - [[#custom-functions][Custom Functions]]
 :END:
 
-- [[#personal-information][Personal Information]]
-- [[#gpg-configuration][GPG Configuration]]
-- [[#appearance][Appearance]]
-  - [[#theme][Theme]]
-  - [[#fonts][Fonts]]
-  - [[#line-numbers][Line Numbers]]
-- [[#macos-keybindings][macOS Keybindings]]
-- [[#org-mode-configuration][Org Mode Configuration]]
-  - [[#general][General]]
-  - [[#basic-configuration][Basic Configuration]]
-  - [[#basic-settings][Basic Settings]]
-  - [[#org-capture-templates][Org Capture Templates]]
-  - [[#archive-done-items][Archive DONE Items]]
-  - [[#r-support][R Support]]
-  - [[#python-support][Python Support]]
-  - [[#julia-support][Julia Support]]
-  - [[#custom-link-types-and-macos-integration][Custom Link Types and macOS Integration]]
-  - [[#autosave-configuration][Autosave Configuration]]
-  - [[#google-calendar-sync][Google Calendar Sync]]
-- [[#programming-languages][Programming Languages]]
-  - [[#r-and-ess][R and ESS]]
-- [[#tools-and-integrations][Tools and Integrations]]
-  - [[#claude-code][Claude Code]]
-  - [[#vertico][Vertico]]
-  - [[#which-key][Which-key]]
-  - [[#projectile][Projectile]]
-  - [[#workspace-configuration][Workspace Configuration]]
-  - [[#indent-bars][Indent Bars]]
-  - [[#diff-hl-configuration][Diff-hl Configuration]]
-  - [[#vterm-configuration][Vterm Configuration]]
-  - [[#opencode-configuration][OpenCode Configuration]]
-  - [[#yazi-integration][Yazi Integration]]
-  - [[#copilot][Copilot]]
-- [[#auto-revert-configuration][Auto-revert Configuration]]
-- [[#window-management-fixes][Window Management Fixes]]
-- [[#spell-checking-configuration][Spell Checking Configuration]]
-- [[#r-rmarkdown-and-quarto-configuration][R, RMarkdown, and Quarto Configuration]]
-  - [[#r-assignment-arrow-shortcut][R Assignment Arrow Shortcut]]
-- [[#lsp-for-r-optional][LSP for R (optional)]]
-  - [[#r-chunk-navigation-shortcuts][R Chunk Navigation Shortcuts]]
-- [[#custom-functions][Custom Functions]]
-
 * Personal Information
 
 Basic personal information used by various Emacs packages.
@@ -108,16 +66,6 @@ Basic personal information used by various Emacs packages.
 (setq user-full-name "Andrew Ellis"
       user-mail-address "andrewellis@pm.me")
 #+end_src
-
-* GPG Configuration
-
-GPG key configuration for signing and encryption. Currently commented out - uncomment and set your GPG key if you use one.
-
-#+begin_src emacs-lisp
-;; Uncomment and set your GPG key if you use one
-;; (setq user-gpg-key "YOUR-GPG-KEY-ID")
-#+end_src
-
 
 * Appearance
 
@@ -159,32 +107,14 @@ Configure Fira Code with ligatures for beautiful code rendering. The configurati
       doom-variable-pitch-font (font-spec :family "FiraCode Nerd Font" :size 16)
       doom-big-font (font-spec :family (if (eq system-type 'darwin) "Fira Code" "FiraCode Nerd Font Mono") :size 20))
 
-;; Simple global ligature setup - enable ALL ligatures everywhere
+;; Doom's :ui ligatures (+extras +fira) already enables global-ligature-mode
+;; with the standard programming ligatures. ligature.el unions the `t' set
+;; with each mode's set, so we only add the R/Julia operators here.
 (after! ligature
-  ;; Create one comprehensive ligature list with all symbols
-  (let ((all-ligatures '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
-                         ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-                         "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-                         "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-                         "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-                         "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
-                         "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-                         "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-                         ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-                         "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-                         "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-                         "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-                         "\\\\" "://"
-                         ;; R-specific ligatures
-                         "%>%" "%<%" "%$%" "%T>%" "%<>%" "%in%" "%nin%"
-                         ;; Julia-specific ligatures
-                         ".<" ".>" ".+" ".-" ".*" "./" ".^" ".%" ".<=" ".>=" ".==" ".!=")))
-
-    ;; Set ligatures globally for ALL modes using 't
-    (ligature-set-ligatures 't all-ligatures))
-
-  ;; Enable global ligature mode
-  (global-ligature-mode 1))
+  (ligature-set-ligatures
+   't
+   '("%>%" "%<%" "%$%" "%T>%" "%<>%" "%in%" "%nin%"
+     ".<" ".>" ".+" ".-" ".*" "./" ".^" ".%" ".<=" ".>=" ".==" ".!=")))
 
 ;; Prevent polymode from transferring problematic modes between buffers
 ;; This eliminates ligature loss and font-lock conflicts during mode switches
@@ -1042,22 +972,7 @@ Projectile provides project management and navigation. It's built into Doom and 
   ;; Recognize directories with .projectile files as projects
   (add-to-list 'projectile-project-root-files ".projectile")
 
-  ;; Fix keybinding issues by completely disabling projectile's direct keybindings
-  ;; Doom handles projectile keybindings through its leader key system
-  (setq projectile-keymap-prefix nil)
-
-  ;; Clear the entire projectile keymap to prevent conflicts
-  (setq projectile-mode-map (make-sparse-keymap))
-
-  ;; Additional fix: disable projectile's command map entirely
-  (setq projectile-command-map (make-sparse-keymap))
-
-  ;; Prevent projectile from trying to bind any keys
-  (advice-add 'projectile-mode :around
-              (lambda (orig-fn &rest args)
-                "Disable projectile keybindings."
-                (let ((projectile-keymap-prefix nil))
-                  (apply orig-fn args)))))
+  )
 
 ;; Key bindings (Doom already sets up SPC p prefix)
 ;; Most useful commands:
@@ -1114,29 +1029,10 @@ Modern indentation guides using indent-bars package for better visual structure 
 Configure diff-hl to handle files outside Git repositories gracefully.
 
 #+begin_src emacs-lisp
-;; Configure diff-hl to handle non-Git files gracefully
+;; diff-hl: skip TRAMP/remote files. Doom's :ui vc-gutter already limits
+;; diff-hl to version-controlled buffers, so no custom guard is needed.
 (after! diff-hl
-  ;; Disable diff-hl for files outside Git repositories
-  (setq diff-hl-disable-on-remote t)
-  
-  ;; Add advice to handle errors gracefully
-  (defadvice! my/diff-hl-handle-errors (orig-fn &rest args)
-    "Suppress diff-hl errors for files not in Git repositories."
-    :around #'diff-hl-changes
-    (condition-case nil
-        (apply orig-fn args)
-      (error nil)))
-  
-  ;; Only enable diff-hl in buffers that are actually in Git repositories
-  (defun my/diff-hl-mode-on-maybe ()
-    "Enable diff-hl-mode only if the current file is in a Git repository."
-    (when (and buffer-file-name
-               (vc-backend buffer-file-name))
-      (diff-hl-mode 1)))
-  
-  ;; Replace the global mode hook
-  (remove-hook 'find-file-hook #'diff-hl-mode-on)
-  (add-hook 'find-file-hook #'my/diff-hl-mode-on-maybe))
+  (setq diff-hl-disable-on-remote t))
 #+end_src
 
 ** Vterm Configuration
@@ -1311,118 +1207,8 @@ GitHub Copilot integration for AI-powered code completion and suggestions.
   ;; Optional: reduce copilot idle delay for faster suggestions
   (setq copilot-idle-delay 0.5)
 
-  ;; Option 1: Disable the warning entirely (simplest solution)
-  (setq copilot-indent-offset-warning-disable t)
-
-  ;; Option 2: Add indentation settings properly
-  ;; The copilot-indentation-alist should map modes to either:
-  ;; - A direct number
-  ;; - A variable name that contains the indentation value
-  ;; - A list of variable names to check
-
-  ;; Ensure the variable exists first
-  (unless (boundp 'copilot-indentation-alist)
-    (setq copilot-indentation-alist '()))
-
-  ;; For org-mode, use the actual indentation variable
-  (add-to-list 'copilot-indentation-alist '(org-mode org-indent-indentation-per-level))
-  (add-to-list 'copilot-indentation-alist '(org-agenda-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(text-mode tab-width))
-  (add-to-list 'copilot-indentation-alist '(fundamental-mode tab-width))
-  (add-to-list 'copilot-indentation-alist '(special-mode tab-width))
-  (add-to-list 'copilot-indentation-alist '(dired-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(magit-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(magit-status-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(magit-diff-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(magit-log-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(magit-revision-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(git-commit-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(help-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(Info-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(compilation-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(messages-buffer-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(inferior-emacs-lisp-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(lisp-interaction-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(eshell-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(shell-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(term-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(vterm-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(comint-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(diff-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(ediff-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(occur-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(grep-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(Custom-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(conf-unix-mode . 2))
-  (add-to-list 'copilot-indentation-alist '(conf-space-mode . 2))
-
-  ;; Add other modes as needed
-  (dolist (mode-indent '((prog-mode . 2)
-                         (emacs-lisp-mode . 2)
-                         (lisp-mode . 2)
-                         (scheme-mode . 2)
-                         (clojure-mode . 2)
-                         (python-mode . 4)
-                         (python-ts-mode . 4)
-                         (yaml-mode . 2)
-                         (yaml-ts-mode . 2)
-                         (js-mode . 2)
-                         (js-ts-mode . 2)
-                         (js2-mode . 2)
-                         (typescript-mode . 2)
-                         (typescript-ts-mode . 2)
-                         (tsx-ts-mode . 2)
-                         (json-mode . 2)
-                         (json-ts-mode . 2)
-                         (web-mode . 2)
-                         (html-mode . 2)
-                         (css-mode . 2)
-                         (scss-mode . 2)
-                         (rust-mode . 4)
-                         (rustic-mode . 4)
-                         (rust-ts-mode . 4)
-                         (go-mode . 8)
-                         (go-ts-mode . 8)
-                         (c-mode . 4)
-                         (c-ts-mode . 4)
-                         (c++-mode . 4)
-                         (c++-ts-mode . 4)
-                         (objc-mode . 4)
-                         (java-mode . 4)
-                         (java-ts-mode . 4)
-                         (julia-mode . 4)
-                         (julia-ts-mode . 4)
-                         (ess-r-mode . 2)
-                         (R-mode . 2)
-                         (ruby-mode . 2)
-                         (ruby-ts-mode . 2)
-                         (lua-mode . 2)
-                         (lua-ts-mode . 2)
-                         (sh-mode . 2)
-                         (bash-ts-mode . 2)
-                         (fish-mode . 2)
-                         (markdown-mode . 2)
-                         (latex-mode . 2)
-                         (LaTeX-mode . 2)))
-    (add-to-list 'copilot-indentation-alist mode-indent))
-
-  ;; Ensure org-mode has proper indentation variables set
-  ;; Note: Don't set tab-width in org-mode as it must be 8 per Org specification
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (setq-local indent-tabs-mode nil)
-              (setq-local org-indent-indentation-per-level 2)))
-
-  ;; Better approach: Set default indentation for modes that don't have it
-  (defun my-copilot-tab-fallback ()
-    "Return a fallback tab width for copilot."
-    (or (and (boundp 'tab-width) tab-width) 2))
-
-  ;; Add fallback entries for common modes that might not have indentation set
-  (dolist (mode '(org-mode text-mode fundamental-mode special-mode))
-    (unless (assq mode copilot-indentation-alist)
-      (add-to-list 'copilot-indentation-alist
-                   (cons mode 'my-copilot-tab-fallback)))))
+  ;; Silence copilot's indentation warning; its defaults are fine.
+  (setq copilot-indent-offset-warning-disable t))
 
 ;; Add keybindings for copilot
 (map! :leader
@@ -1456,66 +1242,24 @@ Citation management using citar with org-mode and org-roam integration.
 #+end_src
 
 #+begin_src emacs-lisp
-;;; Flyspell "global" toggle for Doom (:checkers spell +flyspell)
-
-(defvar my/spell-global-enabled nil
-  "Whether spell checking is enabled globally across text and prog buffers.")
-
-(defun my/spell--text-like-buffer-p ()
-  "Return non-nil if current buffer is a text/document buffer (full spell)."
-  ;; Most doc modes derive from text-mode; list extras if you use nonstandard modes.
-  (or (derived-mode-p 'text-mode)
-      (memq major-mode
-            '(org-mode markdown-mode gfm-mode
-              rst-mode adoc-mode
-              latex-mode LaTeX-mode tex-mode
-              message-mode mu4e-compose-mode))))
-
+;;; Global Flyspell toggle (all buffers at once; text=full words, code=comments/strings).
+;;; Doom also provides a per-buffer toggle on `SPC t s'.
+(defvar my/spell-global-enabled nil)
 (defun my/apply-spell-to-buffer ()
-  "Enable/disable Flyspell in the current buffer to match `my/spell-global-enabled`."
-  (cond
-   ;; Document-like buffers: full spell checking on words everywhere
-   ((my/spell--text-like-buffer-p)
-    (if my/spell-global-enabled
-        (flyspell-mode 1)
-      (when (bound-and-true-p flyspell-mode)
-        (flyspell-mode -1))))
-   ;; Programming buffers: only comments/strings with flyspell-prog-mode
-   ((derived-mode-p 'prog-mode)
-    (if my/spell-global-enabled
-        (when (fboundp 'flyspell-prog-mode) (flyspell-prog-mode))
-      (when (bound-and-true-p flyspell-mode)
-        (flyspell-mode -1))))
-   ;; Everything else: keep it off
-   (t
-    (when (bound-and-true-p flyspell-mode)
-      (flyspell-mode -1)))))
-
+  (cond ((derived-mode-p 'text-mode)
+         (flyspell-mode (if my/spell-global-enabled 1 -1)))
+        ((and my/spell-global-enabled (derived-mode-p 'prog-mode))
+         (flyspell-prog-mode))
+        ((bound-and-true-p flyspell-mode) (flyspell-mode -1))))
 (defun my/toggle-spell-checking ()
-  "Toggle Flyspell for all current and future buffers (text=full, code=prog)."
+  "Toggle Flyspell across all current and future buffers."
   (interactive)
   (setq my/spell-global-enabled (not my/spell-global-enabled))
-  ;; Apply to existing buffers
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (my/apply-spell-to-buffer)))
-  ;; Ensure future buffers follow suit
   (if my/spell-global-enabled
       (add-hook 'after-change-major-mode-hook #'my/apply-spell-to-buffer)
     (remove-hook 'after-change-major-mode-hook #'my/apply-spell-to-buffer))
-  (message "Spell checking %s globally (%s in text, %s in code)"
-           (if my/spell-global-enabled "ENABLED" "disabled")
-           (if my/spell-global-enabled "full" "off")
-           (if my/spell-global-enabled "comments/strings" "off")))
-
-;; Optional: start disabled on launch
-(add-hook 'after-init-hook
-          (lambda ()
-            (setq my/spell-global-enabled nil)
-            (remove-hook 'text-mode-hook #'flyspell-mode)
-            (remove-hook 'prog-mode-hook #'flyspell-prog-mode)
-            (remove-hook 'after-change-major-mode-hook #'my/apply-spell-to-buffer)))
-
+  (dolist (buf (buffer-list)) (with-current-buffer buf (my/apply-spell-to-buffer)))
+  (message "Spell checking %s globally" (if my/spell-global-enabled "ENABLED" "disabled")))
 (map! :leader
       (:prefix ("t" . "toggle")
        :desc "Toggle spell checking globally" "S" #'my/toggle-spell-checking))
@@ -1557,9 +1301,6 @@ Fix frameset and window management errors.
                 (window-parameters . :never))
               frameset-filter-alist))
 
-;; Suppress frameset warnings
-(setq warning-suppress-types '((frameset)))
-
 ;; Better window management for side windows
 (setq window-sides-slots '(nil nil nil 1))
 
@@ -1569,13 +1310,6 @@ Fix frameset and window management errors.
 (setq desktop-restore-in-current-display t)
 (setq desktop-restore-forces-onscreen nil)
 
-;; Additional frameset safety
-(advice-add 'frameset-restore :around
-            (lambda (orig-fun &rest args)
-              (condition-case err
-                  (apply orig-fun args)
-                (error (message "Frameset restore error: %s" err)
-                       nil))))
 #+end_src
 
 * Spell Checking Configuration
@@ -1600,10 +1334,4 @@ Configure hunspell and flyspell for proper spell checking.
 #+end_src
 
 
-* Custom Functions
 
-Placeholder for custom functions and user-defined utilities.
-
-#+begin_src emacs-lisp
-;; Place your custom functions here
-#+end_src
