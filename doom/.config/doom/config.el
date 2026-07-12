@@ -1,3 +1,5 @@
+(quiet!! (require 'cl nil t))
+
 (setq user-full-name "Andrew Ellis"
       user-mail-address "andrewellis@pm.me")
 
@@ -99,7 +101,14 @@
   ;; Keep inferior processes alive
   (setq org-babel-persistent-session t)
 
-  ;; TODO keywords (beorg-compatible)
+  ;; --- Readability: blank line before every new heading so captures/refiles
+  ;; don't pile into one wall of text.
+  (setq org-blank-before-new-entry '((heading . t) (plain-list-item . auto)))
+  (setq org-cycle-separator-lines 2)
+
+  ;; TODO keywords. NOTE: your iOS tool writes `☛ TODO' / `✓ DONE' into
+  ;; inbox.org; those symbols break keyword parsing. Fix that tool to emit
+  ;; plain TODO/DONE, and clean existing entries (see cleanup command).
   (setq org-todo-keywords
         '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
 
@@ -193,29 +202,38 @@
                  '("areas/" "projects/")))))
 
 (after! org
-  (setq org-capture-templates
-        `(("p" "New Project" plain
-           (file (lambda () (read-file-name "Project file: "
-                                           (expand-file-name "projects/" org-directory))))
-           "#+title: %^{Project Name}\n\n* Tasks\n** TODO %?\n\n* Notes\n"
-           :unnarrowed t
-           :kill-buffer t)
-          ("m" "Meeting Notes" entry
-           (file+headline "inbox.org" "Meetings")
-           "* Meeting: %^{Meeting Title} :meeting:\n:PROPERTIES:\n:DATE: %U\n:ATTENDEES: %^{Attendees}\n:END:\n\n** Agenda\n%^{Agenda items}\n\n** Discussion Points\n- %?\n\n** Action Items\n- [ ] \n\n** Follow-up\n- \n"
-           :prepend t)
-          ("d" "Daily Review" entry
-           (file+olp+datetree ,(format-time-string "journal/%Y.org"))
-           "* Daily Review\n** Top 3\n1. %?\n2. \n3. \n\n** Notes\n"
-           :tree-type week)
-          ("t" "Quick Task" entry
-           (file+headline "inbox.org" "Tasks")
-           "* TODO %?\nSCHEDULED: %t\n"
-           :prepend t)
-          ("n" "Quick Note" entry
-           (file+headline "inbox.org" "Notes")
-           "* %? :note:\n%U\n"
-           :prepend t))))
+  (let ((org (lambda (f) (expand-file-name f org-directory))))
+    (setq org-capture-templates
+          `(;; --- Frictionless inbox: dump now, refile during review ---
+            ("t" "Task → inbox" entry (file ,(funcall org "inbox.org"))
+             "* TODO %?\n%U" :prepend t :empty-lines 1)
+            ("n" "Note → inbox" entry (file ,(funcall org "inbox.org"))
+             "* %? :note:\n%U" :prepend t :empty-lines 1)
+
+            ;; --- Direct-to-file: when you already know where it belongs ---
+            ("w" "Work task" entry
+             (file+headline ,(funcall org "areas/work.org") "Tasks")
+             "* TODO %?\n%U" :prepend t :empty-lines 1)
+            ("P" "Personal task" entry
+             (file+headline ,(funcall org "areas/personal.org") "Tasks")
+             "* TODO %?\n%U" :prepend t :empty-lines 1)
+            ("s" "Shopping item" entry
+             (file+headline ,(funcall org "inbox.org") "Shopping")
+             "* TODO %?" :prepend t :empty-lines 1)
+
+            ;; --- Structured ---
+            ("m" "Meeting" entry
+             (file+headline ,(funcall org "inbox.org") "Meetings")
+             "* Meeting: %^{Title} :meeting:\n%U\n** Notes\n- %?\n** Actions\n- [ ] "
+             :empty-lines 1)
+            ("d" "Daily review" entry
+             (file+olp+datetree ,(funcall org "journal/%Y.org"))
+             "* Daily Review\n** Top 3\n1. %?\n2. \n3. \n" :tree-type week)
+            ("p" "New project" plain
+             (file (lambda () (read-file-name "Project file: "
+                                              ,(funcall org "projects/"))))
+             "#+title: %^{Project Name}\n\n* Tasks\n** TODO %?\n\n* Notes\n"
+             :unnarrowed t :kill-buffer t)))))
 
 (defun my/archive-all-done-items ()
   "Archive all DONE items in all agenda files."
@@ -226,6 +244,20 @@
 (map! :leader
       (:prefix ("o" . "open")
        :desc "Archive all DONE items" "A" #'my/archive-all-done-items))
+
+(after! org
+  ;; "i" in the agenda dispatcher (SPC o A / C-c a) shows the inbox to process.
+  (add-to-list 'org-agenda-custom-commands
+               '("i" "Inbox — process & refile"
+                 ((tags "inbox"
+                        ((org-agenda-overriding-header
+                          "📥 Inbox — refile with C-c C-w, rebuild with g")))))
+               t))
+
+(map! :leader
+      (:prefix ("o" . "open")
+       :desc "Open inbox" "i"
+       (cmd! (find-file (expand-file-name "inbox.org" org-directory)))))
 
 ;; Portable R executable
 (defvar +r-executable (or (executable-find "R") "/usr/local/bin/R")
