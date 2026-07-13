@@ -882,7 +882,12 @@ Features: LSP/xref integration, tree-sitter, imenu, ediff for reviewing changes,
   (setq claude-code-ide-auto-start-mcp-server t)
 
   ;; Enable diagnostics integration (Flycheck/Flymake)
-  (setq claude-code-ide-enable-diagnostics t))
+  (setq claude-code-ide-enable-diagnostics t)
+
+  ;; Expose Emacs' own intelligence to Claude over MCP: xref, imenu,
+  ;; tree-sitter and project info. Without this the MCP server runs but
+  ;; Claude gets no Emacs-side tools.
+  (claude-code-ide-emacs-tools-setup))
 #+end_src
 
 ** pi
@@ -892,11 +897,24 @@ Same bridge as the LazyVim setup: =agent-shell-pi= drives the =pi-acp= adapter
 (=npm i -g pi-acp=), which spawns =pi --mode rpc= and uses =~/.pi/agent/settings.json=
 for provider/model config, so no API key is set here.
 
+The adapter command lives in =agent-shell-pi-acp-command= (not =agent-shell-pi-command=),
+and already defaults to ~'("pi-acp")~, so there is nothing to set here.
+
+Every command bound under =SPC k p= is listed in =:commands= so it autoloads
+agent-shell on first use; otherwise the send/interrupt keys are void until the
+agent happens to have been started.
+
 #+begin_src emacs-lisp
 (use-package! agent-shell
-  :commands (agent-shell-pi-start-agent)
-  :config
-  (setq agent-shell-pi-command '("pi-acp")))
+  :commands (agent-shell-pi-start-agent
+             agent-shell-send-region
+             agent-shell-send-dwim
+             agent-shell-send-current-file
+             agent-shell-switch-buffer
+             agent-shell-interrupt
+             agent-shell-restart
+             agent-shell-resume-session
+             agent-shell-new-worktree-shell))
 #+end_src
 
 ** Vertico
@@ -1175,31 +1193,46 @@ Configure gptel as the LLM chat client, with API keys loaded from a local =.env=
   :after (gptel magit)
   :hook (magit-mode . gptel-magit-install))
 
-;; Unified AI assistant keybindings
+;; Unified AI assistant keybindings under SPC k.
+;; Claude Code and pi get parallel bindings, so the same key means the same
+;; thing whichever agent you are driving: r = send region, b = switch to its
+;; buffer, R = resume, k = stop.
 (map! :leader
       (:prefix ("k" . "AI")
-       ;; Claude Code IDE commands
-       :desc "Claude menu" "c" #'claude-code-ide
-       :desc "Send region/buffer" "r" #'claude-code-ide-send-region
-       :desc "Send buffer" "B" #'claude-code-ide-send-buffer
-       :desc "Toggle Claude window" "t" #'claude-code-ide-toggle
-       :desc "Kill Claude session" "k" #'claude-code-ide-kill
-       :desc "Start Claude" "C" #'claude-code-ide-start
-       :desc "Switch buffer" "b" #'claude-code-ide-switch-to-buffer
-       :desc "Show diff" "d" #'claude-code-ide-show-diff
-       :desc "Accept changes" "a" #'claude-code-ide-accept-changes
-       :desc "Reject changes" "x" #'claude-code-ide-reject-changes
-       :desc "MCP server status" "m" #'claude-code-ide-mcp-status
 
-       ;; GPTel/OpenCode commands
-       :desc "GPTel chat" "g" #'my/gptel-quick
-       :desc "GPTel menu" "G" #'gptel-menu
-       :desc "GPTel send" "s" #'gptel-send))
+       (:prefix ("c" . "claude code")
+        :desc "Menu (transient)"       "c" #'claude-code-ide-menu
+        :desc "Start in project"       "o" #'claude-code-ide
+        :desc "Toggle window"          "t" #'claude-code-ide-toggle
+        :desc "Send region as @-ref"   "r" #'claude-code-ide-insert-at-mentioned
+        :desc "Send prompt"            "s" #'claude-code-ide-send-prompt
+        :desc "Continue conversation"  "C" #'claude-code-ide-continue
+        :desc "Resume session"         "R" #'claude-code-ide-resume
+        :desc "Switch to buffer"       "b" #'claude-code-ide-switch-to-buffer
+        :desc "List sessions"          "l" #'claude-code-ide-list-sessions
+        :desc "Check status"           "?" #'claude-code-ide-check-status
+        :desc "Stop session"           "k" #'claude-code-ide-stop)
 
-;; Also set up the global Claude prefix key binding
-(map! :n "C-c c m" #'claude-code-ide
-      :i "C-c c m" #'claude-code-ide
-      :v "C-c c m" #'claude-code-ide)
+       (:prefix ("p" . "pi")
+        :desc "Start pi agent"         "p" #'agent-shell-pi-start-agent
+        :desc "Send region"            "r" #'agent-shell-send-region
+        :desc "Send dwim"              "s" #'agent-shell-send-dwim
+        :desc "Send current file"      "f" #'agent-shell-send-current-file
+        :desc "Switch to shell"        "b" #'agent-shell-switch-buffer
+        :desc "Resume session"         "R" #'agent-shell-resume-session
+        :desc "New worktree shell"     "w" #'agent-shell-new-worktree-shell
+        :desc "Interrupt"              "i" #'agent-shell-interrupt
+        :desc "Restart"                "k" #'agent-shell-restart)
+
+       (:prefix ("g" . "gptel")
+        :desc "Quick chat"             "g" #'my/gptel-quick
+        :desc "Menu"                   "m" #'gptel-menu
+        :desc "Send"                   "s" #'gptel-send)))
+
+;; Global entry point to the Claude transient, independent of the leader.
+(map! :n "C-c c m" #'claude-code-ide-menu
+      :i "C-c c m" #'claude-code-ide-menu
+      :v "C-c c m" #'claude-code-ide-menu)
 #+end_src
 
 ** Yazi Integration
@@ -1252,12 +1285,14 @@ GitHub Copilot integration for AI-powered code completion and suggestions.
   ;; Silence copilot's indentation warning; its defaults are fine.
   (setq copilot-indent-offset-warning-disable t))
 
-;; Add keybindings for copilot
+;; Copilot sits under the same SPC k AI prefix, but as its own subgroup:
+;; a flat "p" here would shadow the whole SPC k p (pi) keymap.
 (map! :leader
       (:prefix ("k" . "AI")
-       :desc "Toggle Copilot" "p" #'copilot-mode
-       :desc "Copilot diagnose" "P" #'copilot-diagnose
-       :desc "Copilot login" "L" #'copilot-login))
+       (:prefix ("o" . "copilot")
+        :desc "Toggle Copilot"   "t" #'copilot-mode
+        :desc "Copilot diagnose" "d" #'copilot-diagnose
+        :desc "Copilot login"    "l" #'copilot-login)))
 #+end_src
 
 ** Citar
