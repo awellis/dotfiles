@@ -41,8 +41,8 @@
     - [[#research-and-documentation][Research and Documentation]]
   - [[#ai-integrations][AI Integrations]]
     - [[#claude-code][Claude Code]]
-    - [[#gptelopencode][GPTel/OpenCode]]
-    - [[#monet-ide-features][Monet IDE Features]]
+    - [[#gptel][GPTel]]
+    - [[#pi][pi]]
   - [[#development-tools][Development Tools]]
     - [[#project-management][Project Management]]
     - [[#version-control][Version Control]]
@@ -74,9 +74,10 @@
 - [[#keybindings][Keybindings]]
   - [[#leader-keys][Leader Keys]]
   - [[#ai-assistant-commands][AI Assistant Commands]]
-    - [[#claude-code-spc-k][Claude Code (SPC k)]]
-    - [[#gptelopencode][GPTel/OpenCode]]
-    - [[#monet-ide][Monet IDE]]
+    - [[#claude-code-spc-k-c][Claude Code (SPC k c)]]
+    - [[#pi-spc-k-p][pi (SPC k p)]]
+    - [[#gptel][GPTel]]
+    - [[#copilot-spc-k-o][Copilot (SPC k o)]]
   - [[#org-mode-shortcuts][Org Mode Shortcuts]]
     - [[#general-org][General Org]]
     - [[#rmarkdownquarto-spc-m-f][RMarkdown/Quarto (SPC m f)]]
@@ -162,7 +163,7 @@
 
 This is a comprehensive Doom Emacs configuration designed for data science, statistical computing, and general programming with a focus on R, Python, Julia, and literate programming workflows. The configuration emphasizes:
 
-- **Modern tooling**: Integration with AI assistants (Claude Code, GPTel/OpenCode)
+- **Modern tooling**: Integration with AI assistants (Claude Code, pi, GPTel)
 - **Data science workflows**: Full support for R/ESS, RMarkdown, Quarto, and Jupyter notebooks
 - **Literate programming**: Org-babel support for multiple languages
 - **Beautiful interface**: Catppuccin theme with Fira Code ligatures
@@ -255,7 +256,7 @@ Declares additional packages beyond Doom's defaults:
 - =catppuccin-theme= - Modern dark theme
 - =claude-code= - AI assistant integration
 - =quarto-emacs= - Quarto document support
-- =opencode= - AI coding assistant
+- =agent-shell= - pi coding agent over ACP
 - =indent-bars= - Visual indentation guides
 - And more...
 
@@ -329,17 +330,16 @@ This configuration uses org-mode's literate programming features:
 - Desktop notifications
 - Comprehensive keybinding system
 
-*** GPTel/OpenCode
+*** GPTel
 - OpenAI GPT integration
-- Coding-specific tools and agents
 - Org-mode based chat interface
 - Streaming responses
 
-*** Monet IDE Features
-- External terminal integration
-- Diff tools for code review
-- Session management
-- IDE-like features for AI development
+*** pi
+- Coding agent over ACP via agent-shell and the =pi-acp= adapter
+- Provider/model configured in =~/.pi/agent/settings.json=
+- Send region, file or dwim straight into the agent shell
+- Worktree-isolated sessions
 
 ** Development Tools
 
@@ -468,7 +468,7 @@ For packages not in MELPA:
 - =catppuccin-theme= - Modern dark theme
 - =claude-code= - AI assistant integration
 - =quarto-emacs= - Quarto document support
-- =opencode= - AI coding tools
+- =agent-shell= - pi coding agent over ACP
 - =indent-bars= - Visual indentation
 - =org-make-toc= - Automatic table of contents
 
@@ -497,29 +497,55 @@ The configuration uses Doom's =SPC= leader key system:
 
 ** AI Assistant Commands
 
-*** Claude Code (=SPC k=)
-| Key | Command | Description |
-|-----|---------|-------------|
-| =SPC k c= | claude-code | Open Claude menu |
-| =SPC k r= | claude-code-send | Send region/buffer |
-| =SPC k e= | claude-code-send-error | Fix error |
-| =SPC k t= | claude-code-toggle | Toggle Claude window |
-| =SPC k o= | claude-code-send-file | Send file |
-| =SPC k k= | claude-code-kill | Kill session |
+All AI assistants live under =SPC k=. Claude Code and pi use parallel keys, so
+the same letter means the same thing whichever agent you are driving: =r= sends
+the region, =b= switches to its buffer, =R= resumes, =k= stops.
 
-*** GPTel/OpenCode
+*** Claude Code (=SPC k c=)
 | Key | Command | Description |
 |-----|---------|-------------|
-| =SPC k g= | gptel-quick | Quick GPTel chat |
-| =SPC k G= | gptel-menu | GPTel menu |
-| =SPC k s= | gptel-send | Send to GPTel |
+| =SPC k c c= | claude-code-ide-menu | Menu (transient) |
+| =SPC k c o= | claude-code-ide | Start in project |
+| =SPC k c t= | claude-code-ide-toggle | Toggle Claude window |
+| =SPC k c r= | claude-code-ide-insert-at-mentioned | Send region as @-ref |
+| =SPC k c s= | claude-code-ide-send-prompt | Send prompt |
+| =SPC k c C= | claude-code-ide-continue | Continue conversation |
+| =SPC k c R= | claude-code-ide-resume | Resume session |
+| =SPC k c b= | claude-code-ide-switch-to-buffer | Switch to buffer |
+| =SPC k c l= | claude-code-ide-list-sessions | List sessions |
+| =SPC k c ?= | claude-code-ide-check-status | Check status |
+| =SPC k c k= | claude-code-ide-stop | Stop session |
 
-*** Monet IDE
+Also bound globally: =C-c c m= opens the Claude transient.
+
+*** pi (=SPC k p=)
+pi runs over ACP via [[https://github.com/xenodium/agent-shell][agent-shell]] and the =pi-acp= adapter.
+
 | Key | Command | Description |
 |-----|---------|-------------|
-| =SPC k S= | monet-start-server | Start Monet server |
-| =SPC k l= | monet-list-sessions | List sessions |
-| =SPC k d= | monet-show-diff | Show diff |
+| =SPC k p p= | agent-shell-pi-start-agent | Start pi agent |
+| =SPC k p r= | agent-shell-send-region | Send region |
+| =SPC k p s= | agent-shell-send-dwim | Send dwim |
+| =SPC k p f= | agent-shell-send-current-file | Send current file |
+| =SPC k p b= | agent-shell-switch-buffer | Switch to shell |
+| =SPC k p R= | agent-shell-resume-session | Resume session |
+| =SPC k p w= | agent-shell-new-worktree-shell | New worktree shell |
+| =SPC k p i= | agent-shell-interrupt | Interrupt |
+| =SPC k p k= | agent-shell-restart | Restart |
+
+*** GPTel
+| Key | Command | Description |
+|-----|---------|-------------|
+| =SPC k g g= | my/gptel-quick | Quick GPTel chat |
+| =SPC k g m= | gptel-menu | GPTel menu |
+| =SPC k g s= | gptel-send | Send to GPTel |
+
+*** Copilot (=SPC k o=)
+| Key | Command | Description |
+|-----|---------|-------------|
+| =SPC k o t= | copilot-mode | Toggle Copilot |
+| =SPC k o d= | copilot-diagnose | Copilot diagnose |
+| =SPC k o l= | copilot-login | Copilot login |
 
 ** Org Mode Shortcuts
 
