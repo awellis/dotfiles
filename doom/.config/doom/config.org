@@ -45,7 +45,7 @@
   - [[#indent-bars][Indent Bars]]
   - [[#diff-hl-configuration][Diff-hl Configuration]]
   - [[#vterm-configuration][Vterm Configuration]]
-  - [[#opencode-configuration][OpenCode Configuration]]
+  - [[#gptel-configuration][GPTel Configuration]]
   - [[#yazi-integration][Yazi Integration]]
   - [[#copilot][Copilot]]
 - [[#auto-revert-configuration][Auto-revert Configuration]]
@@ -1121,21 +1121,11 @@ Configure vterm to use fish shell for a proper terminal experience.
   (setq vterm-buffer-name-string "vterm %s"))
 #+end_src
 
-** OpenCode Configuration
+** GPTel Configuration
 
-Configure OpenCode as an AI-powered coding assistant that integrates with gptel for enhanced development workflow.
+Configure gptel as the LLM chat client, with API keys loaded from a local =.env= file.
 
 #+begin_src emacs-lisp
-;; OpenCode - AI-powered coding assistant
-(use-package! opencode
-  :after gptel
-  :config
-  ;; Use the full OpenCode setup (registers tools and agents with gptel)
-  (opencode-setup)
-  ;; Set coding tools as enabled
-  (setq opencode-enabled-tools 'coding)
-  (setq opencode-default-preset 'opencode-coding))
-  
 ;; Define the quick gptel function first
 (defun my/gptel-quick ()
   "Start gptel without prompting for buffer name."

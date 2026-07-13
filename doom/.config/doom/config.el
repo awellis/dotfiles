@@ -792,16 +792,6 @@ Spaces are added around the operator when appropriate."
   ;; Optional: Set buffer name format
   (setq vterm-buffer-name-string "vterm %s"))
 
-;; OpenCode - AI-powered coding assistant
-(use-package! opencode
-  :after gptel
-  :config
-  ;; Use the full OpenCode setup (registers tools and agents with gptel)
-  (opencode-setup)
-  ;; Set coding tools as enabled
-  (setq opencode-enabled-tools 'coding)
-  (setq opencode-default-preset 'opencode-coding))
-  
 ;; Define the quick gptel function first
 (defun my/gptel-quick ()
   "Start gptel without prompting for buffer name."

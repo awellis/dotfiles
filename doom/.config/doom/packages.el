@@ -65,8 +65,6 @@
 ;;   :recipe (:host github :repo "stevemolitor/monet"))
 (package! indent-bars
   :recipe (:host github :repo "jdtsmith/indent-bars"))
-(package! opencode
-  :recipe (:host github :repo "colobas/opencode.el"))
 (package! gptel)
 (package! gptel-magit)
 (package! org-make-toc)
