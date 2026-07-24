@@ -240,13 +240,21 @@
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'agenda))
 
-;; Add keybinding for the archive function
+;; Lives under the org-agenda prefix (SPC o a A) rather than SPC o A, which is
+;; Doom's own `org-agenda' dispatcher. Note SPC m A is already
+;; `org-archive-subtree-default', so it isn't free either.
+;; NOTE: `:prefix-map', not `:prefix'. Under Doom v2's `map!' compat shim a bare
+;; (:prefix ("o" . "open")) rebinds SPC o to a *fresh* keymap, orphaning
+;; `doom-leader-open-map' and silently discarding every binding made before it.
 (map! :leader
-      (:prefix ("o" . "open")
-       :desc "Archive all DONE items" "A" #'my/archive-all-done-items))
+      (:prefix-map ("o" . "open")
+       ;; Bare "a" with NO description string: supplying one would rebuild the
+       ;; sub-keymap and drop Doom's own a/t/m/v agenda entries.
+       (:prefix "a"
+        :desc "Archive all DONE items" "A" #'my/archive-all-done-items)))
 
 (after! org
-  ;; "i" in the agenda dispatcher (SPC o A / C-c a) shows the inbox to process.
+  ;; "i" in the agenda dispatcher (SPC o A, SPC o a a, or C-c a) shows the inbox.
   (add-to-list 'org-agenda-custom-commands
                '("i" "Inbox — process & refile"
                  ((tags "inbox"
@@ -255,7 +263,7 @@
                t))
 
 (map! :leader
-      (:prefix ("o" . "open")
+      (:prefix-map ("o" . "open")
        :desc "Open inbox" "i"
        (cmd! (find-file (expand-file-name "inbox.org" org-directory)))))
 
@@ -907,7 +915,7 @@ Spaces are added around the operator when appropriate."
 (autoload 'ee-yazi-project "eee" nil t)
 
 (map! :leader
-      (:prefix ("o" . "open")
+      (:prefix-map ("o" . "open")
        :desc "Open Yazi" "y" #'ee-yazi
        :desc "Open Yazi (project)" "Y" #'ee-yazi-project))
 
@@ -976,8 +984,9 @@ Spaces are added around the operator when appropriate."
     (remove-hook 'after-change-major-mode-hook #'my/apply-spell-to-buffer))
   (dolist (buf (buffer-list)) (with-current-buffer buf (my/apply-spell-to-buffer)))
   (message "Spell checking %s globally" (if my/spell-global-enabled "ENABLED" "disabled")))
+;; `:prefix-map' so this adds to Doom's toggle map instead of replacing it.
 (map! :leader
-      (:prefix ("t" . "toggle")
+      (:prefix-map ("t" . "toggle")
        :desc "Toggle spell checking globally" "S" #'my/toggle-spell-checking))
 
 ;; Auto-revert buffers when files change on disk

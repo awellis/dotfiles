@@ -553,15 +553,22 @@ pi runs over ACP via [[https://github.com/xenodium/agent-shell][agent-shell]] an
 | Key | Command | Description |
 |-----|---------|-------------|
 | =SPC X= | org-capture | Quick capture |
-| =SPC n r f= | org-roam-node-find | Find note |
-| =SPC n r i= | org-roam-node-insert | Insert link |
-| =SPC o A= | archive-done-items | Archive completed |
+| =SPC n n= | org-capture | Capture (notes prefix) |
+| =SPC n a= | org-agenda | Agenda dispatcher |
+| =SPC n t= | org-todo-list | All TODOs |
+| =SPC n f= | +default/find-in-notes | Find file in notes |
+| =SPC o A= | org-agenda | Agenda dispatcher |
+| =SPC o a A= | my/archive-all-done-items | Archive all DONE items |
+| =SPC o i= | (inbox.org) | Open inbox |
+
+Org-roam is not enabled (no =+roam= flag on the =org= module), so there are no
+=SPC n r= bindings.
 
 *** RMarkdown/Quarto (=SPC m f=)
 | Key | Command | Description |
 |-----|---------|-------------|
-| =SPC m f r= | rmd-sanitize-buffer | Fix reverse typing |
-| =SPC m f d= | rmd-debug-state | Debug buffer state |
+| =SPC m f r= | +rmd/sanitize-buffer | Fix reverse typing |
+| =SPC m f d= | +rmd/echo-debug-state | Debug buffer state |
 
 ** macOS Integration
 | Key | Command | Description |
