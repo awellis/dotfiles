@@ -89,11 +89,14 @@ Using the Catppuccin (or Tokyo Night) theme for a modern, neon-inspired dark the
 
 #+begin_src emacs-lisp
 ;; Available themes are listed in ~/.config/doom/themes
-;; Set default colors to prevent white flash during catppuccin loading
-(setq default-frame-alist
-      '((background-color . "#1e1e2e")
-        (foreground-color . "#cdd6f4")))
-(setq initial-frame-alist default-frame-alist)
+;; Set default colors to prevent white flash during catppuccin loading.
+;; Merge (don't `setq' the whole list): a wholesale replace wipes Doom's own
+;; default-frame-alist entries, notably (vertical-scroll-bars) which disables
+;; the scroll bars, plus menu-bar-lines/tool-bar-lines.
+(dolist (pair '((background-color . "#1e1e2e")
+                (foreground-color . "#cdd6f4")))
+  (add-to-list 'default-frame-alist pair))
+(setq initial-frame-alist (copy-alist default-frame-alist))
 
 (setq doom-theme 'catppuccin)
 (use-package! catppuccin-theme :init (setq catppuccin-flavor 'mocha))
