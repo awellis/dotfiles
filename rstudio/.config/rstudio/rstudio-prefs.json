@@ -3,7 +3,6 @@
     "load_workspace": false,
     "initial_working_directory": "~",
     "auto_detect_indentation": true,
-    "insert_native_pipe_operator": true,
     "highlight_selected_line": true,
     "scroll_past_end_of_document": true,
     "highlight_r_function_calls": true,
