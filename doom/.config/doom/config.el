@@ -635,6 +635,25 @@ Spaces are added around the operator when appropriate."
              agent-shell-resume-session
              agent-shell-new-worktree-shell))
 
+(defun my/pi-send-region (beg end)
+  "Send region BEG..END to the pi TUI in the tmux pane tagged @ai."
+  (interactive "r")
+  (let ((script (expand-file-name "~/.local/bin/tmux-ai-send"))
+        (text (format "%s:%d-%d\n```%s\n%s\n```\n"
+                      (if buffer-file-name
+                          (file-relative-name buffer-file-name (doom-project-root))
+                        (buffer-name))
+                      (line-number-at-pos beg)
+                      (line-number-at-pos end)
+                      (string-remove-suffix "-mode" (symbol-name major-mode))
+                      (buffer-substring-no-properties beg end))))
+    (with-temp-buffer
+      (insert text)
+      (unless (zerop (call-process-region (point-min) (point-max) script nil nil))
+        (user-error "No tmux pane tagged @ai (open one with tmux prefix+a)")))
+    (deactivate-mark)
+    (message "Sent %d lines to pi" (count-lines beg end))))
+
 ;; Vertico configuration
 (after! vertico
   ;; Show more candidates
@@ -892,7 +911,8 @@ Spaces are added around the operator when appropriate."
         :desc "Resume session"         "R" #'agent-shell-resume-session
         :desc "New worktree shell"     "w" #'agent-shell-new-worktree-shell
         :desc "Interrupt"              "i" #'agent-shell-interrupt
-        :desc "Restart"                "k" #'agent-shell-restart)
+        :desc "Restart"                "k" #'agent-shell-restart
+        :desc "Send region to tmux pi" "t" #'my/pi-send-region)
 
        (:prefix ("g" . "gptel")
         :desc "Quick chat"             "g" #'my/gptel-quick

@@ -103,7 +103,7 @@
     },
     "pi-acp": {
       "default_config_options": {
-        "model": "huggingface/zai-org/GLM-5.2"
+        "model": "azure-openai-responses/gpt-5.6-sol"
       },
       "favorite_config_option_values": {
         "model": [

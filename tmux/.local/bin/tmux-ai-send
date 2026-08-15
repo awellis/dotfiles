@@ -1,0 +1,20 @@
+#!/bin/sh
+# Paste stdin into the tmux pane tagged @ai (opened with tmux prefix+a).
+#
+# paste-buffer -p sends the text as a bracketed paste, so multi-line input
+# lands in the agent's prompt as one block instead of submitting per newline.
+# The pane is found by its @ai tag, not by command name: pi is a node script,
+# so pane_current_command reads "node".
+#
+# GUI Emacs / other launchd apps inherit a minimal PATH; make tmux findable.
+PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+export PATH
+
+pane=$(tmux list-panes -a -F '#{pane_id} #{@ai}' 2>/dev/null | awk '$2 != "" { print $1; exit }')
+if [ -z "$pane" ]; then
+    echo "tmux-ai-send: no pane tagged @ai (open one with tmux prefix+a)" >&2
+    exit 1
+fi
+
+tmux load-buffer -b ai-send - || exit 1
+tmux paste-buffer -d -b ai-send -p -t "$pane"

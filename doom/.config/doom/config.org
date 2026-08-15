@@ -930,6 +930,39 @@ agent happens to have been started.
              agent-shell-new-worktree-shell))
 #+end_src
 
+*** Sending a region to pi in tmux
+
+The ACP bridge above runs pi inside Emacs. This sends a region to the real pi
+TUI in a tmux pane instead (open one with tmux =prefix+a=). The shell script
+=~/.local/bin/tmux-ai-send= (stowed from the =tmux= package) does the tmux side:
+it finds the pane tagged =@ai= and bracket-pastes stdin into it, so multi-line
+text arrives as one unsubmitted prompt.
+
+Called by absolute path because GUI Emacs does not inherit the shell's =PATH=.
+If it reports no server running, Emacs and tmux disagree on =TMPDIR=: set
+=TMUX_TMPDIR= identically for both.
+
+#+begin_src emacs-lisp
+(defun my/pi-send-region (beg end)
+  "Send region BEG..END to the pi TUI in the tmux pane tagged @ai."
+  (interactive "r")
+  (let ((script (expand-file-name "~/.local/bin/tmux-ai-send"))
+        (text (format "%s:%d-%d\n```%s\n%s\n```\n"
+                      (if buffer-file-name
+                          (file-relative-name buffer-file-name (doom-project-root))
+                        (buffer-name))
+                      (line-number-at-pos beg)
+                      (line-number-at-pos end)
+                      (string-remove-suffix "-mode" (symbol-name major-mode))
+                      (buffer-substring-no-properties beg end))))
+    (with-temp-buffer
+      (insert text)
+      (unless (zerop (call-process-region (point-min) (point-max) script nil nil))
+        (user-error "No tmux pane tagged @ai (open one with tmux prefix+a)")))
+    (deactivate-mark)
+    (message "Sent %d lines to pi" (count-lines beg end))))
+#+end_src
+
 ** Vertico
 
 Vertico provides a performant and minimalistic vertical completion UI. It's already enabled in init.el.
@@ -1235,7 +1268,8 @@ Configure gptel as the LLM chat client, with API keys loaded from a local =.env=
         :desc "Resume session"         "R" #'agent-shell-resume-session
         :desc "New worktree shell"     "w" #'agent-shell-new-worktree-shell
         :desc "Interrupt"              "i" #'agent-shell-interrupt
-        :desc "Restart"                "k" #'agent-shell-restart)
+        :desc "Restart"                "k" #'agent-shell-restart
+        :desc "Send region to tmux pi" "t" #'my/pi-send-region)
 
        (:prefix ("g" . "gptel")
         :desc "Quick chat"             "g" #'my/gptel-quick
