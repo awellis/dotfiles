@@ -197,6 +197,7 @@
          (mapcar (lambda (file)
                    (expand-file-name file org-directory))
                  '("inbox.org"
+                   "inbox-mobile.org"
                    "reminders-beorg.org"
                    "beorg-customize-init.org"))
          ;; All .org files in specified directories
