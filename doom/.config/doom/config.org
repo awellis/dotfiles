@@ -381,6 +381,12 @@ Org mode specific configuration with session management improvements to keep REP
          (mapcan (lambda (dir)
                    (directory-files (expand-file-name dir org-directory) t "\\.org$"))
                  '("areas/" "projects/")))))
+
+;; Doom's normal-state `]' is a prefix; keep agenda day navigation in both states.
+(after! evil-org-agenda
+  (evil-define-key* '(normal motion) evil-org-agenda-mode-map
+    (kbd "]") #'org-agenda-later
+    (kbd "[") #'org-agenda-earlier))
 #+end_src
 
 ** Org Capture Templates

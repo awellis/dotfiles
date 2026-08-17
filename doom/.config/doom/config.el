@@ -205,6 +205,12 @@
                    (directory-files (expand-file-name dir org-directory) t "\\.org$"))
                  '("areas/" "projects/")))))
 
+;; Doom's normal-state `]' is a prefix; keep agenda day navigation in both states.
+(after! evil-org-agenda
+  (evil-define-key* '(normal motion) evil-org-agenda-mode-map
+    (kbd "]") #'org-agenda-later
+    (kbd "[") #'org-agenda-earlier))
+
 (after! org
   (let ((org (lambda (f) (expand-file-name f org-directory))))
     (setq org-capture-templates
