@@ -1,156 +1,111 @@
 return {
   "nvim-orgmode/orgmode",
-  enabled = false,
   event = "VeryLazy",
-  ft = { "org" },
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter",
+  ft = "org",
+  keys = {
+    { "<leader>n", nil, desc = "Org" },
+    { "<leader>na", "<cmd>Org agenda<cr>", desc = "Org agenda" },
+    { "<leader>nc", "<cmd>Org capture<cr>", desc = "Org capture" },
+    { "<leader>ni", "<cmd>edit ~/Syncthing/org/inbox.org<cr>", desc = "Org inbox" },
   },
   config = function()
-    require("orgmode").setup({
-      -- Your org files location
-      org_agenda_files = "~/Dropbox/org/**/*",
-      org_default_notes_file = "~/Dropbox/org/inbox.org",
+    local org_dir = "~/Syncthing/org"
 
-      -- Agenda settings
-      org_agenda_span = "week",
-      org_agenda_start_on_weekday = 1, -- Monday
+    require("orgmode").setup({
+      -- Keep this in sync with the Doom Emacs Org setup. Listing agenda
+      -- sources explicitly avoids indexing archives and Syncthing versions.
+      org_agenda_files = {
+        org_dir .. "/inbox.org",
+        org_dir .. "/inbox-mobile.org",
+        org_dir .. "/reminders-beorg.org",
+        org_dir .. "/beorg-customize-init.org",
+        org_dir .. "/areas/*.org",
+        org_dir .. "/projects/*.org",
+      },
+      org_default_notes_file = org_dir .. "/inbox.org",
+      org_archive_location = org_dir .. "/archive/completed.org::",
+
+      org_agenda_span = "day",
+      org_agenda_start_on_weekday = 1,
+      org_deadline_warning_days = 7,
       org_agenda_skip_scheduled_if_done = true,
       org_agenda_skip_deadline_if_done = true,
 
-      -- TODO keywords matching your current workflow
-      org_todo_keywords = { "TODO(t)", "NEXT(n)", "WAITING(w)", "|", "DONE(d)", "CANCELLED(c)" },
+      org_todo_keywords = { "TODO(t)", "INPROGRESS(i)", "WAITING(w)", "|", "DONE(d)", "CANCELLED(c)" },
       org_todo_keyword_faces = {
-        TODO = ":foreground red :weight bold",
-        NEXT = ":foreground blue :weight bold",
-        WAITING = ":foreground orange :weight bold",
-        DONE = ":foreground green :weight bold",
-        CANCELLED = ":foreground gray :weight bold",
+        INPROGRESS = ":foreground #f9e2af :weight bold",
+        WAITING = ":foreground #a6adc8 :weight bold",
+        CANCELLED = ":foreground #6c7086 :weight bold",
       },
 
-      -- Priority settings (matching your [#A], [#B], [#C] usage)
       org_priority_highest = "A",
       org_priority_default = "B",
       org_priority_lowest = "C",
-
-      -- Logging
-      org_log_done = "time", -- Log when tasks are marked done
+      org_log_done = "time",
       org_log_into_drawer = "LOGBOOK",
-
-      -- Tags
       org_tags_column = -80,
       org_use_tag_inheritance = true,
-
-      -- Archive location
-      org_archive_location = "~/Dropbox/org/archive/completed.org::* From %s",
-
-      -- Startup folding
       org_startup_folded = "content",
+      calendar_week_start_day = 1,
 
-      -- Calendar/popup for dates
-      calendar_week_start_day = 1, -- Monday
-
-      -- Capture templates
       org_capture_templates = {
-        -- Quick TODO to inbox
         t = {
-          description = "Task",
-          template = "* TODO [#B] %?\nSCHEDULED: %t\n[%<%Y-%m-%d %a %H:%M>]",
-          target = "~/Dropbox/org/inbox.org",
+          description = "Task → inbox",
+          template = "* TODO %?\n%U",
+          target = org_dir .. "/inbox.org",
         },
-        -- High priority task
-        T = {
-          description = "Urgent Task",
-          template = "* TODO [#A] %?\nSCHEDULED: %t\nDEADLINE: %t\n[%<%Y-%m-%d %a %H:%M>]",
-          target = "~/Dropbox/org/inbox.org",
-        },
-        -- Quick note
         n = {
-          description = "Note",
-          template = "* %?\n[%<%Y-%m-%d %a %H:%M>]",
-          target = "~/Dropbox/org/inbox.org",
+          description = "Note → inbox",
+          template = "* %? :note:\n%U",
+          target = org_dir .. "/inbox.org",
         },
-        -- Link capture (for URLs you want to read later)
-        l = {
-          description = "Link",
-          template = "* TODO [[%x][%?]]\nSCHEDULED: %t\n[%<%Y-%m-%d %a %H:%M>]",
-          target = "~/Dropbox/org/inbox.org",
-          headline = "Links",
-        },
-        -- Work task
         w = {
-          description = "Work Task",
-          template = "* TODO [#B] %?\nSCHEDULED: %t",
-          target = "~/Dropbox/org/areas/work.org",
+          description = "Work task",
+          template = "* TODO %?\n%U",
+          target = org_dir .. "/areas/work.org",
+          headline = "Tasks",
         },
-        -- Meeting notes
+        p = {
+          description = "Personal task",
+          template = "* TODO %?\n%U",
+          target = org_dir .. "/areas/personal.org",
+        },
+        s = {
+          description = "Shopping item",
+          template = "* TODO %? :errand:\n%U",
+          target = org_dir .. "/inbox.org",
+        },
         m = {
-          description = "Meeting Notes",
-          template = [[
-* Meeting: %?
-[%<%Y-%m-%d %a %H:%M>]
-** Participants
--
-** Agenda
-1.
-** Discussion
--
-** Action Items
-*** TODO
-*** TODO
-** Next Steps
--]],
-          target = "~/Dropbox/org/inbox.org",
+          description = "Meeting",
+          template = "* Meeting: %? :meeting:\n%U\n** Notes\n-\n** Actions\n- [ ] ",
+          target = org_dir .. "/inbox.org",
         },
-        -- Journal entry
         j = {
-          description = "Journal Entry",
-          template = [[
-*** %<%Y-%m-%d %A>
-**** Daily Review
-***** Morning Planning
-****** Today's Priority
-1.
-2.
-3.
-****** Energy Level
-[1-10]:
-***** Work Log
-****** Accomplished
--
-****** In Progress
--
-***** Evening Review
-****** What went well?
--
-****** What could be improved?
--
-***** Gratitude
--
-***** Health & Habits
-- [ ] Exercise
-- [ ] Meditation
-- [ ] Reading
-- [ ] Water intake]],
-          target = "~/Dropbox/org/journal/2025.org",
-          headline = "2025",
+          description = "Daily review",
+          template = "* %<%Y-%m-%d %A>\n** Top 3\n1. %?\n2.\n3.\n** Notes\n-",
+          target = org_dir .. "/journal/%<%Y>.org",
         },
       },
 
-      -- Notifications (experimental)
       notifications = {
         enabled = true,
-        repeater_reminder_time = 10, -- minutes before
+        cron_enabled = false,
+        repeater_reminder_time = 10,
         deadline_warning_reminder_time = 10,
         reminder_time = 10,
       },
 
-      -- Mappings
       mappings = {
-        org = {
-          org_toggle_checkbox = "<C-Space>",
+        prefix = "<leader>n",
+      },
+      ui = {
+        input = {
+          use_vim_ui = true,
         },
       },
     })
+
+    -- Orgmode ships an experimental LSP for symbols, references, and completion.
+    vim.lsp.enable("org")
   end,
 }
