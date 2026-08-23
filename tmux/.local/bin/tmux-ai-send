@@ -4,17 +4,35 @@
 # paste-buffer -p sends the text as a bracketed paste, so multi-line input
 # lands in the agent's prompt as one block instead of submitting per newline.
 # The pane is found by its @ai tag, not by command name: pi is a node script,
-# so pane_current_command reads "node".
+# so pane_current_command reads "node". When called from tmux, limit the search
+# to the caller's session to avoid sending text to another project.
 #
 # GUI Emacs / other launchd apps inherit a minimal PATH; make tmux findable.
 PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 export PATH
 
-pane=$(tmux list-panes -a -F '#{pane_id} #{@ai}' 2>/dev/null | awk '$2 != "" { print $1; exit }')
-if [ -z "$pane" ]; then
-    echo "tmux-ai-send: no pane tagged @ai (open one with tmux prefix+a)" >&2
+session=
+if [ -n "${TMUX_PANE:-}" ]; then
+    session=$(tmux display-message -p -t "$TMUX_PANE" '#{session_id}' 2>/dev/null)
+fi
+if [ -n "$session" ]; then
+    panes=$(tmux list-panes -s -t "$session" -F '#{pane_id} #{@ai}' 2>/dev/null)
+    scope="in this tmux session"
+else
+    panes=$(tmux list-panes -a -F '#{pane_id} #{@ai}' 2>/dev/null)
+    scope="across tmux sessions"
+fi
+
+panes=$(printf '%s\n' "$panes" | awk '$2 != "" { print $1 }')
+count=$(printf '%s\n' "$panes" | awk 'NF { n++ } END { print n + 0 }')
+if [ "$count" -eq 0 ]; then
+    echo "tmux-ai-send: no pane tagged @ai $scope (open one with tmux prefix+a)" >&2
+    exit 1
+elif [ "$count" -gt 1 ]; then
+    echo "tmux-ai-send: multiple panes tagged @ai $scope" >&2
     exit 1
 fi
+pane=$panes
 
 tmux load-buffer -b ai-send - || exit 1
 tmux paste-buffer -d -b ai-send -p -t "$pane"
