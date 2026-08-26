@@ -33,6 +33,17 @@ return {
     },
   },
 
+  -- Use HTML comments in Quarto/Markdown prose.
+  {
+    "folke/ts-comments.nvim",
+    opts = {
+      lang = {
+        quarto = "<!-- %s -->",
+        markdown = "<!-- %s -->",
+      },
+    },
+  },
+
   -- LSP for code embedded in Markdown/Quarto
   {
     "jmbuhr/otter.nvim",

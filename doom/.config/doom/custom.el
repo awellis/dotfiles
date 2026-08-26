@@ -8,8 +8,11 @@
  '(desktop-save-mode t)
  '(display-line-numbers-type 'relative)
  '(ignored-local-variable-values '((eval progn (pp-buffer) (indent-buffer))))
+ '(show-paren-when-point-inside-paren t)
  '(size-indication-mode t)
- '(tool-bar-mode nil))
+ '(sp-show-pair-from-inside t)
+ '(tool-bar-mode nil)
+ '(which-key-side-window-location '(right bottom)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

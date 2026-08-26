@@ -132,9 +132,9 @@
   },
   "buffer_font_family": "FiraCode Nerd Font",
   "theme": {
-    "mode": "light",
+    "mode": "dark",
     "light": "One Light",
-    "dark": "Catppuccin Mocha",
+    "dark": "Kanso Zen (Borderless)",
   },
   "telemetry": {
     "diagnostics": false,
