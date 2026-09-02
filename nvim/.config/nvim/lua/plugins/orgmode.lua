@@ -7,6 +7,7 @@ return {
     { "<leader>na", "<cmd>Org agenda<cr>", desc = "Org agenda" },
     { "<leader>nc", "<cmd>Org capture<cr>", desc = "Org capture" },
     { "<leader>ni", "<cmd>edit ~/Syncthing/org/inbox.org<cr>", desc = "Org inbox" },
+    { "<leader>nt", nil, desc = "Org TODO" },
     {
       "<leader>ntd",
       function()
@@ -120,6 +121,9 @@ return {
           -- state prompt; <leader>ntd above toggles DONE directly.
           org_todo = { "cit", "<leader>nts" },
           org_todo_prev = { "ciT", "<leader>nT" },
+          -- The default is <prefix>t (= <leader>nt), which consumes the TODO
+          -- prefix before <leader>ntd or <leader>nts can be completed.
+          org_set_tags_command = "<leader>ng",
         },
       },
       ui = {
