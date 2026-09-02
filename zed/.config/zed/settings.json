@@ -132,8 +132,8 @@
   },
   "buffer_font_family": "FiraCode Nerd Font",
   "theme": {
-    "mode": "dark",
-    "light": "One Light",
+    "mode": "light",
+    "light": "Kanso Pearl",
     "dark": "Catppuccin Macchiato",
   },
   "telemetry": {
