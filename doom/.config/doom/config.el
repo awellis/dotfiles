@@ -392,6 +392,30 @@
 ;; Auto-save after idle time using a timer
 (run-with-idle-timer 30 t (lambda () (save-some-buffers-without-asking)))
 
+(after! markdown-mode
+  ;; Doom's Pandoc command still uses option names deprecated in Pandoc 3.11.
+  ;; Use advice rather than redefining the function so Doom's autoload cannot
+  ;; overwrite this fix later in the startup sequence.
+  (defadvice! my/markdown-compile-pandoc-a (beg end output-buffer)
+    :override #'+markdown-compile-pandoc
+    "Compile Markdown with Pandoc using its current option names."
+    (when (executable-find "pandoc")
+      (call-process-region beg end "pandoc" nil output-buffer nil
+                           "-f" "markdown"
+                           "-t" "html"
+                           "--math-method=mathjax"
+                           "--syntax-highlighting=pygments")))
+
+  (setq markdown-css-paths
+        '("https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown-light.min.css"
+          "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css")
+        markdown-xhtml-header-content
+        (concat "<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>"
+                "<style>:root { color-scheme: light; } html, body { background: #fff; color: #1f2328; } body { box-sizing: border-box; max-width: 740px; width: 100%; margin: 40px auto; padding: 0 10px; }</style>"
+                "<script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script>"
+                "<script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script>"
+                "<script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightElement(code); }); });</script>")))
+
 (after! ess
   ;; Core ESS settings following 2024-2025 best practices
   (setq inferior-R-program-name +r-executable
@@ -422,7 +446,28 @@
   ;; Observable JS fences use `ojs', but polymode otherwise looks for a
   ;; nonexistent `ojs-mode'.  Treat them as JavaScript chunks instead.
   (add-to-list 'polymode-mode-name-aliases '(ojs . js-mode))
-  (add-to-list 'auto-mode-alist '("\\.qmd\\'" . poly-quarto-mode)))
+  (add-to-list 'auto-mode-alist '("\\.qmd\\'" . poly-quarto-mode))
+
+  ;; quarto-emacs sets these variables globally from its mode hook, causing
+  ;; ordinary Markdown buffers to call the Quarto preview code.  Localize the
+  ;; compiler choice in both polymode's base buffer and its Markdown indirect
+  ;; buffers, then restore Doom's compiler as the global default.
+  (setq-default markdown-command #'+markdown-compile
+                markdown-command-needs-filename nil)
+  (defun my/localize-markdown-command ()
+    (let* ((base (or (buffer-base-buffer) (current-buffer)))
+           (file (buffer-local-value 'buffer-file-name base))
+           (quarto-p (and file (string-match-p "\\.qmd\\'" file) t)))
+      (setq-local markdown-command
+                  (if quarto-p
+                      #'quarto-mode-markdown-command
+                    #'+markdown-compile)
+                  markdown-command-needs-filename quarto-p)
+      (setq-default markdown-command #'+markdown-compile
+                    markdown-command-needs-filename nil)))
+  (add-hook 'markdown-mode-hook #'my/localize-markdown-command 90)
+  (add-hook 'markdown-ts-mode-hook #'my/localize-markdown-command 90)
+  (add-hook 'poly-quarto-mode-hook #'my/localize-markdown-command 90))
 
 ;;
 ;;; Popup rules for R/Help buffers

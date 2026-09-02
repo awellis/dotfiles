@@ -7,6 +7,24 @@ return {
     { "<leader>na", "<cmd>Org agenda<cr>", desc = "Org agenda" },
     { "<leader>nc", "<cmd>Org capture<cr>", desc = "Org capture" },
     { "<leader>ni", "<cmd>edit ~/Syncthing/org/inbox.org<cr>", desc = "Org inbox" },
+    {
+      "<leader>ntd",
+      function()
+        local org = require("orgmode").instance()
+        local headline = org.files:get_closest_headline()
+        if not headline then
+          vim.notify("No Org heading at point", vim.log.levels.WARN)
+          return
+        end
+
+        -- Drive orgmode's normal TODO transition so CLOSED timestamps,
+        -- parent cookies, and other transition behavior are preserved.
+        local fast_key = headline:is_done() and "t" or "d"
+        vim.api.nvim_feedkeys(fast_key, "n", false)
+        require("orgmode").action("org_mappings.todo_next_state")
+      end,
+      desc = "Toggle Org DONE",
+    },
   },
   config = function()
     local org_dir = "~/Syncthing/org"
@@ -97,6 +115,12 @@ return {
 
       mappings = {
         prefix = "<leader>n",
+        org = {
+          -- Keep orgmode's normal-mode shortcuts. Use <leader>nts for the
+          -- state prompt; <leader>ntd above toggles DONE directly.
+          org_todo = { "cit", "<leader>nts" },
+          org_todo_prev = { "ciT", "<leader>nT" },
+        },
       },
       ui = {
         input = {
