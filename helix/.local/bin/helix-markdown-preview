@@ -1,0 +1,424 @@
+#!/usr/bin/env python3
+"""Open a small, live-reloading Markdown preview for Helix."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import html
+import json
+import mimetypes
+import os
+import re
+import shutil
+import socket
+import subprocess
+import sys
+import threading
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from typing import Any
+
+CACHE_DIR = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "helix-markdown-preview"
+CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "helix"
+STYLE_PATH = CONFIG_DIR / "markdown-preview.css"
+IDLE_TIMEOUT_SECONDS = 30 * 60
+
+PAGE_TEMPLATE = """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>__TITLE__ · Preview</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="reading-progress" id="reading-progress"></div>
+  <header class="preview-bar">
+    <div class="document-identity">
+      <span class="document-mark" aria-hidden="true">M↓</span>
+      <span class="document-name" id="document-name">__TITLE__</span>
+    </div>
+    <div class="live-state" id="live-state" role="status">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span id="live-label">Watching for saves</span>
+    </div>
+  </header>
+  <div class="reading-layout">
+    <aside class="outline" id="outline" aria-label="Document outline">
+      <div class="outline-label">On this page</div>
+      <nav id="outline-links"></nav>
+    </aside>
+    <main>
+      <article class="markdown-body" id="document"></article>
+    </main>
+  </div>
+  <script>
+    const article = document.querySelector('#document');
+    const outline = document.querySelector('#outline');
+    const outlineLinks = document.querySelector('#outline-links');
+    const progress = document.querySelector('#reading-progress');
+    const liveLabel = document.querySelector('#live-label');
+    let revision = null;
+    let loading = false;
+
+    function rebuildOutline() {
+      const headings = [...article.querySelectorAll('h2, h3')];
+      outlineLinks.replaceChildren();
+      outline.hidden = headings.length < 2;
+
+      for (const heading of headings) {
+        const link = document.createElement('a');
+        link.href = `#${heading.id}`;
+        link.textContent = heading.textContent;
+        link.className = `outline-${heading.tagName.toLowerCase()}`;
+        outlineLinks.append(link);
+      }
+
+      for (const link of article.querySelectorAll('a[href^="http"]')) {
+        link.target = '_blank';
+        link.rel = 'noreferrer';
+      }
+    }
+
+    async function refresh(force = false) {
+      if (loading) return;
+      loading = true;
+      try {
+        const response = await fetch('/render', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`render failed (${response.status})`);
+        const data = await response.json();
+        if (force || data.revision !== revision) {
+          const oldRange = Math.max(document.documentElement.scrollHeight - innerHeight, 1);
+          const scrollRatio = scrollY / oldRange;
+          article.innerHTML = data.html;
+          revision = data.revision;
+          document.title = `${data.title} · Preview`;
+          document.querySelector('#document-name').textContent = data.title;
+          rebuildOutline();
+          if (!force) {
+            requestAnimationFrame(() => {
+              const newRange = Math.max(document.documentElement.scrollHeight - innerHeight, 0);
+              scrollTo({ top: scrollRatio * newRange });
+            });
+          }
+        }
+        liveLabel.textContent = 'Watching for saves';
+        document.body.classList.remove('connection-lost');
+      } catch (error) {
+        liveLabel.textContent = 'Preview paused';
+        document.body.classList.add('connection-lost');
+      } finally {
+        loading = false;
+      }
+    }
+
+    function updateProgress() {
+      const range = document.documentElement.scrollHeight - innerHeight;
+      const value = range > 0 ? Math.min(scrollY / range, 1) : 0;
+      progress.style.transform = `scaleX(${value})`;
+    }
+
+    addEventListener('scroll', updateProgress, { passive: true });
+    addEventListener('resize', updateProgress, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refresh();
+    });
+    refresh(true);
+    setInterval(refresh, 900);
+  </script>
+</body>
+</html>
+"""
+
+FALLBACK_CSS = """
+:root { color-scheme: light; font-family: Georgia, serif; }
+body { max-width: 72ch; margin: 4rem auto; padding: 0 1.5rem; color: #282522; background: #faf8f3; }
+.preview-bar { display: flex; justify-content: space-between; font-family: sans-serif; font-size: .8rem; }
+.reading-layout { display: grid; }
+.outline { display: none; }
+.markdown-body { line-height: 1.7; }
+pre { overflow: auto; padding: 1rem; background: #eeeae2; }
+img { max-width: 100%; }
+"""
+
+TITLE_RE = re.compile(r"^#\s+(.+?)\s*#?\s*$", re.MULTILINE)
+
+
+def document_title(document: Path, source: str | None = None) -> str:
+    if source is None:
+        try:
+            source = document.read_text(encoding="utf-8")
+        except OSError:
+            source = ""
+    match = TITLE_RE.search(source)
+    if match:
+        title = re.sub(r"[*_`\[\]]", "", match.group(1)).strip()
+        if title:
+            return title
+    return document.stem.replace("-", " ").replace("_", " ").strip().title()
+
+
+def render_markdown(document: Path) -> tuple[str, str]:
+    try:
+        source = document.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        message = html.escape(str(error))
+        return f'<section class="render-error"><h1>Preview unavailable</h1><pre>{message}</pre></section>', document.name
+
+    title = document_title(document, source)
+    pandoc = shutil.which("pandoc")
+    if pandoc is None:
+        message = "Pandoc is required as the Markdown parser. Install it with: brew install pandoc"
+        return f'<section class="render-error"><h1>Renderer missing</h1><p>{html.escape(message)}</p></section>', title
+
+    command = [
+        pandoc,
+        "--from=markdown+smart+autolink_bare_uris+emoji+tex_math_single_backslash+tex_math_double_backslash",
+        "--to=html5",
+        "--math-method=mathml",
+        "--highlight-style=pygments",
+        "--wrap=none",
+    ]
+    result = subprocess.run(
+        command,
+        input=source,
+        capture_output=True,
+        text=True,
+        cwd=document.parent,
+        timeout=20,
+        check=False,
+    )
+    if result.returncode != 0:
+        message = html.escape(result.stderr.strip() or "Pandoc returned an unknown error.")
+        rendered = f'<section class="render-error"><h1>Could not render Markdown</h1><pre>{message}</pre></section>'
+        return rendered, title
+    return result.stdout, title
+
+
+def state_path(document: Path) -> Path:
+    digest = hashlib.sha256(str(document).encode()).hexdigest()[:16]
+    return CACHE_DIR / f"{digest}.json"
+
+
+def read_state(document: Path) -> dict[str, Any] | None:
+    try:
+        return json.loads(state_path(document).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def is_healthy(document: Path, port: int) -> bool:
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/health", timeout=0.35) as response:
+            payload = json.loads(response.read())
+        return payload.get("document") == str(document)
+    except (OSError, ValueError, urllib.error.URLError):
+        return False
+
+
+def available_port() -> int:
+    with socket.socket() as probe:
+        probe.bind(("127.0.0.1", 0))
+        return int(probe.getsockname()[1])
+
+
+def open_browser(url: str) -> None:
+    browser = os.environ.get("BROWSER")
+    if browser:
+        command = [browser, url]
+    elif sys.platform == "darwin":
+        command = ["open", url]
+    elif shutil.which("xdg-open"):
+        command = ["xdg-open", url]
+    else:
+        import webbrowser
+
+        webbrowser.open(url)
+        return
+    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def launch_preview(document: Path) -> int:
+    document = document.expanduser().resolve()
+    if not document.is_file():
+        print(f"Markdown preview: file not found: {document}", file=sys.stderr)
+        return 1
+    if shutil.which("pandoc") is None:
+        print("Markdown preview requires pandoc (`brew install pandoc`).", file=sys.stderr)
+        return 1
+
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    state = read_state(document)
+    if state and isinstance(state.get("port"), int) and is_healthy(document, state["port"]):
+        url = f'http://127.0.0.1:{state["port"]}/'
+        open_browser(url)
+        print("Markdown preview opened (live reload is already running).")
+        return 0
+
+    state_path(document).unlink(missing_ok=True)
+    port = available_port()
+    command = [
+        sys.executable,
+        str(Path(__file__).resolve()),
+        "--serve",
+        str(document),
+        "--port",
+        str(port),
+    ]
+    process = subprocess.Popen(
+        command,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+
+    for _ in range(30):
+        if is_healthy(document, port):
+            state_path(document).write_text(
+                json.dumps({"document": str(document), "port": port, "pid": process.pid}),
+                encoding="utf-8",
+            )
+            url = f"http://127.0.0.1:{port}/"
+            open_browser(url)
+            print("Markdown preview opened. It will refresh whenever you save.")
+            return 0
+        if process.poll() is not None:
+            break
+        time.sleep(0.1)
+
+    print("Markdown preview could not start.", file=sys.stderr)
+    return 1
+
+
+class PreviewServer(ThreadingHTTPServer):
+    daemon_threads = True
+
+    def __init__(self, address: tuple[str, int], document: Path):
+        super().__init__(address, PreviewHandler)
+        self.document = document
+        self.root = document.parent.resolve()
+        self.last_seen = time.monotonic()
+        self.render_lock = threading.Lock()
+        self.render_revision: int | None = None
+        self.rendered_html = ""
+        self.rendered_title = document_title(document)
+
+    def render(self) -> dict[str, Any]:
+        try:
+            revision = self.document.stat().st_mtime_ns
+        except OSError:
+            revision = -1
+        with self.render_lock:
+            if revision != self.render_revision:
+                self.rendered_html, self.rendered_title = render_markdown(self.document)
+                self.render_revision = revision
+        return {"html": self.rendered_html, "title": self.rendered_title, "revision": revision}
+
+
+class PreviewHandler(BaseHTTPRequestHandler):
+    server: PreviewServer
+
+    def log_message(self, format: str, *args: Any) -> None:
+        return
+
+    def send_bytes(self, body: bytes, content_type: str, status: int = 200) -> None:
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def send_text(self, text: str, content_type: str, status: int = 200) -> None:
+        self.send_bytes(text.encode("utf-8"), f"{content_type}; charset=utf-8", status)
+
+    def do_GET(self) -> None:
+        self.server.last_seen = time.monotonic()
+        request_path = urllib.parse.unquote(urllib.parse.urlparse(self.path).path)
+
+        if request_path == "/":
+            title = document_title(self.server.document)
+            page = PAGE_TEMPLATE.replace("__TITLE__", html.escape(title))
+            self.send_text(page, "text/html")
+            return
+        if request_path == "/health":
+            payload = json.dumps({"document": str(self.server.document)})
+            self.send_text(payload, "application/json")
+            return
+        if request_path == "/render":
+            self.send_text(json.dumps(self.server.render()), "application/json")
+            return
+        if request_path == "/style.css":
+            try:
+                css = STYLE_PATH.read_text(encoding="utf-8")
+            except OSError:
+                css = FALLBACK_CSS
+            self.send_text(css, "text/css")
+            return
+        if request_path == "/favicon.ico":
+            self.send_bytes(b"", "image/x-icon", 204)
+            return
+
+        candidate = (self.server.root / request_path.lstrip("/")).resolve()
+        try:
+            candidate.relative_to(self.server.root)
+        except ValueError:
+            self.send_text("Forbidden", "text/plain", 403)
+            return
+        if not candidate.is_file():
+            self.send_text("Not found", "text/plain", 404)
+            return
+        try:
+            body = candidate.read_bytes()
+        except OSError:
+            self.send_text("Could not read asset", "text/plain", 500)
+            return
+        content_type = mimetypes.guess_type(candidate.name)[0] or "application/octet-stream"
+        self.send_bytes(body, content_type)
+
+
+def serve(document: Path, port: int) -> int:
+    document = document.expanduser().resolve()
+    server = PreviewServer(("127.0.0.1", port), document)
+
+    def stop_when_idle() -> None:
+        while time.monotonic() - server.last_seen < IDLE_TIMEOUT_SECONDS:
+            time.sleep(30)
+        server.shutdown()
+
+    threading.Thread(target=stop_when_idle, daemon=True).start()
+    try:
+        server.serve_forever(poll_interval=0.5)
+    finally:
+        server.server_close()
+        current_state = read_state(document)
+        if current_state and current_state.get("pid") == os.getpid():
+            state_path(document).unlink(missing_ok=True)
+    return 0
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("document", type=Path, help="Markdown file to preview")
+    parser.add_argument("--serve", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--port", type=int, default=0, help=argparse.SUPPRESS)
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    if args.serve:
+        return serve(args.document, args.port)
+    return launch_preview(args.document)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

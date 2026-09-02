@@ -6,3 +6,7 @@ name = "markdown"
 file-types = ["md", "markdown", "mkd", "mkdn", "mdwn", "mdown", "markdn", "mdtxt", "mdtext", "qmd"]
 language-servers = ["marksman", "iwe"]
 auto-format = true
+text-width = 88
+rulers = [88]
+soft-wrap = { enable = true, wrap-at-text-width = true }
+indent = { tab-width = 2, unit = "  " }

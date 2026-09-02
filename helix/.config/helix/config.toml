@@ -19,6 +19,7 @@ b = ":buffer-next"
 
 [keys.normal.space]
 q = { q = ":quit-all", w = ":quit" }
+m = { p = [":write", ':sh helix-markdown-preview "%{buffer_name}"'] }
 "|" = ":vsplit"
 "-" = ":hsplit"
 
