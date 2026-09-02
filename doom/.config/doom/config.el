@@ -76,11 +76,22 @@
         "s-x" #'kill-region        ;; ⌘X
         "s-v" #'yank))             ;; ⌘V
 
+(defconst my/prose-preview-stylesheet
+  (concat "file://" (expand-file-name "~/.config/preview/prose.css"))
+  "Shared stylesheet for Markdown and Org browser previews.")
+
 ;; Auto-generate/update a Table of Contents inside Org buffers
 (use-package! org-make-toc
   :hook (org-mode . org-make-toc-mode))
 
 (setq org-directory "~/Syncthing/org/")
+
+(after! ox-html
+  (setq org-html-head-include-default-style nil
+        org-html-head
+        (format
+         "<link rel='stylesheet' type='text/css' href='%s' />\n<script>document.addEventListener('DOMContentLoaded', () => document.body.classList.add('markdown-body'));</script>"
+         my/prose-preview-stylesheet)))
 
 ;; General org-babel session management
 (after! org
@@ -401,20 +412,16 @@
     "Compile Markdown with Pandoc using its current option names."
     (when (executable-find "pandoc")
       (call-process-region beg end "pandoc" nil output-buffer nil
-                           "-f" "markdown"
+                           "-f" "markdown+smart+autolink_bare_uris+emoji+tex_math_single_backslash+tex_math_double_backslash"
                            "-t" "html"
-                           "--math-method=mathjax"
+                           "--math-method=mathml"
                            "--syntax-highlighting=pygments")))
 
-  (setq markdown-css-paths
-        '("https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown-light.min.css"
-          "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css")
+  (setq markdown-enable-math t
+        markdown-css-paths (list my/prose-preview-stylesheet)
         markdown-xhtml-header-content
         (concat "<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>"
-                "<style>:root { color-scheme: light; } html, body { background: #fff; color: #1f2328; } body { box-sizing: border-box; max-width: 740px; width: 100%; margin: 40px auto; padding: 0 10px; }</style>"
-                "<script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script>"
-                "<script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script>"
-                "<script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightElement(code); }); });</script>")))
+                "<script>document.addEventListener('DOMContentLoaded', () => document.body.classList.add('markdown-body'));</script>")))
 
 (after! ess
   ;; Core ESS settings following 2024-2025 best practices

@@ -236,6 +236,24 @@ h1::after {
   content: "";
 }
 
+.org-body h1 {
+  max-width: none;
+  margin: var(--space-3xl) 0 var(--space-md);
+  font-family: var(--sans);
+  font-size: clamp(1.65rem, 3vw, 2.15rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.13;
+}
+
+.org-body > h1:first-child {
+  margin-top: 0;
+}
+
+.org-body h1::after {
+  display: none;
+}
+
 h2 {
   margin: var(--space-3xl) 0 var(--space-md);
   font-size: clamp(1.65rem, 3vw, 2.15rem);
@@ -581,6 +599,78 @@ summary {
   white-space: pre-wrap;
 }
 
+/* Hosts without the Helix preview shell: markdown-preview.nvim and Emacs. */
+body.markdown-body,
+#page-ctn > .markdown-body {
+  width: min(calc(100% - 3rem), 46rem);
+  margin-inline: auto;
+  padding-block: clamp(2.5rem, 7vw, 6rem) 14vh;
+}
+
+#__next > main {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+#page-ctn {
+  max-width: none;
+  color: inherit;
+}
+
+#page-header {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  align-items: center;
+  min-height: 3.25rem;
+  padding: 0 var(--space-lg);
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklch, var(--rule) 75%, transparent);
+  border-radius: 0;
+  color: var(--ink-soft);
+  background: color-mix(in oklch, var(--paper) 92%, transparent);
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  backdrop-filter: blur(12px);
+}
+
+#page-header h3 {
+  color: var(--ink);
+  font-size: 0.76rem;
+  letter-spacing: 0.025em;
+}
+
+#page-header svg {
+  color: var(--accent);
+}
+
+.todo,
+.done {
+  padding: 0.12em 0.45em;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.72em;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.todo {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.done {
+  color: oklch(39% 0.08 145);
+  background: oklch(91% 0.04 145);
+}
+
+.tag {
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: 0.75em;
+}
+
 @media (max-width: 70rem) {
   body {
     background: var(--paper);
@@ -646,6 +736,7 @@ summary {
   }
 
   .preview-bar,
+  #page-header,
   .outline,
   .reading-progress {
     display: none;

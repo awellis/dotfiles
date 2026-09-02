@@ -3,6 +3,27 @@
 -- Add any additional keymaps here
 vim.keymap.set("i", "jj", "<ESC>", { silent = true })
 
+local function open_prose_preview()
+  local file = vim.api.nvim_buf_get_name(0)
+  if file == "" then
+    vim.notify("Save the document before opening its preview", vim.log.levels.WARN)
+    return
+  end
+
+  vim.cmd("silent update")
+  vim.system({ "prose-preview", file }, { text = true }, function(result)
+    if result.code ~= 0 then
+      vim.schedule(function()
+        vim.notify(vim.trim(result.stderr or "Preview command failed"), vim.log.levels.ERROR, { title = "Prose preview" })
+      end)
+    end
+  end)
+end
+
+vim.api.nvim_create_user_command("MarkdownPreview", open_prose_preview, { desc = "Preview Markdown or Org" })
+vim.api.nvim_create_user_command("ProsePreview", open_prose_preview, { desc = "Preview Markdown or Org" })
+vim.keymap.set("n", "<leader>mp", open_prose_preview, { desc = "Preview Markdown or Org" })
+
 -- Send the visual selection to the pi TUI running in a tmux pane (open one with
 -- tmux prefix+a). <leader>amp drives pi in-editor over ACP instead; this is for
 -- when you want the real pi session next door.

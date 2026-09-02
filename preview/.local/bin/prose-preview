@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Open a small, live-reloading Markdown preview for Helix."""
+"""Open a small, live-reloading Markdown or Org preview."""
 
 from __future__ import annotations
 
@@ -23,9 +23,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
-CACHE_DIR = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "helix-markdown-preview"
-CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "helix"
-STYLE_PATH = CONFIG_DIR / "markdown-preview.css"
+CACHE_DIR = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "prose-preview"
+CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+STYLE_PATH = CONFIG_DIR / "preview" / "prose.css"
 IDLE_TIMEOUT_SECONDS = 30 * 60
 
 PAGE_TEMPLATE = """<!doctype html>
@@ -41,7 +41,7 @@ PAGE_TEMPLATE = """<!doctype html>
   <div class="reading-progress" id="reading-progress"></div>
   <header class="preview-bar">
     <div class="document-identity">
-      <span class="document-mark" aria-hidden="true">M↓</span>
+      <span class="document-mark" aria-hidden="true">__MARK__</span>
       <span class="document-name" id="document-name">__TITLE__</span>
     </div>
     <div class="live-state" id="live-state" role="status">
@@ -97,6 +97,7 @@ PAGE_TEMPLATE = """<!doctype html>
           const oldRange = Math.max(document.documentElement.scrollHeight - innerHeight, 1);
           const scrollRatio = scrollY / oldRange;
           article.innerHTML = data.html;
+          article.classList.toggle('org-body', data.format === 'org');
           revision = data.revision;
           document.title = `${data.title} · Preview`;
           document.querySelector('#document-name').textContent = data.title;
@@ -148,6 +149,28 @@ img { max-width: 100%; }
 """
 
 TITLE_RE = re.compile(r"^#\s+(.+?)\s*#?\s*$", re.MULTILINE)
+ORG_TITLE_RE = re.compile(r"^#\+title:\s*(.+?)\s*$", re.IGNORECASE | re.MULTILINE)
+ORG_HEADING_RE = re.compile(r"^\*+\s+(?:(?:TODO|DONE|INPROGRESS|WAITING|CANCELLED)\s+)?(.+?)\s*$", re.MULTILINE)
+DISPLAY_DOLLAR_MATH_RE = re.compile(r"(?<!\\)\$\$(.*?)(?<!\\)\$\$", re.DOTALL)
+INLINE_DOLLAR_MATH_RE = re.compile(r"(?<![\\$])\$(?!\$)([^\n]+?)(?<![\\$])\$(?!\$)")
+BACKSLASH_DISPLAY_MATH_RE = re.compile(r"(\\\[)(.*?)(\\\])", re.DOTALL)
+BACKSLASH_INLINE_MATH_RE = re.compile(r"(\\\()(.+?)(\\\))")
+
+
+def normalize_math_backslashes(source: str) -> str:
+    """Repair doubled TeX command slashes while preserving TeX row breaks."""
+
+    def repair_body(body: str) -> str:
+        return re.sub(r"\\\\(?=[A-Za-z])", r"\\", body)
+
+    source = DISPLAY_DOLLAR_MATH_RE.sub(lambda match: f"$${repair_body(match.group(1))}$$", source)
+    source = INLINE_DOLLAR_MATH_RE.sub(lambda match: f"${repair_body(match.group(1))}$", source)
+    source = BACKSLASH_DISPLAY_MATH_RE.sub(
+        lambda match: f"{match.group(1)}{repair_body(match.group(2))}{match.group(3)}", source
+    )
+    return BACKSLASH_INLINE_MATH_RE.sub(
+        lambda match: f"{match.group(1)}{repair_body(match.group(2))}{match.group(3)}", source
+    )
 
 
 def document_title(document: Path, source: str | None = None) -> str:
@@ -156,9 +179,13 @@ def document_title(document: Path, source: str | None = None) -> str:
             source = document.read_text(encoding="utf-8")
         except OSError:
             source = ""
-    match = TITLE_RE.search(source)
+    if document.suffix.lower() == ".org":
+        match = ORG_TITLE_RE.search(source) or ORG_HEADING_RE.search(source)
+    else:
+        match = TITLE_RE.search(source)
     if match:
         title = re.sub(r"[*_`\[\]]", "", match.group(1)).strip()
+        title = re.sub(r"\s+:[^:]+(?::[^:]+)*:\s*$", "", title)
         if title:
             return title
     return document.stem.replace("-", " ").replace("_", " ").strip().title()
@@ -172,14 +199,20 @@ def render_markdown(document: Path) -> tuple[str, str]:
         return f'<section class="render-error"><h1>Preview unavailable</h1><pre>{message}</pre></section>', document.name
 
     title = document_title(document, source)
+    source = normalize_math_backslashes(source)
     pandoc = shutil.which("pandoc")
     if pandoc is None:
-        message = "Pandoc is required as the Markdown parser. Install it with: brew install pandoc"
+        message = "Pandoc is required as the document parser. Install it with: brew install pandoc"
         return f'<section class="render-error"><h1>Renderer missing</h1><p>{html.escape(message)}</p></section>', title
 
+    reader = (
+        "org"
+        if document.suffix.lower() == ".org"
+        else "markdown+smart+autolink_bare_uris+emoji+tex_math_single_backslash+tex_math_double_backslash"
+    )
     command = [
         pandoc,
-        "--from=markdown+smart+autolink_bare_uris+emoji+tex_math_single_backslash+tex_math_double_backslash",
+        f"--from={reader}",
         "--to=html5",
         "--math-method=mathml",
         "--highlight-style=pygments",
@@ -196,7 +229,7 @@ def render_markdown(document: Path) -> tuple[str, str]:
     )
     if result.returncode != 0:
         message = html.escape(result.stderr.strip() or "Pandoc returned an unknown error.")
-        rendered = f'<section class="render-error"><h1>Could not render Markdown</h1><pre>{message}</pre></section>'
+        rendered = f'<section class="render-error"><h1>Could not render document</h1><pre>{message}</pre></section>'
         return rendered, title
     return result.stdout, title
 
@@ -247,10 +280,10 @@ def open_browser(url: str) -> None:
 def launch_preview(document: Path) -> int:
     document = document.expanduser().resolve()
     if not document.is_file():
-        print(f"Markdown preview: file not found: {document}", file=sys.stderr)
+        print(f"Document preview: file not found: {document}", file=sys.stderr)
         return 1
     if shutil.which("pandoc") is None:
-        print("Markdown preview requires pandoc (`brew install pandoc`).", file=sys.stderr)
+        print("Document preview requires pandoc (`brew install pandoc`).", file=sys.stderr)
         return 1
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -258,7 +291,7 @@ def launch_preview(document: Path) -> int:
     if state and isinstance(state.get("port"), int) and is_healthy(document, state["port"]):
         url = f'http://127.0.0.1:{state["port"]}/'
         open_browser(url)
-        print("Markdown preview opened (live reload is already running).")
+        print("Document preview opened (live reload is already running).")
         return 0
 
     state_path(document).unlink(missing_ok=True)
@@ -287,13 +320,13 @@ def launch_preview(document: Path) -> int:
             )
             url = f"http://127.0.0.1:{port}/"
             open_browser(url)
-            print("Markdown preview opened. It will refresh whenever you save.")
+            print("Document preview opened. It will refresh whenever you save.")
             return 0
         if process.poll() is not None:
             break
         time.sleep(0.1)
 
-    print("Markdown preview could not start.", file=sys.stderr)
+    print("Document preview could not start.", file=sys.stderr)
     return 1
 
 
@@ -319,7 +352,13 @@ class PreviewServer(ThreadingHTTPServer):
             if revision != self.render_revision:
                 self.rendered_html, self.rendered_title = render_markdown(self.document)
                 self.render_revision = revision
-        return {"html": self.rendered_html, "title": self.rendered_title, "revision": revision}
+        document_format = "org" if self.document.suffix.lower() == ".org" else "markdown"
+        return {
+            "html": self.rendered_html,
+            "title": self.rendered_title,
+            "revision": revision,
+            "format": document_format,
+        }
 
 
 class PreviewHandler(BaseHTTPRequestHandler):
@@ -346,7 +385,8 @@ class PreviewHandler(BaseHTTPRequestHandler):
 
         if request_path == "/":
             title = document_title(self.server.document)
-            page = PAGE_TEMPLATE.replace("__TITLE__", html.escape(title))
+            mark = "O•" if self.server.document.suffix.lower() == ".org" else "M↓"
+            page = PAGE_TEMPLATE.replace("__TITLE__", html.escape(title)).replace("__MARK__", mark)
             self.send_text(page, "text/html")
             return
         if request_path == "/health":
@@ -407,7 +447,7 @@ def serve(document: Path, port: int) -> int:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("document", type=Path, help="Markdown file to preview")
+    parser.add_argument("document", type=Path, help="Markdown or Org file to preview")
     parser.add_argument("--serve", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--port", type=int, default=0, help=argparse.SUPPRESS)
     return parser.parse_args()

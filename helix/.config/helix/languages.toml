@@ -10,3 +10,10 @@ text-width = 88
 rulers = [88]
 soft-wrap = { enable = true, wrap-at-text-width = true }
 indent = { tab-width = 2, unit = "  " }
+
+[[language]]
+name = "org"
+text-width = 88
+rulers = [88]
+soft-wrap = { enable = true, wrap-at-text-width = true }
+indent = { tab-width = 2, unit = "  " }
