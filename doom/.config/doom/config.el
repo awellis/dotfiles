@@ -419,6 +419,9 @@
 (use-package! quarto-mode
   :after polymode
   :config
+  ;; Observable JS fences use `ojs', but polymode otherwise looks for a
+  ;; nonexistent `ojs-mode'.  Treat them as JavaScript chunks instead.
+  (add-to-list 'polymode-mode-name-aliases '(ojs . js-mode))
   (add-to-list 'auto-mode-alist '("\\.qmd\\'" . poly-quarto-mode)))
 
 ;;

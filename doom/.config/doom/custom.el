@@ -12,7 +12,8 @@
  '(size-indication-mode t)
  '(sp-show-pair-from-inside t)
  '(tool-bar-mode nil)
- '(which-key-side-window-location '(right bottom)))
+ '(which-key-popup-type 'frame)
+ '(which-key-side-window-location '(bottom)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -7,6 +7,11 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     ft = { "quarto", "markdown" },
+    init = function()
+      -- Quarto labels Observable JS fences as `ojs`; use the JavaScript
+      -- parser for those Tree-sitter injections.
+      vim.treesitter.language.register("javascript", "ojs")
+    end,
     keys = {
       { "<leader>q", nil, desc = "Quarto" },
       { "<leader>qp", "<cmd>QuartoPreview<cr>", desc = "Preview" },
@@ -16,6 +21,8 @@ return {
     opts = {
       lspFeatures = {
         enabled = true,
+        -- OJS is highlighted with the JavaScript parser, but is not valid
+        -- standard JavaScript, so exclude it from JS/TS LSP diagnostics.
         languages = { "r", "python", "julia" },
         chunks = "all",
         diagnostics = {
