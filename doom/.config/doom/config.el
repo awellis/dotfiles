@@ -380,6 +380,34 @@
 ;; - Safari: [[https://example.com][Page Title]]
 ;; - Finder: [[file:/path/to/file.txt][file.txt]]
 
+(use-package! org-draw
+  :commands (org-draw org-draw-edit org-draw-setup org-draw-menu)
+  :init
+  ;; Figures resolve relative to the visited org file, so a drawing travels with
+  ;; the document rather than living in a central attachment store.
+  (setq org-draw-directory "figures"
+        ;; Doom leaves `org-image-actual-width' nil, so the `#+ATTR_ORG: :width'
+        ;; line org-draw writes is honoured. Cap inline figures at a readable
+        ;; width instead of the canvas' native pixel size.
+        org-draw-insert-attr-width 600
+        ;; Require a 6-digit code before a browser can push into a buffer. Paired
+        ;; tokens persist, so this costs one `org-draw-setup' per device and makes
+        ;; the server safe to run on a shared network (BFH, conference wifi).
+        ;; Set to nil for a trusted LAN only.
+        org-draw-require-pairing t))
+
+;; Bindings live outside `:config': org-draw only loads when one of its commands
+;; runs, and these keys are what run them.
+(after! org
+  (map! :map org-mode-map
+        :localleader
+        "D" #'org-draw-menu)
+
+  (map! :map org-mode-map
+        "C-c d d" #'org-draw
+        "C-c d e" #'org-draw-edit
+        "C-c d s" #'org-draw-setup))
+
 ;; Disable the "Really exit Emacs?" confirmation
 (setq confirm-kill-emacs nil)
 

@@ -78,3 +78,9 @@
 ;; explicitly so straight doesn't rely on a stale local recipe cache.
 (package! let-completion :recipe (:host github :repo "gggion/let-completion.el"))
 (package! agent-shell :recipe (:host github :repo "xenodium/agent-shell"))
+;; Draw into org from a browser (tldraw canvas served over the LAN).
+;; Explicit recipe mirroring MELPA's: the local straight recipe cache predates
+;; org-draw's MELPA listing, and the shipped web/canvas.html must be installed.
+(package! org-draw
+  :recipe (:host github :repo "larrasket/org-draw"
+           :files (:defaults ("web" "web/canvas.html"))))

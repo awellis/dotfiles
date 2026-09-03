@@ -652,6 +652,73 @@ Supported apps include: Mail, Safari, Chrome, Firefox, Finder, and more.
 ;; - Finder: [[file:/path/to/file.txt][file.txt]]
 #+end_src
 
+** Drawing with org-draw
+
+[[https://github.com/larrasket/org-draw][org-draw]] serves a [[https://github.com/tldraw/tldraw][tldraw]] canvas over HTTP on port 8777, so any device on the
+same network (iPad, phone, or a browser on this machine) can draw and have the result
+land in the org buffer as a PNG link. The stroke data is embedded in the PNG, so a
+figure stays re-editable later.
+
+*** One-time setup per device
+Pairing is enabled below, so a browser must present a 6-digit code before it can push
+into a buffer. Tokens persist in =~/.config/emacs/org-draw-tokens=, so this is needed
+once per device:
+
+1. =M-x org-draw-setup= opens a =*org-draw setup*= buffer with a 6-digit code and the
+   receiver URLs (prefer the =.local= one: it survives IP changes)
+2. Open that URL on the iPad, enter the code, and keep the tab open. It long-polls for
+   draw requests
+3. macOS will ask Emacs for local network permission the first time the server starts
+
+*** Usage
+1. Put point where the figure should go and hit =SPC m D= → =d= (or =C-c d d=)
+2. The queued request appears on the iPad's open receiver tab
+3. Draw, commit from the canvas, and the PNG is written to =figures/= beside the org
+   file with the link inserted at point
+4. =org-draw= is DWIM: on an existing org-draw figure it reopens that drawing for
+   editing rather than starting a new one
+
+*** Keybindings
+| Keybinding  | Function        | Description                                |
+|-------------+-----------------+--------------------------------------------|
+| =SPC m D=   | org-draw-menu   | Transient menu (draw, edit, setup, server) |
+| =C-c d d=   | org-draw        | Draw at point, or edit figure at point     |
+| =C-c d e=   | org-draw-edit   | Edit figure at point (errors if none)      |
+| =C-c d s=   | org-draw-setup  | Pairing code and receiver URLs             |
+
+Note =SPC m d= is Doom's org date/deadline prefix, hence the capital =D= for drawing.
+
+*** Configuration
+#+begin_src emacs-lisp
+(use-package! org-draw
+  :commands (org-draw org-draw-edit org-draw-setup org-draw-menu)
+  :init
+  ;; Figures resolve relative to the visited org file, so a drawing travels with
+  ;; the document rather than living in a central attachment store.
+  (setq org-draw-directory "figures"
+        ;; Doom leaves `org-image-actual-width' nil, so the `#+ATTR_ORG: :width'
+        ;; line org-draw writes is honoured. Cap inline figures at a readable
+        ;; width instead of the canvas' native pixel size.
+        org-draw-insert-attr-width 600
+        ;; Require a 6-digit code before a browser can push into a buffer. Paired
+        ;; tokens persist, so this costs one `org-draw-setup' per device and makes
+        ;; the server safe to run on a shared network (BFH, conference wifi).
+        ;; Set to nil for a trusted LAN only.
+        org-draw-require-pairing t))
+
+;; Bindings live outside `:config': org-draw only loads when one of its commands
+;; runs, and these keys are what run them.
+(after! org
+  (map! :map org-mode-map
+        :localleader
+        "D" #'org-draw-menu)
+
+  (map! :map org-mode-map
+        "C-c d d" #'org-draw
+        "C-c d e" #'org-draw-edit
+        "C-c d s" #'org-draw-setup))
+#+end_src
+
 ** Autosave Configuration
 
 Configure automatic saving of buffers to prevent data loss.
