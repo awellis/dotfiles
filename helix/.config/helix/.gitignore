@@ -1,1 +1,5 @@
-runtime/
+# Compiled tree-sitter grammars are build artifacts; rebuild with
+# ./build-grammars.sh (or `hx --grammar fetch && hx --grammar build`).
+runtime/grammars/
+
+# Queries under runtime/queries/ ARE tracked -- they are config, not artifacts.

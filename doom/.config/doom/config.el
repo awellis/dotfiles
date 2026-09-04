@@ -688,6 +688,29 @@ Spaces are added around the operator when appropriate."
         :i "M-n" #'org-babel-next-src-block
         :i "M-p" #'org-babel-previous-src-block))
 
+(after! treesit
+  (dolist (src '((stan
+                  . ("https://github.com/WardBrian/tree-sitter-stan"
+                     "v0.3.1" "grammars/stan/src"))
+                 (stanfunctions
+                  . ("https://github.com/WardBrian/tree-sitter-stan"
+                     "v0.3.1" "grammars/stanfunctions/src"))))
+    (add-to-list 'treesit-language-source-alist src))
+
+  ;; Compile on demand. Demoted errors so a missing compiler or no network
+  ;; degrades to "no Stan highlighting" instead of breaking startup.
+  (dolist (lang '(stan stanfunctions))
+    (unless (treesit-language-available-p lang)
+      (with-demoted-errors "Stan grammar install failed: %S"
+        (treesit-install-language-grammar lang)))))
+
+(use-package! stan-ts-mode
+  :when (treesit-available-p)
+  :mode (("\\.stan\\'" . stan-ts-mode)
+         ("\\.stanfunctions\\'" . stan-functions-ts-mode))
+  :config
+  (setq stan-ts-mode-indent-offset 2))
+
 ;; Claude Code IDE - MCP-based integration with bidirectional Emacs communication
 (use-package! claude-code-ide
   :config

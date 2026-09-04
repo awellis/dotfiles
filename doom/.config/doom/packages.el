@@ -84,3 +84,6 @@
 (package! org-draw
   :recipe (:host github :repo "larrasket/org-draw"
            :files (:defaults ("web" "web/canvas.html"))))
+;; Stan (mc-stan.org): tree-sitter major mode for .stan / .stanfunctions,
+;; using the same grammar as the nvim and helix configs in this repo.
+(package! stan-ts-mode)

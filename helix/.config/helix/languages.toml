@@ -17,3 +17,33 @@ text-width = 88
 rulers = [88]
 soft-wrap = { enable = true, wrap-at-text-width = true }
 indent = { tab-width = 2, unit = "  " }
+
+# Stan (mc-stan.org). Helix ships no stan grammar, so it is built from source
+# by ./build-grammars.sh into runtime/grammars/ (gitignored). Highlight queries
+# are vendored in runtime/queries/{stan,stanfunctions}/.
+
+[[language]]
+name = "stan"
+scope = "source.stan"
+injection-regex = "^stan$"
+file-types = ["stan"]
+comment-tokens = ["//", "#"]
+block-comment-tokens = { start = "/*", end = "*/" }
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "stan"
+source = { git = "https://github.com/WardBrian/tree-sitter-stan", rev = "74d7eb2d970c84982c8c687a20695ebe2f259cfd", subpath = "grammars/stan" }
+
+[[language]]
+name = "stanfunctions"
+scope = "source.stanfunctions"
+injection-regex = "^stanfunctions$"
+file-types = ["stanfunctions"]
+comment-tokens = ["//", "#"]
+block-comment-tokens = { start = "/*", end = "*/" }
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "stanfunctions"
+source = { git = "https://github.com/WardBrian/tree-sitter-stan", rev = "74d7eb2d970c84982c8c687a20695ebe2f259cfd", subpath = "grammars/stanfunctions" }

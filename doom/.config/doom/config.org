@@ -1060,6 +1060,45 @@ Unified navigation across Rmd/Qmd and Org:
 #+end_src
 
 
+** Stan
+
+Tree-sitter highlighting for [[https://mc-stan.org][Stan]] models. The grammar is
+=WardBrian/tree-sitter-stan=, the same one used by the Neovim and Helix configs
+in this repo, so all three editors highlight Stan identically. Keep the revision
+below in sync with =nvim/.config/nvim/lua/plugins/stan.lua= and
+=helix/.config/helix/build-grammars.sh=.
+
+=stan-ts-mode.el= calls ~user-error~ at the end of the file if the grammar is
+missing, so the grammar has to exist before the package finishes loading. The
+file does ~(require 'treesit)~ before that check, which means this ~after!~ block
+runs first: the grammar is compiled the first time a Stan file is opened rather
+than on every startup.
+
+#+begin_src emacs-lisp
+(after! treesit
+  (dolist (src '((stan
+                  . ("https://github.com/WardBrian/tree-sitter-stan"
+                     "v0.3.1" "grammars/stan/src"))
+                 (stanfunctions
+                  . ("https://github.com/WardBrian/tree-sitter-stan"
+                     "v0.3.1" "grammars/stanfunctions/src"))))
+    (add-to-list 'treesit-language-source-alist src))
+
+  ;; Compile on demand. Demoted errors so a missing compiler or no network
+  ;; degrades to "no Stan highlighting" instead of breaking startup.
+  (dolist (lang '(stan stanfunctions))
+    (unless (treesit-language-available-p lang)
+      (with-demoted-errors "Stan grammar install failed: %S"
+        (treesit-install-language-grammar lang)))))
+
+(use-package! stan-ts-mode
+  :when (treesit-available-p)
+  :mode (("\\.stan\\'" . stan-ts-mode)
+         ("\\.stanfunctions\\'" . stan-functions-ts-mode))
+  :config
+  (setq stan-ts-mode-indent-offset 2))
+#+end_src
+
 * Tools and Integrations
 
 ** Claude Code
