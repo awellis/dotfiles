@@ -98,7 +98,7 @@
       "default_config_options": {
         "effort": "high",
         "mode": "auto",
-        "model": "opus[1m]",
+        "model": "claude-fable-5-1[1m]",
       },
       "type": "registry",
     },
