@@ -48,9 +48,7 @@ function tide --description "Start/attach a tmux dev session: nvim + an AI agent
     tmux new-session -d -s $session_name -x (tput cols) -y (tput lines) -c $cwd nvim
     # Right column (35%) for the AI agent
     set -l agent_pane (tmux split-window -h -t $session_name -p 35 -c $cwd -P -F '#{pane_id}' $agent_cmd)
-    if test $agent = pi
-        tmux set-option -p -t $agent_pane @ai pi
-    end
+    tmux set-option -p -t $agent_pane @ai $agent
     # Spare shell beneath the agent (30%)
     tmux split-window -v -t $agent_pane -p 30 -c $cwd
     # Focus the nvim pane
