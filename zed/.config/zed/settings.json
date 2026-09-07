@@ -98,19 +98,26 @@
       "default_config_options": {
         "effort": "high",
         "mode": "auto",
-        "model": "claude-fable-5-1[1m]",
+        "model": "opus[1m]",
       },
       "type": "registry",
     },
     "pi-acp": {
       "default_config_options": {
-        "thought_level": "medium",
-        "model": "azure-openai-responses/gpt-5.6-sol"
+        "thought_level": "high",
+        "model": "azure-anthropic/claude-opus-4-8-2"
       },
       "favorite_config_option_values": {
         "model": [
           "azure-openai/Kimi-K2.6",
-          "huggingface/zai-org/GLM-5.2"
+          "huggingface/zai-org/GLM-5.2",
+          "openai-codex/gpt-5.6-sol",
+          "openai-codex/gpt-6-astra",
+          "openai-codex/gpt-5.6-terra",
+          "openai-codex/gpt-5.6-luna",
+          "azure-openai-responses/gpt-5.6-sol",
+          "github-copilot/gpt-5.6-terra",
+          "anthropic/claude-opus-4-8"
         ]
       },
       "default_mode": "high",
@@ -143,4 +150,9 @@
   "base_keymap": "VSCode",
   "vim_mode": false,
   "helix_mode": true,
+  "jupyter": {
+    "kernel_selections": {
+      "r": "ark"
+    }
+  }
 }

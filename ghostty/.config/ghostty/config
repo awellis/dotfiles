@@ -33,7 +33,7 @@ gtk-titlebar-hide-when-maximized = true
 gtk-toolbar-style = raised-border
 
 # Keybinds
-keybind = shift+enter=text:\x1b\r
+# Ghostty's native extended-key reporting lets pi distinguish Shift+Enter.
 # keybind = global:cmd+ctrl+alt+shift+g=toggle_quick_terminal
 
 # Machine-specific overrides (not in git)

@@ -1,8 +1,8 @@
 function tide --description "Start/attach a tmux dev session: nvim + an AI agent pane (claude or pi)"
     # Usage: tide [agent] [session-name]
-    #   agent:        claude (default) or pi
+    #   agent:        pi (default) or claude
     #   session-name: defaults to the current directory name
-    set -l agent claude
+    set -l agent pi
     set -l session_name (basename (pwd))
 
     # The first positional arg selects the agent if it names one; otherwise it
