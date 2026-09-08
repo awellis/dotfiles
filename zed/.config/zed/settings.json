@@ -105,7 +105,7 @@
     "pi-acp": {
       "default_config_options": {
         "thought_level": "high",
-        "model": "azure-anthropic/claude-opus-4-8-2"
+        "model": "openai-codex/gpt-6-astra"
       },
       "favorite_config_option_values": {
         "model": [
