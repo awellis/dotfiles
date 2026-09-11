@@ -1074,6 +1074,11 @@ file does ~(require 'treesit)~ before that check, which means this ~after!~ bloc
 runs first: the grammar is compiled the first time a Stan file is opened rather
 than on every startup.
 
+Stan include files commonly contain bare function definitions rather than a
+complete model. Files named =*-functions.stan= or =*_functions.stan= therefore
+use the package's =stanfunctions= grammar; ordinary =.stan= files continue to
+use the full Stan grammar.
+
 #+begin_src emacs-lisp
 (after! treesit
   (dolist (src '((stan
@@ -1097,6 +1102,11 @@ than on every startup.
          ("\\.stanfunctions\\'" . stan-functions-ts-mode))
   :config
   (setq stan-ts-mode-indent-offset 2))
+
+;; Bare function include files are not valid complete Stan programs. Keep this
+;; more specific rule ahead of the generic .stan rule registered above.
+(add-to-list 'auto-mode-alist
+             '("[-_]functions\\.stan\\'" . stan-functions-ts-mode))
 #+end_src
 
 * Tools and Integrations

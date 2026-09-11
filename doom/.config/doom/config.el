@@ -711,6 +711,11 @@ Spaces are added around the operator when appropriate."
   :config
   (setq stan-ts-mode-indent-offset 2))
 
+;; Bare function include files are not valid complete Stan programs. Keep this
+;; more specific rule ahead of the generic .stan rule registered above.
+(add-to-list 'auto-mode-alist
+             '("[-_]functions\\.stan\\'" . stan-functions-ts-mode))
+
 ;; Claude Code IDE - MCP-based integration with bidirectional Emacs communication
 (use-package! claude-code-ide
   :config
