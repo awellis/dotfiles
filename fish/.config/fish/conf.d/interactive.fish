@@ -19,29 +19,24 @@ bind -M insert \cf forward-bigword
 bind -M insert \cy accept-autosuggestion
 bind -M default \cy accept-autosuggestion
 
-# In tmux, free Ctrl-H/L for vim-tmux-navigator pane navigation
-if set -q TMUX
-    bind -M insert \cl ''
-end
-
 # Use eza for directory preview
 set -gx fzf_preview_dir_cmd eza --all --color=always
 
 # --- Keybindings ---
 # Backspace = delete one character
 bind -M insert -k backspace backward-delete-char 2>/dev/null
-bind -M insert \x7f backward-delete-char  # DEL fallback
+bind -M insert \x7f backward-delete-char # DEL fallback
 
 # Ctrl+Backspace = delete previous word
 bind -M insert -k sbackspace backward-kill-word 2>/dev/null
 if not set -q TMUX
-    bind -M insert \b backward-kill-word  # ^H (skip in tmux so Ctrl-H reaches vim-tmux-navigator)
+    bind -M insert \b backward-kill-word # ^H (skip in tmux so Ctrl-H reaches vim-tmux-navigator)
 end
-bind -M insert \x17 backward-kill-word    # Ctrl+W sequence
+bind -M insert \x17 backward-kill-word # Ctrl+W sequence
 
 # Alt+Backspace = delete previous word
-bind -M insert \e\x7f backward-kill-word  # ESC + DEL
-bind -M insert \e\b   backward-kill-word  # ESC + ^H
+bind -M insert \e\x7f backward-kill-word # ESC + DEL
+bind -M insert \e\b backward-kill-word # ESC + ^H
 
 # Ctrl+Delete = kill word forward
 bind -M insert '\e[3;5~' kill-word 2>/dev/null
