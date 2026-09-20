@@ -3,6 +3,16 @@
 -- Add any additional keymaps here
 vim.keymap.set("i", "jj", "<ESC>", { silent = true })
 
+-- Navigate wrapped lines by display row (gj/gk) when no count is given,
+-- so j/k step through visually wrapped prose instead of jumping whole
+-- logical lines. A count (e.g. 10j) still moves by logical line so
+-- relative-number jumps keep working.
+for _, key in ipairs({ "j", "k" }) do
+  vim.keymap.set({ "n", "x" }, key, function()
+    return vim.v.count == 0 and ("g" .. key) or key
+  end, { expr = true, silent = true, desc = "Down/Up by display line" })
+end
+
 local function open_prose_preview()
   local file = vim.api.nvim_buf_get_name(0)
   if file == "" then

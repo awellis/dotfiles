@@ -17,11 +17,23 @@ return {
       return false
     end
 
+    -- True when the cursor is in a citation context: a pandoc @key
+    -- (Quarto/Markdown) or inside a LaTeX \cite{...}-style command.
+    local function in_citation()
+      local col = vim.api.nvim_win_get_cursor(0)[2]
+      local before = vim.api.nvim_get_current_line():sub(1, col)
+      -- pandoc @citekey
+      if before:match("@[%w_:%-%.]*$") then return true end
+      -- inside a LaTeX \cite / \citep / \textcite / \autocite{ ... command
+      if before:match("\\%a*cite%a*%s*{[^}]*$") then return true end
+      return false
+    end
+
     local function completion_active()
       if vim.b.completion == false then return false end
       if vim.b.completion == true then return true end
-      -- auto: prose filetypes only complete in code blocks
-      if prose_ft[vim.bo.filetype] then return in_code_block() end
+      -- auto: prose filetypes complete in code blocks or citation contexts
+      if prose_ft[vim.bo.filetype] then return in_code_block() or in_citation() end
       return true
     end
 
