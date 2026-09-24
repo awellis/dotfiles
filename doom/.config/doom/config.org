@@ -18,6 +18,7 @@
   - [[#line-numbers][Line Numbers]]
   - [[#parenthesis-matching][Parenthesis Matching]]
 - [[#macos-keybindings][macOS Keybindings]]
+- [[#evil-keybindings][Evil Keybindings]]
 - [[#org-mode-configuration][Org Mode Configuration]]
   - [[#table-of-contents][Table of Contents]]
   - [[#directory][Directory]]
@@ -70,6 +71,7 @@
   - [[#line-numbers][Line Numbers]]
   - [[#parenthesis-matching][Parenthesis Matching]]
 - [[#macos-keybindings][macOS Keybindings]]
+- [[#evil-keybindings][Evil Keybindings]]
 - [[#org-mode-configuration][Org Mode Configuration]]
   - [[#table-of-contents][Table of Contents]]
   - [[#directory][Directory]]
@@ -232,6 +234,16 @@ Configure familiar macOS Command key shortcuts for cut/copy/paste operations.
   (map! "s-c" #'kill-ring-save     ;; ⌘C
         "s-x" #'kill-region        ;; ⌘X
         "s-v" #'yank))             ;; ⌘V
+#+end_src
+
+* Evil Keybindings
+
+Keep the standard Emacs save binding available in Evil insert state. Doom
+normally uses =C-x C-s= there for yasnippet completion.
+
+#+begin_src emacs-lisp
+(after! evil
+  (map! :i "C-x C-s" #'save-buffer))
 #+end_src
 
 * Shared Browser Preview Style

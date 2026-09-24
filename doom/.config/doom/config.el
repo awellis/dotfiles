@@ -76,6 +76,9 @@
         "s-x" #'kill-region        ;; ⌘X
         "s-v" #'yank))             ;; ⌘V
 
+(after! evil
+  (map! :i "C-x C-s" #'save-buffer))
+
 (defconst my/prose-preview-stylesheet
   (concat "file://" (expand-file-name "~/.config/preview/prose.css"))
   "Shared stylesheet for Markdown and Org browser previews.")
