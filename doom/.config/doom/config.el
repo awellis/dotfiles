@@ -77,7 +77,8 @@
         "s-v" #'yank))             ;; ⌘V
 
 (after! evil
-  (map! :i "C-x C-s" #'save-buffer))
+  (map! :i "C-x C-s" #'save-buffer
+        :i "C-x C-y" #'yasnippet-capf))
 
 (defconst my/prose-preview-stylesheet
   (concat "file://" (expand-file-name "~/.config/preview/prose.css"))

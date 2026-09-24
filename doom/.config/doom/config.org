@@ -238,12 +238,13 @@ Configure familiar macOS Command key shortcuts for cut/copy/paste operations.
 
 * Evil Keybindings
 
-Keep the standard Emacs save binding available in Evil insert state. Doom
-normally uses =C-x C-s= there for yasnippet completion.
+Keep the standard Emacs save binding available in Evil insert state. Move
+Doom's yasnippet completion binding from =C-x C-s= to =C-x C-y=.
 
 #+begin_src emacs-lisp
 (after! evil
-  (map! :i "C-x C-s" #'save-buffer))
+  (map! :i "C-x C-s" #'save-buffer
+        :i "C-x C-y" #'yasnippet-capf))
 #+end_src
 
 * Shared Browser Preview Style
