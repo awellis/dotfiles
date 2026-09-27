@@ -455,6 +455,22 @@
         (concat "<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>"
                 "<script>document.addEventListener('DOMContentLoaded', () => document.body.classList.add('markdown-body'));</script>")))
 
+(defun my/prose-preview ()
+  "Save and open the current Markdown file in the shared prose preview."
+  (interactive)
+  (let ((file (buffer-file-name (buffer-base-buffer))))
+    (if (or (null file)
+            (string-match-p "\\.\\(qmd\\|[rR]md\\)\\'" file)
+            (not (executable-find "prose-preview")))
+        (call-interactively #'markdown-preview)
+      (save-buffer)
+      (call-process "prose-preview" nil 0 nil file))))
+
+(map! :after markdown-mode
+      :map markdown-mode-map
+      :localleader
+      "p" #'my/prose-preview)
+
 (after! ess
   ;; Core ESS settings following 2024-2025 best practices
   (setq inferior-R-program-name +r-executable

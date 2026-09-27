@@ -577,6 +577,31 @@ mark {
   background: oklch(88% 0.11 89 / 0.65);
 }
 
+/* CriticMarkup: insertions, deletions, substitutions, comments. */
+ins.critic {
+  color: oklch(42% 0.11 150);
+  background: oklch(92% 0.06 150 / 0.6);
+  text-decoration: underline 1px oklch(55% 0.11 150);
+  text-underline-offset: 0.18em;
+}
+
+del.critic {
+  color: oklch(45% 0.13 28);
+  background: oklch(92% 0.05 28 / 0.55);
+  text-decoration: line-through 1px;
+}
+
+.critic-comment {
+  margin-inline: 0.2em;
+  padding: 0.05em 0.4em;
+  border-left: 2px solid var(--accent);
+  border-radius: 0.2rem;
+  color: var(--ink-soft);
+  background: var(--wash);
+  font-family: var(--sans);
+  font-size: 0.8em;
+}
+
 summary {
   cursor: pointer;
   color: var(--accent);

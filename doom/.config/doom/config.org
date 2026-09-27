@@ -791,6 +791,28 @@ stays light regardless of the system theme and does not require CDN assets.
                 "<script>document.addEventListener('DOMContentLoaded', () => document.body.classList.add('markdown-body'));</script>")))
 #+end_src
 
+Preview plain Markdown with the shared =prose-preview= tool (same live-reloading
+page as Neovim, with CriticMarkup support). Quarto and R Markdown buffers keep
+their own preview path.
+
+#+begin_src emacs-lisp
+(defun my/prose-preview ()
+  "Save and open the current Markdown file in the shared prose preview."
+  (interactive)
+  (let ((file (buffer-file-name (buffer-base-buffer))))
+    (if (or (null file)
+            (string-match-p "\\.\\(qmd\\|[rR]md\\)\\'" file)
+            (not (executable-find "prose-preview")))
+        (call-interactively #'markdown-preview)
+      (save-buffer)
+      (call-process "prose-preview" nil 0 nil file))))
+
+(map! :after markdown-mode
+      :map markdown-mode-map
+      :localleader
+      "p" #'my/prose-preview)
+#+end_src
+
 ** R and ESS
 
 Clean ESS configuration following modern best practices.

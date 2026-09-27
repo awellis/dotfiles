@@ -11,6 +11,7 @@ import mimetypes
 import os
 import re
 import shutil
+import signal
 import socket
 import subprocess
 import sys
@@ -27,6 +28,8 @@ CACHE_DIR = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "pr
 CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
 STYLE_PATH = CONFIG_DIR / "preview" / "prose.css"
 IDLE_TIMEOUT_SECONDS = 30 * 60
+# Servers report the script version they run, so an edit to this script replaces them.
+SCRIPT_VERSION = str(Path(__file__).resolve().stat().st_mtime_ns)
 
 PAGE_TEMPLATE = """<!doctype html>
 <html lang="en">
@@ -155,6 +158,35 @@ DISPLAY_DOLLAR_MATH_RE = re.compile(r"(?<!\\)\$\$(.*?)(?<!\\)\$\$", re.DOTALL)
 INLINE_DOLLAR_MATH_RE = re.compile(r"(?<![\\$])\$(?!\$)([^\n]+?)(?<![\\$])\$(?!\$)")
 BACKSLASH_DISPLAY_MATH_RE = re.compile(r"(\\\[)(.*?)(\\\])", re.DOTALL)
 BACKSLASH_INLINE_MATH_RE = re.compile(r"(\\\()(.+?)(\\\))")
+# Code is matched first so CriticMarkup inside fences or backtick spans stays literal.
+CRITIC_RE = re.compile(
+    r"(?P<code>^(?P<fence>`{3,}|~{3,}).*?^(?P=fence)[`~]*[ \t]*$|(?P<ticks>`+).+?(?<!`)(?P=ticks)(?!`))"
+    r"|\{\+\+(?P<add>.*?)\+\+\}"
+    r"|\{--(?P<delete>.*?)--\}"
+    r"|\{~~(?P<old>.*?)~>(?P<new>.*?)~~\}"
+    r"|\{==(?P<highlight>.*?)==\}"
+    r"|\{>>(?P<comment>.*?)<<\}",
+    re.DOTALL | re.MULTILINE,
+)
+
+
+def critic_to_html(source: str) -> str:
+    """Turn CriticMarkup into inline HTML, which Pandoc passes through untouched."""
+
+    def replace(match: re.Match[str]) -> str:
+        if match["code"] is not None:
+            return match["code"]
+        if match["add"] is not None:
+            return f'<ins class="critic">{match["add"]}</ins>'
+        if match["delete"] is not None:
+            return f'<del class="critic">{match["delete"]}</del>'
+        if match["old"] is not None:
+            return f'<del class="critic">{match["old"]}</del><ins class="critic">{match["new"]}</ins>'
+        if match["highlight"] is not None:
+            return f'<mark class="critic">{match["highlight"]}</mark>'
+        return f'<span class="critic-comment">{match["comment"]}</span>'
+
+    return CRITIC_RE.sub(replace, source)
 
 
 def normalize_math_backslashes(source: str) -> str:
@@ -200,6 +232,8 @@ def render_markdown(document: Path) -> tuple[str, str]:
 
     title = document_title(document, source)
     source = normalize_math_backslashes(source)
+    if document.suffix.lower() != ".org":
+        source = critic_to_html(source)
     pandoc = shutil.which("pandoc")
     if pandoc is None:
         message = "Pandoc is required as the document parser. Install it with: brew install pandoc"
@@ -246,13 +280,19 @@ def read_state(document: Path) -> dict[str, Any] | None:
         return None
 
 
-def is_healthy(document: Path, port: int) -> bool:
+def serves(document: Path, port: int) -> dict[str, Any] | None:
+    """Return the /health payload if a preview server for this document answers on port."""
     try:
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/health", timeout=0.35) as response:
             payload = json.loads(response.read())
-        return payload.get("document") == str(document)
     except (OSError, ValueError, urllib.error.URLError):
-        return False
+        return None
+    return payload if payload.get("document") == str(document) else None
+
+
+def is_healthy(document: Path, port: int) -> bool:
+    payload = serves(document, port)
+    return payload is not None and payload.get("version") == SCRIPT_VERSION
 
 
 def available_port() -> int:
@@ -288,12 +328,19 @@ def launch_preview(document: Path) -> int:
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     state = read_state(document)
-    if state and isinstance(state.get("port"), int) and is_healthy(document, state["port"]):
+    running = serves(document, state["port"]) if state and isinstance(state.get("port"), int) else None
+    if running and running.get("version") == SCRIPT_VERSION:
         url = f'http://127.0.0.1:{state["port"]}/'
         open_browser(url)
         print("Document preview opened (live reload is already running).")
         return 0
 
+    # A server for this document running an older version of this script: replace it.
+    if running and isinstance(state.get("pid"), int):
+        try:
+            os.kill(state["pid"], signal.SIGTERM)
+        except OSError:
+            pass
     state_path(document).unlink(missing_ok=True)
     port = available_port()
     command = [
@@ -390,7 +437,7 @@ class PreviewHandler(BaseHTTPRequestHandler):
             self.send_text(page, "text/html")
             return
         if request_path == "/health":
-            payload = json.dumps({"document": str(self.server.document)})
+            payload = json.dumps({"document": str(self.server.document), "version": SCRIPT_VERSION})
             self.send_text(payload, "application/json")
             return
         if request_path == "/render":
@@ -445,9 +492,36 @@ def serve(document: Path, port: int) -> int:
     return 0
 
 
+def export_html(document: Path, output: str) -> int:
+    """Write a self-contained page (stylesheet inlined) to a file or stdout."""
+    document = document.expanduser().resolve()
+    if not document.is_file():
+        print(f"Document preview: file not found: {document}", file=sys.stderr)
+        return 1
+    body, title = render_markdown(document)
+    try:
+        css = STYLE_PATH.read_text(encoding="utf-8")
+    except OSError:
+        css = FALLBACK_CSS
+    page = (
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        f"<title>{html.escape(title)}</title>\n<style>\n{css}\n</style>\n</head>\n"
+        f'<body class="markdown-body">\n{body}\n</body>\n</html>\n'
+    )
+    if output == "-":
+        sys.stdout.write(page)
+    else:
+        Path(output).expanduser().write_text(page, encoding="utf-8")
+    return 0
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("document", type=Path, help="Markdown or Org file to preview")
+    parser.add_argument(
+        "-o", "--output", metavar="FILE", help="write standalone HTML to FILE ('-' for stdout) instead of previewing"
+    )
     parser.add_argument("--serve", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--port", type=int, default=0, help=argparse.SUPPRESS)
     return parser.parse_args()
@@ -457,6 +531,8 @@ def main() -> int:
     args = parse_args()
     if args.serve:
         return serve(args.document, args.port)
+    if args.output:
+        return export_html(args.document, args.output)
     return launch_preview(args.document)
 
 
