@@ -466,8 +466,14 @@
       (save-buffer)
       (call-process "prose-preview" nil 0 nil file))))
 
+;; With (markdown +tree-sitter), .md files open in markdown-ts-mode, which Doom
+;; gives its own keymap, so the binding has to go in both maps.
 (map! :after markdown-mode
       :map markdown-mode-map
+      :localleader
+      "p" #'my/prose-preview)
+(map! :after markdown-ts-mode
+      :map markdown-ts-mode-map
       :localleader
       "p" #'my/prose-preview)
 
