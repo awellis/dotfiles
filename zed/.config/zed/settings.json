@@ -139,9 +139,9 @@
   },
   "buffer_font_family": "FiraCode Nerd Font",
   "theme": {
-    "mode": "light",
+    "mode": "dark",
     "light": "Kanso Pearl",
-    "dark": "Catppuccin Macchiato",
+    "dark": "Tokyo Night",
   },
   "telemetry": {
     "diagnostics": false,
