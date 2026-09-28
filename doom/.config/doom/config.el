@@ -477,6 +477,10 @@
       :localleader
       "p" #'my/prose-preview)
 
+(after! tex
+  (setq-default TeX-engine 'luatex
+                TeX-PDF-mode t))
+
 (after! ess
   ;; Core ESS settings following 2024-2025 best practices
   (setq inferior-R-program-name +r-executable

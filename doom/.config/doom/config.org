@@ -819,6 +819,18 @@ their own preview path.
       "p" #'my/prose-preview)
 #+end_src
 
+** LaTeX
+
+Use LuaLaTeX by default for AUCTeX compilation and preview-latex. This supports
+OpenType fonts through =fontspec= and matches the LaTeX toolchain used elsewhere
+in this repository.
+
+#+begin_src emacs-lisp
+(after! tex
+  (setq-default TeX-engine 'luatex
+                TeX-PDF-mode t))
+#+end_src
+
 ** R and ESS
 
 Clean ESS configuration following modern best practices.
