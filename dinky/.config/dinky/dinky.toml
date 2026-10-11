@@ -6,7 +6,7 @@
 start-at-login = true
 workspaces = 5                          # across all displays, one native Space each
 default-layout = 'fixed'                # tiles (dwindle) | dwindle | accordion | fixed | scrolling
-default-tiling = true                   # false leaves workspaces untiled unless overridden
+default-tiling = false                  # leave windows at their app-chosen size and position
 follow-app-activation = true            # Cmd-Tab and Dock clicks switch Spaces the fast way
 float-windows-without-fullscreen = true # progress windows, About, Calculator and the like float
 
@@ -46,7 +46,7 @@ width = 4
 active-color = '#e1e3e4'   # '#rrggbb' or '#rrggbbaa'
 inactive-color = '#494d64'
 order = 'below'            # below | above (a click-through ring over the window)
-exclude-apps = []          # bundle IDs whose windows get no border
+exclude-apps = ['com.brnbw.Tuna'] # keep Tuna's launcher panel borderless
 
 [focus-follows-mouse]
 enabled = false
@@ -78,8 +78,13 @@ shift = 'both'
 
 # Every rule whose conditions all match a new window runs, in order.
 [[rules]]
-app-id = 'com.apple.systempreferences' # also: app-name, title (regexes), kind (normal|dialog|sheet|panel)
+app-id = 'com.apple.systempreferences'   # also: app-name, title (regexes), kind (normal|dialog|sheet|panel)
 run = 'layout floating'
+
+[[rules]]
+app-id = 'com.brnbw.Tuna'
+run = 'layout floating'
+
 
 [mode.main]
 ctrl-left = 'workspace prev'
