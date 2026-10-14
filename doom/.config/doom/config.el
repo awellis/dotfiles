@@ -90,6 +90,11 @@
 
 (setq org-directory "~/Syncthing/org/")
 
+;; Browse timestamped list notes as a chronological, filterable timeline.
+(add-load-path! "lisp")
+(after! org
+  (require 'org-notes-timeline))
+
 (after! ox-html
   (setq org-html-head-include-default-style nil
         org-html-head
@@ -290,7 +295,8 @@
 (map! :leader
       (:prefix-map ("o" . "open")
        :desc "Open inbox" "i"
-       (cmd! (find-file (expand-file-name "inbox.org" org-directory)))))
+       (cmd! (find-file (expand-file-name "inbox.org" org-directory)))
+       :desc "Org notes timeline" "n" #'org-notes-timeline))
 
 ;; Portable R executable
 (defvar +r-executable (or (executable-find "R") "/usr/local/bin/R")

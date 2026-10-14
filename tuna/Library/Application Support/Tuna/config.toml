@@ -1,0 +1,833 @@
+[catalogs]
+searchPriorities = []
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'camera-preview.commands'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.applications'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.audio-input-devices'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.audio-output-devices'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.clipboard'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.color-history'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.color-tools'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.combo-actions'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.combo-groups'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.commands'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.contacts'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.current-selection'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.custom-items'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.dictation-history'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.effects'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.emoji'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.finder-favorites'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.last-dictation-recording'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.media-controls'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.menu-items'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.modes'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.network-locations'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.printers'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.processes'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.prompts'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.quick-actions'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.recents'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.scripts'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.settings'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.shelf'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.shortcuts'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.smart-links'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.system-settings'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.system-tasks'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.user-folders'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.volumes'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.window-management'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.windows'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.sortOrders]]
+    catalogIdentifier = 'tuna.clipboard'
+    sortOrder = 'name.asc'
+
+[[comboMode.bindings]]
+key = 't'
+label = 'Ghostty'
+iconPath = '/Applications/Ghostty.app'
+
+    [comboMode.bindings.destination]
+    type = 'command'
+
+        [comboMode.bindings.destination.command]
+        type = 'savedCommand'
+        subjectIdentifiers = ['path:/Applications/Ghostty.app']
+        actionIdentifier = 'tuna.common-actions/open'
+        behavior = 'run'
+        presentation = 'hidden'
+
+[[comboMode.bindings]]
+key = 'o'
+label = 'Open'
+
+    [comboMode.bindings.destination]
+    type = 'group'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 's'
+        label = 'Safari'
+        iconPath = '/Applications/Safari.app'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['path:/Applications/Safari.app']
+                actionIdentifier = 'tuna.common-actions/open'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'e'
+        label = 'Mail'
+        iconPath = '/System/Applications/Mail.app'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['path:/System/Applications/Mail.app']
+                actionIdentifier = 'tuna.common-actions/open'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'i'
+        label = 'Music'
+        iconPath = '/System/Applications/Music.app'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['path:/System/Applications/Music.app']
+                actionIdentifier = 'tuna.common-actions/open'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'm'
+        label = 'Messages'
+        iconPath = '/System/Applications/Messages.app'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['path:/System/Applications/Messages.app']
+                actionIdentifier = 'tuna.common-actions/open'
+                behavior = 'run'
+                presentation = 'hidden'
+
+[[comboMode.bindings]]
+key = 'r'
+label = 'Raycast'
+
+    [comboMode.bindings.destination]
+    type = 'group'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'e'
+        label = 'Emoji and symbols'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'raycast://extensions/raycast/emoji-symbols/search-emoji-symbols'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'p'
+        label = 'Confetti'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'raycast://confetti'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'c'
+        label = 'Camera'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'raycast://extensions/raycast/system/open-camera'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'f'
+        label = 'Maximize window'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'raycast://extensions/raycast/window-management/maximize'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'g'
+        label = 'Finder to Ghostty'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'raycast://extensions/yedongze/terminalfinder/finderToGhostty'
+
+[[comboMode.bindings]]
+key = 'w'
+label = 'Window'
+
+    [comboMode.bindings.destination]
+    type = 'group'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'h'
+        label = 'Left half'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'rectangle-pro://execute-action?name=left-half'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'l'
+        label = 'Right half'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'rectangle-pro://execute-action?name=right-half'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'm'
+        label = 'Messaging layout'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'rectangle-pro://execute-layout?name=messaging'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'c'
+        label = 'Center window'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'moves://template/center'
+
+[[comboMode.bindings]]
+key = 'z'
+label = 'Zettelkasten'
+
+    [comboMode.bindings.destination]
+    type = 'group'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'z'
+        label = 'Daily note'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'url'
+            url = 'obsidian://adv-uri?vault=Zettelkasten&filepath=Assets%2FNotes%2F2025-02-12.md'
+
+[[comboMode.bindings]]
+key = 'd'
+label = 'Dinky'
+iconPath = 'rectangle.3.group'
+
+    [comboMode.bindings.destination]
+    type = 'group'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = '1'
+        label = 'Workspace 1'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 1']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = '2'
+        label = 'Workspace 2'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 2']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = '3'
+        label = 'Workspace 3'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 3']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = '4'
+        label = 'Workspace 4'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 4']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = '5'
+        label = 'Workspace 5'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 5']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'n'
+        label = 'Next workspace'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace next']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'p'
+        label = 'Previous workspace'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace prev']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'b'
+        label = 'Last workspace'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace-back-and-forth']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'h'
+        label = 'Focus left'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky focus left']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'j'
+        label = 'Focus down'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky focus down']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'k'
+        label = 'Focus up'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky focus up']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'l'
+        label = 'Focus right'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky focus right']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'm'
+        label = 'Move to workspace'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'group'
+
+                [[comboMode.bindings.destination.bindings.destination.bindings]]
+                key = '1'
+                label = 'Workspace 1'
+
+                    [comboMode.bindings.destination.bindings.destination.bindings.destination]
+                    type = 'command'
+
+                        [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
+                        type = 'savedCommand'
+                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 1']
+                        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                        behavior = 'run'
+                        presentation = 'hidden'
+
+                [[comboMode.bindings.destination.bindings.destination.bindings]]
+                key = '2'
+                label = 'Workspace 2'
+
+                    [comboMode.bindings.destination.bindings.destination.bindings.destination]
+                    type = 'command'
+
+                        [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
+                        type = 'savedCommand'
+                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 2']
+                        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                        behavior = 'run'
+                        presentation = 'hidden'
+
+                [[comboMode.bindings.destination.bindings.destination.bindings]]
+                key = '3'
+                label = 'Workspace 3'
+
+                    [comboMode.bindings.destination.bindings.destination.bindings.destination]
+                    type = 'command'
+
+                        [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
+                        type = 'savedCommand'
+                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 3']
+                        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                        behavior = 'run'
+                        presentation = 'hidden'
+
+                [[comboMode.bindings.destination.bindings.destination.bindings]]
+                key = '4'
+                label = 'Workspace 4'
+
+                    [comboMode.bindings.destination.bindings.destination.bindings.destination]
+                    type = 'command'
+
+                        [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
+                        type = 'savedCommand'
+                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 4']
+                        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                        behavior = 'run'
+                        presentation = 'hidden'
+
+                [[comboMode.bindings.destination.bindings.destination.bindings]]
+                key = '5'
+                label = 'Workspace 5'
+
+                    [comboMode.bindings.destination.bindings.destination.bindings.destination]
+                    type = 'command'
+
+                        [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
+                        type = 'savedCommand'
+                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 5']
+                        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                        behavior = 'run'
+                        presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'x'
+        label = 'Move in layout'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'group'
+
+                [[comboMode.bindings.destination.bindings.destination.bindings]]
+                key = 'h'
+                label = 'Move left'
+
+                    [comboMode.bindings.destination.bindings.destination.bindings.destination]
+                    type = 'command'
+
+                        [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
+                        type = 'savedCommand'
+                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move left']
+                        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                        behavior = 'run'
+                        presentation = 'hidden'
+
+                [[comboMode.bindings.destination.bindings.destination.bindings]]
+                key = 'j'
+                label = 'Move down'
+
+                    [comboMode.bindings.destination.bindings.destination.bindings.destination]
+                    type = 'command'
+
+                        [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
+                        type = 'savedCommand'
+                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move down']
+                        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                        behavior = 'run'
+                        presentation = 'hidden'
+
+                [[comboMode.bindings.destination.bindings.destination.bindings]]
+                key = 'k'
+                label = 'Move up'
+
+                    [comboMode.bindings.destination.bindings.destination.bindings.destination]
+                    type = 'command'
+
+                        [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
+                        type = 'savedCommand'
+                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move up']
+                        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                        behavior = 'run'
+                        presentation = 'hidden'
+
+                [[comboMode.bindings.destination.bindings.destination.bindings]]
+                key = 'l'
+                label = 'Move right'
+
+                    [comboMode.bindings.destination.bindings.destination.bindings.destination]
+                    type = 'command'
+
+                        [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
+                        type = 'savedCommand'
+                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move right']
+                        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                        behavior = 'run'
+                        presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'f'
+        label = 'Fullscreen'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky fullscreen']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 't'
+        label = 'Toggle floating/tiling'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky layout floating tiling']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 's'
+        label = 'Scrolling layout'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky layout scrolling']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = '='
+        label = 'Balance sizes'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky balance-sizes']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'r'
+        label = 'Reload configuration'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                type = 'savedCommand'
+                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky reload-config']
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+
+[hotkeys]
+custom = []
+
+    [hotkeys.app.activate]
+    carbonKeyCode = 49
+    carbonModifiers = 2048
+
+    [hotkeys.app.comboMode]
+    carbonKeyCode = 41
+    carbonModifiers = 6912
+
+[settings]
+activationDoublePressTrigger = 'leftCommand'
+comboModeModifierTrigger = 'rightCommand'
+comboModeThemeStyle = 'breadcrumb'
+fuzzyModeTriggerType = 'doublePress'
+screenPreference = 'activeWindow'
+
+[[catalogSettings]]
+catalogIdentifier = 'com.brnbw.tuna.themes.default'
+
+    [catalogSettings.values]
+    ThemeTint = 'system'
+
+[[catalogSettings]]
+catalogIdentifier = 'tuna.prompts'
+
+    [catalogSettings.values]
+    Provider = 'apple'
