@@ -784,7 +784,9 @@ Spaces are added around the operator when appropriate."
              agent-shell-new-worktree-shell))
 
 (use-package! agent-shell-math-renderer
-  :after (agent-shell latex-to-svg-backend)
+  ;; The renderer loads latex-to-svg-backend itself. Waiting for both here
+  ;; would leave it deferred because nothing loads the backend independently.
+  :after agent-shell
   :hook (agent-shell-mode . agent-shell-math-renderer-mode)
   :config
   (add-hook 'enable-theme-functions
