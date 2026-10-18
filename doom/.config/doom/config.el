@@ -90,11 +90,6 @@
 
 (setq org-directory "~/Syncthing/org/")
 
-;; Browse timestamped list notes as a chronological, filterable timeline.
-(add-load-path! "lisp")
-(after! org
-  (require 'org-notes-timeline))
-
 (after! ox-html
   (setq org-html-head-include-default-style nil
         org-html-head
@@ -295,8 +290,7 @@
 (map! :leader
       (:prefix-map ("o" . "open")
        :desc "Open inbox" "i"
-       (cmd! (find-file (expand-file-name "inbox.org" org-directory)))
-       :desc "Org notes timeline" "n" #'org-notes-timeline))
+       (cmd! (find-file (expand-file-name "inbox.org" org-directory)))))
 
 ;; Portable R executable
 (defvar +r-executable (or (executable-find "R") "/usr/local/bin/R")
@@ -788,6 +782,24 @@ Spaces are added around the operator when appropriate."
              agent-shell-restart
              agent-shell-resume-session
              agent-shell-new-worktree-shell))
+
+(use-package! agent-shell-math-renderer
+  :after (agent-shell latex-to-svg-backend)
+  :hook (agent-shell-mode . agent-shell-math-renderer-mode)
+  :config
+  (add-hook 'enable-theme-functions
+            #'agent-shell-math-renderer-on-appearance-change)
+  (add-hook 'after-setting-font-hook
+            #'agent-shell-math-renderer-on-appearance-change))
+
+(use-package! agent-shell-macext
+  :if (eq system-type 'darwin)
+  :after agent-shell
+  :hook (agent-shell-mode . agent-shell-macext-setup)
+  :custom
+  (agent-shell-macext-file-copy-policy 'auto)
+  (agent-shell-macext-notifications t)
+  (agent-shell-macext-notify-current-buffer nil))
 
 (defun my/pi-send-region (beg end)
   "Send region BEG..END to the pi TUI in the tmux pane tagged @ai."

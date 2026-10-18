@@ -78,6 +78,13 @@
 ;; explicitly so straight doesn't rely on a stale local recipe cache.
 (package! let-completion :recipe (:host github :repo "gggion/let-completion.el"))
 (package! agent-shell :recipe (:host github :repo "xenodium/agent-shell"))
+(package! latex-to-svg-backend
+  :recipe (:host github :repo "alberti42/latex-to-svg-backend"))
+(package! agent-shell-math-renderer
+  :recipe (:host github :repo "alberti42/agent-shell-math-renderer"))
+(when (eq system-type 'darwin)
+  (package! agent-shell-macext
+    :recipe (:host github :repo "cxa/agent-shell-macext")))
 ;; Draw into org from a browser (tldraw canvas served over the LAN).
 ;; Explicit recipe mirroring MELPA's: the local straight recipe cache predates
 ;; org-draw's MELPA listing, and the shipped web/canvas.html must be installed.

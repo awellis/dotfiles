@@ -1222,6 +1222,24 @@ agent happens to have been started.
              agent-shell-restart
              agent-shell-resume-session
              agent-shell-new-worktree-shell))
+
+(use-package! agent-shell-math-renderer
+  :after (agent-shell latex-to-svg-backend)
+  :hook (agent-shell-mode . agent-shell-math-renderer-mode)
+  :config
+  (add-hook 'enable-theme-functions
+            #'agent-shell-math-renderer-on-appearance-change)
+  (add-hook 'after-setting-font-hook
+            #'agent-shell-math-renderer-on-appearance-change))
+
+(use-package! agent-shell-macext
+  :if (eq system-type 'darwin)
+  :after agent-shell
+  :hook (agent-shell-mode . agent-shell-macext-setup)
+  :custom
+  (agent-shell-macext-file-copy-policy 'auto)
+  (agent-shell-macext-notifications t)
+  (agent-shell-macext-notify-current-buffer nil))
 #+end_src
 
 *** Sending a region to pi in tmux
