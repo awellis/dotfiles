@@ -512,6 +512,10 @@
   (poly-quarto-mode))
 
 (use-package! quarto-ts-mode
+  :commands (quarto-ts-panache-ensure
+             quarto-ts-panache-format-buffer
+             quarto-ts-panache-code-actions
+             quarto-ts-panache-reconnect)
   :mode (("\\.qmd\\'" . quarto-ts-mode)
          ("_quarto\\.ya?ml\\'" . quarto-ts-project-mode))
   :init
