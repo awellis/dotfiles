@@ -514,6 +514,8 @@
 (use-package! quarto-ts-mode
   :mode (("\\.qmd\\'" . quarto-ts-mode)
          ("_quarto\\.ya?ml\\'" . quarto-ts-project-mode))
+  :init
+  (setq quarto-ts-panache-auto-start t)
   :config
   (map! :map quarto-ts-mode-map
         :n "]r" #'quarto-ts-cell-next
@@ -532,6 +534,11 @@
          :desc "Toggle cell fold" "f" #'quarto-ts-cell-toggle-fold
          :desc "Fold all cells" "F" #'quarto-ts-cell-fold-all
          :desc "Unfold all cells" "u" #'quarto-ts-cell-unfold-all)
+        (:prefix ("d" . "document")
+         :desc "Start Panache" "e" #'quarto-ts-panache-ensure
+         :desc "Format document" "f" #'quarto-ts-panache-format-buffer
+         :desc "Code actions" "a" #'quarto-ts-panache-code-actions
+         :desc "Reconnect Panache" "r" #'quarto-ts-panache-reconnect)
         (:prefix ("e" . "execute")
          :desc "Run cell" "e" #'quarto-ts-runner-run-cell
          :desc "Run cell and next" "n" #'quarto-ts-runner-run-cell-and-next
