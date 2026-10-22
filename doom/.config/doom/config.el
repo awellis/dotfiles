@@ -503,7 +503,66 @@
   (add-to-list 'auto-mode-alist '("\\.[rR]md\\'" . poly-markdown+r-mode)))
 
 ;;
-;;; Quarto Support (quarto-mode)
+;;; Quarto Support (tree-sitter default, Polymode fallback)
+
+(defun my/quarto-use-polymode ()
+  "Reopen the current Quarto document with the Polymode fallback."
+  (interactive)
+  (require 'quarto-mode)
+  (poly-quarto-mode))
+
+(use-package! quarto-ts-mode
+  :mode (("\\.qmd\\'" . quarto-ts-mode)
+         ("_quarto\\.ya?ml\\'" . quarto-ts-project-mode))
+  :config
+  (map! :map quarto-ts-mode-map
+        :n "]r" #'quarto-ts-cell-next
+        :n "[r" #'quarto-ts-cell-previous
+        :n "M-n" #'quarto-ts-cell-next
+        :n "M-p" #'quarto-ts-cell-previous
+        :i "M-n" #'quarto-ts-cell-next
+        :i "M-p" #'quarto-ts-cell-previous
+        :localleader
+        :desc "Quarto option help" "h" #'quarto-ts-yaml-describe-option
+        :desc "Use Polymode fallback" "M" #'my/quarto-use-polymode
+        (:prefix ("c" . "cells")
+         :desc "Next cell" "n" #'quarto-ts-cell-next
+         :desc "Previous cell" "p" #'quarto-ts-cell-previous
+         :desc "Mark cell" "m" #'quarto-ts-cell-mark
+         :desc "Toggle cell fold" "f" #'quarto-ts-cell-toggle-fold
+         :desc "Fold all cells" "F" #'quarto-ts-cell-fold-all
+         :desc "Unfold all cells" "u" #'quarto-ts-cell-unfold-all)
+        (:prefix ("e" . "execute")
+         :desc "Run cell" "e" #'quarto-ts-runner-run-cell
+         :desc "Run cell and next" "n" #'quarto-ts-runner-run-cell-and-next
+         :desc "Run line" "l" #'quarto-ts-runner-run-line
+         :desc "Run region" "r" #'quarto-ts-runner-run-region
+         :desc "Run cells above" "a" #'quarto-ts-runner-run-cells-above
+         :desc "Run all cells" "b" #'quarto-ts-runner-run-all-cells
+         :desc "Open REPL" "z" #'quarto-ts-runner-open-repl)
+        (:prefix ("l" . "language")
+         :desc "Open shadow buffer" "s" #'quarto-ts-shadow-open
+         :desc "Start Eglot" "e" #'quarto-ts-eglot-ensure
+         :desc "Rename symbol" "r" #'quarto-ts-eglot-rename
+         :desc "Format cell" "f" #'quarto-ts-eglot-format-cell
+         :desc "Code actions" "a" #'quarto-ts-eglot-code-actions)
+        (:prefix ("i" . "insert")
+         :desc "Citation" "c" #'quarto-ts-insert-citation
+         :desc "Callout" "a" #'quarto-ts-insert-callout
+         :desc "Shortcode" "s" #'quarto-ts-insert-shortcode)
+        (:prefix ("p" . "preview")
+         :desc "Start preview" "p" #'quarto-ts-preview-start
+         :desc "Stop preview" "s" #'quarto-ts-preview-stop
+         :desc "Browse preview" "b" #'quarto-ts-preview-browse
+         :desc "Refresh preview" "r" #'quarto-ts-preview-refresh
+         :desc "Preview log" "l" #'quarto-ts-preview-show-log
+         :desc "Render document" "x" #'quarto-ts-render
+         :desc "Render to format" "f" #'quarto-ts-render-to
+         :desc "Render project" "P" #'quarto-ts-render-project))
+  (map! :map quarto-ts-project-mode-map
+        :localleader
+        :desc "Quarto option help" "h" #'quarto-ts-yaml-describe-option
+        :desc "Start YAML Eglot" "e" #'quarto-ts-yaml-eglot-ensure))
 
 (use-package! quarto-mode
   :after polymode
@@ -511,18 +570,20 @@
   ;; Observable JS fences use `ojs', but polymode otherwise looks for a
   ;; nonexistent `ojs-mode'.  Treat them as JavaScript chunks instead.
   (add-to-list 'polymode-mode-name-aliases '(ojs . js-mode))
-  (add-to-list 'auto-mode-alist '("\\.qmd\\'" . poly-quarto-mode))
 
   ;; quarto-emacs sets these variables globally from its mode hook, causing
   ;; ordinary Markdown buffers to call the Quarto preview code.  Localize the
-  ;; compiler choice in both polymode's base buffer and its Markdown indirect
-  ;; buffers, then restore Doom's compiler as the global default.
+  ;; compiler choice in Polymode's base buffer and Markdown indirect buffers,
+  ;; then restore Doom's compiler as the global default.
   (setq-default markdown-command #'+markdown-compile
                 markdown-command-needs-filename nil)
   (defun my/localize-markdown-command ()
     (let* ((base (or (buffer-base-buffer) (current-buffer)))
            (file (buffer-local-value 'buffer-file-name base))
-           (quarto-p (and file (string-match-p "\\.qmd\\'" file) t)))
+           (quarto-p
+            (and file
+                 (string-match-p "\\.qmd\\'" file)
+                 (not (derived-mode-p 'quarto-ts-mode)))))
       (setq-local markdown-command
                   (if quarto-p
                       #'quarto-mode-markdown-command
@@ -532,7 +593,10 @@
                     markdown-command-needs-filename nil)))
   (add-hook 'markdown-mode-hook #'my/localize-markdown-command 90)
   (add-hook 'markdown-ts-mode-hook #'my/localize-markdown-command 90)
-  (add-hook 'poly-quarto-mode-hook #'my/localize-markdown-command 90))
+  (add-hook 'poly-quarto-mode-hook #'my/localize-markdown-command 90)
+  (map! :map poly-quarto-mode-map
+        :localleader
+        :desc "Use tree-sitter Quarto" "T" #'quarto-ts-mode))
 
 ;;
 ;;; Popup rules for R/Help buffers

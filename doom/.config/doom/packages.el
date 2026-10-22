@@ -54,6 +54,11 @@
 (package! transient)  ; Ensure transient is available
 (package! eat :recipe (:host codeberg :repo "akib/emacs-eat"))  ; Terminal emulator for claude-code
 (package! aider :recipe (:host github :repo "tninja/aider.el"))
+;; First-class Quarto editing under active local development.  Keep
+;; quarto-emacs installed as a Polymode fallback during migration.
+(package! quarto-ts-mode
+  :recipe (:local-repo "/Users/andrew/GitHub/dev/quarto-ts-mode"
+           :build (:not compile)))
 (package! quarto-emacs :recipe (:host github :repo "quarto-dev/quarto-emacs"))
 ;; Claude Code IDE - MCP-based integration with LSP, treesitter, and ediff
 (package! claude-code-ide
