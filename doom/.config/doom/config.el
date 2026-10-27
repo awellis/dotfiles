@@ -878,6 +878,38 @@ Spaces are added around the operator when appropriate."
   (agent-shell-macext-notifications t)
   (agent-shell-macext-notify-current-buffer nil))
 
+;; Search, browse, and resume saved agent-shell transcripts across projects.
+(use-package! agent-recall
+  :commands (agent-recall-search
+             agent-recall-browse
+             agent-recall-resume
+             agent-recall-reindex)
+  :hook (agent-shell-mode . agent-recall-track-sessions)
+  :custom
+  (agent-recall-search-paths '("~/GitHub" "~/work" "~/dotfiles" "~/Syncthing/org"))
+  (agent-recall-search-function 'consult-ripgrep)
+  (agent-recall-browse-sort 'modified-desc))
+
+;; Project-grouped overview and quick preview for concurrent agent shells.
+(use-package! agent-shell-hq
+  :commands (agent-shell-hq-toggle agent-shell-hq-peek)
+  :custom
+  (agent-shell-hq-toggle-sidebar-width 46)
+  (agent-shell-hq-peek-position 'right)
+  (agent-shell-hq-peek-width 52)
+  (agent-shell-hq-peek-height 40))
+
+;; Stable Emacs bookmarks and Org links that resume their agent-shell session.
+(use-package! agent-shell-links
+  :after agent-shell
+  :config
+  (agent-shell-links-bookmark-setup)
+  (after! ol
+    (org-link-set-parameters
+     "agent-shell"
+     :follow #'agent-shell-links-org-follow
+     :store #'agent-shell-links-org-store)))
+
 (defun my/pi-send-region (beg end)
   "Send region BEG..END to the pi TUI in the tmux pane tagged @ai."
   (interactive "r")
@@ -1155,7 +1187,12 @@ Spaces are added around the operator when appropriate."
         :desc "New worktree shell"     "w" #'agent-shell-new-worktree-shell
         :desc "Interrupt"              "i" #'agent-shell-interrupt
         :desc "Restart"                "k" #'agent-shell-restart
-        :desc "Send region to tmux pi" "t" #'my/pi-send-region)
+        :desc "Send region to tmux pi" "t" #'my/pi-send-region
+        :desc "Agent shell HQ"         "h" #'agent-shell-hq-toggle
+        :desc "Peek at agent shells"   "P" #'agent-shell-hq-peek
+        :desc "Browse transcripts"     "l" #'agent-recall-browse
+        :desc "Search transcripts"     "/" #'agent-recall-search
+        :desc "Resume transcript"      "u" #'agent-recall-resume)
 
        (:prefix ("g" . "gptel")
         :desc "Quick chat"             "g" #'my/gptel-quick

@@ -1,4 +1,7 @@
 {
+  "title_bar": {
+    "show_sign_in": false
+  },
   "minimum_split_diff_width": 0.0,
   "preview_tabs": {
     "enable_preview_from_file_finder": true
@@ -139,7 +142,7 @@
   },
   "buffer_font_family": "FiraCode Nerd Font",
   "theme": {
-    "mode": "dark",
+    "mode": "light",
     "light": "Kanso Pearl",
     "dark": "Tokyo Night",
   },

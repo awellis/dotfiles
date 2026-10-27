@@ -87,6 +87,13 @@
   :recipe (:host github :repo "alberti42/latex-to-svg-backend"))
 (package! agent-shell-math-renderer
   :recipe (:host github :repo "alberti42/agent-shell-math-renderer"))
+(package! agent-recall
+  :recipe (:host github :repo "Marx-A00/agent-recall"))
+(package! agent-shell-hq
+  :recipe (:host github :repo "SreenivasVRao/agent-shell-hq"
+           :files ("*.el")))
+(package! agent-shell-links
+  :recipe (:host github :repo "ultronozm/agent-shell-links.el"))
 (when (eq system-type 'darwin)
   (package! agent-shell-macext
     :recipe (:host github :repo "cxa/agent-shell-macext")))
