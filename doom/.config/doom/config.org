@@ -1354,6 +1354,41 @@ agent happens to have been started.
      :store #'agent-shell-links-org-store)))
 #+end_src
 
+*** Editing PI-EDIT passages
+
+Place point between =<!-- PI-EDIT: start -->= and =<!-- PI-EDIT: end -->=.
+In Quarto and Markdown buffers, =SPC m E s= narrows to that text while keeping
+its major mode. =SPC m E f= (or =C-c C-c=) finishes, removing only the two
+comments and showing the full document. =SPC m E l= (or =C-c C-k=) leaves
+editing with comments and edits intact. These commands do not save the file.
+They are also available as =M-x pi-edit-start=, =pi-edit-finish=, and
+=pi-edit-leave=. Outside Evil normal state, use Doom's =C-c l= local leader.
+
+All marker pairs must be balanced and non-nested. Widen an already narrowed
+buffer before starting. The implementation and its batch-test command are in
+=lisp/pi-edit.el=; =lisp/pi-edit-test.el= contains the tests.
+
+#+begin_src emacs-lisp
+(load! "lisp/pi-edit")
+
+(map! :after markdown-mode
+      :map markdown-mode-map
+      :localleader
+      :desc "PI edit" "E" pi-edit-command-map)
+(map! :after markdown-ts-mode
+      :map markdown-ts-mode-map
+      :localleader
+      :desc "PI edit" "E" pi-edit-command-map)
+(map! :after quarto-ts-mode
+      :map quarto-ts-mode-map
+      :localleader
+      :desc "PI edit" "E" pi-edit-command-map)
+(map! :after quarto-mode
+      :map poly-quarto-mode-map
+      :localleader
+      :desc "PI edit" "E" pi-edit-command-map)
+#+end_src
+
 *** Sending a region to pi in tmux
 
 The ACP bridge above runs pi inside Emacs. This sends a region to the real pi

@@ -910,6 +910,25 @@ Spaces are added around the operator when appropriate."
      :follow #'agent-shell-links-org-follow
      :store #'agent-shell-links-org-store)))
 
+(load! "lisp/pi-edit")
+
+(map! :after markdown-mode
+      :map markdown-mode-map
+      :localleader
+      :desc "PI edit" "E" pi-edit-command-map)
+(map! :after markdown-ts-mode
+      :map markdown-ts-mode-map
+      :localleader
+      :desc "PI edit" "E" pi-edit-command-map)
+(map! :after quarto-ts-mode
+      :map quarto-ts-mode-map
+      :localleader
+      :desc "PI edit" "E" pi-edit-command-map)
+(map! :after quarto-mode
+      :map poly-quarto-mode-map
+      :localleader
+      :desc "PI edit" "E" pi-edit-command-map)
+
 (defun my/pi-send-region (beg end)
   "Send region BEG..END to the pi TUI in the tmux pane tagged @ai."
   (interactive "r")
