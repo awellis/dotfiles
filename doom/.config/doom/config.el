@@ -550,20 +550,29 @@
                    reverse))))
     reverse))
 
-(defun my/quarto--render-targets (file reverse-graph)
-  "Return terminal Quarto documents that transitively include FILE."
+(defun my/quarto--dependent-documents (file reverse-graph)
+  "Return every Quarto document that transitively includes FILE."
   (let ((visited (make-hash-table :test #'equal))
-        targets)
+        dependents)
     (cl-labels
         ((visit (node)
-           (unless (gethash node visited)
-             (puthash node t visited)
-             (let ((parents (delete-dups (gethash node reverse-graph))))
-               (if parents
-                   (mapc #'visit parents)
-                 (push node targets))))))
+           (dolist (parent (delete-dups (gethash node reverse-graph)))
+             (unless (gethash parent visited)
+               (puthash parent t visited)
+               (push parent dependents)
+               (visit parent)))))
       (visit file))
-    (sort (delete-dups targets) #'string<)))
+    (sort (delete-dups dependents) #'string<)))
+
+(defun my/quarto--render-targets (file reverse-graph)
+  "Return terminal Quarto documents that transitively include FILE."
+  (let ((dependents (my/quarto--dependent-documents file reverse-graph)))
+    (or
+     (cl-remove-if
+      (lambda (document)
+        (gethash document reverse-graph))
+      dependents)
+     (list file))))
 
 (defconst my/quarto--preview-render-command
   "90B3C9E8-0DBC-4BC0-B164-AA2D5C031B28"
@@ -603,6 +612,7 @@
          (and buffer-file-name
               (file-in-directory-p buffer-file-name root))))
     (let* ((reverse-graph (my/quarto--reverse-include-graph root))
+           (dependents (my/quarto--dependent-documents current reverse-graph))
            (targets (my/quarto--render-targets current reverse-graph)))
       (when (and (equal targets (list current))
                  (not (string-equal (file-name-extension current) "qmd")))
@@ -616,6 +626,16 @@
                           (file-relative-name target root))))
                targets
                " && "))
+             (invalidate-command
+              (when (and preview-url dependents)
+                (concat
+                 "touch "
+                 (mapconcat
+                  (lambda (document)
+                    (shell-quote-argument
+                     (file-relative-name document root)))
+                  dependents
+                  " "))))
              (reload-command
               (when preview-url
                 (format "curl --fail --silent --show-error %s"
@@ -623,9 +643,9 @@
                          (my/quarto--preview-render-url
                           preview-url (car targets) root)))))
              (command
-              (if reload-command
-                  (concat render-command " && " reload-command)
-                render-command)))
+              (string-join
+               (delq nil (list render-command invalidate-command reload-command))
+               " && ")))
         (message "Rendering %s%s"
                  (mapconcat (lambda (target)
                               (file-relative-name target root))
