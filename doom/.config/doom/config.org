@@ -869,6 +869,21 @@ explicit fallback during migration.
 ;;
 ;;; Quarto Support (tree-sitter default, Polymode fallback)
 
+(defun my/render-cas-einstieg ()
+  "Save the current buffer and render the CAS Einstieg deck without a preview."
+  (interactive)
+  (let ((default-directory
+         (or (locate-dominating-file default-directory "_quarto.yml")
+             (user-error "Not in a Quarto project"))))
+    (unless (file-exists-p "slides/cas-einstieg/index.qmd")
+      (user-error "This project has no CAS Einstieg deck"))
+    (save-buffer)
+    (compilation-start "quarto render slides/cas-einstieg/index.qmd")))
+
+(map! :leader
+      (:prefix-map ("o" . "open")
+       :desc "Render CAS Einstieg" "q" #'my/render-cas-einstieg))
+
 (defun my/quarto-use-polymode ()
   "Reopen the current Quarto document with the Polymode fallback."
   (interactive)
