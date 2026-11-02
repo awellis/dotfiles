@@ -519,7 +519,8 @@
   :mode (("\\.qmd\\'" . quarto-ts-mode)
          ("_quarto\\.ya?ml\\'" . quarto-ts-project-mode))
   :init
-  (setq quarto-ts-panache-auto-start t)
+  (setq quarto-ts-panache-auto-start t
+        quarto-ts-hide-markup nil)
   :config
   (map! :map quarto-ts-mode-map
         :n "]r" #'quarto-ts-cell-next
