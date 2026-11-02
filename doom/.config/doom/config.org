@@ -1002,10 +1002,19 @@ explicit fallback during migration.
                   " "))))
              (reload-command
               (when preview-url
-                (format "curl --fail --silent --show-error %s"
-                        (shell-quote-argument
-                         (my/quarto--preview-render-url
-                          preview-url (car targets) root)))))
+                (let* ((requests
+                        (mapcar
+                         (lambda (target)
+                           (format "curl --fail --silent --show-error %s"
+                                   (shell-quote-argument
+                                    (my/quarto--preview-render-url
+                                     preview-url target root))))
+                         targets))
+                       (final-reload (car requests)))
+                  (string-join
+                   (append requests
+                           (list "sleep 1" final-reload))
+                   " && "))))
              (command
               (string-join
                (delq nil (list render-command invalidate-command reload-command))
