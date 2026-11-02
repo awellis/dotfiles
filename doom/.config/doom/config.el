@@ -506,18 +506,23 @@
 ;;; Quarto Support (tree-sitter default, Polymode fallback)
 
 (defun my/render-cas-einstieg ()
-  "Save modified project files and render the CAS Einstieg deck without a preview."
+  "Save project files, render the CAS Einstieg deck, and refresh its live wrapper."
   (interactive)
   (let* ((root (or (locate-dominating-file default-directory "_quarto.yml")
                    (user-error "Not in a Quarto project")))
          (default-directory root))
-    (unless (file-exists-p "slides/cas-einstieg/index.qmd")
-      (user-error "This project has no CAS Einstieg deck"))
+    (unless (and (file-exists-p "slides/cas-einstieg/index.qmd")
+                 (file-exists-p "workshop/cas/tag-1/werkzeugnutzung/index.qmd"))
+      (user-error "This project has no CAS Einstieg deck and wrapper"))
     (save-some-buffers
      t (lambda ()
          (and buffer-file-name
               (file-in-directory-p buffer-file-name root))))
-    (compilation-start "quarto render slides/cas-einstieg/index.qmd")))
+    ;; A separate render does not notify the running preview's browser clients.
+    ;; Touch its wrapper only after success so Quarto rebuilds and reloads it.
+    (compilation-start
+     (concat "quarto render slides/cas-einstieg/index.qmd"
+             " && touch workshop/cas/tag-1/werkzeugnutzung/index.qmd"))))
 
 (map! :leader
       (:prefix-map ("o" . "open")
