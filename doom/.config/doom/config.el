@@ -506,14 +506,17 @@
 ;;; Quarto Support (tree-sitter default, Polymode fallback)
 
 (defun my/render-cas-einstieg ()
-  "Save the current buffer and render the CAS Einstieg deck without a preview."
+  "Save modified project files and render the CAS Einstieg deck without a preview."
   (interactive)
-  (let ((default-directory
-         (or (locate-dominating-file default-directory "_quarto.yml")
-             (user-error "Not in a Quarto project"))))
+  (let* ((root (or (locate-dominating-file default-directory "_quarto.yml")
+                   (user-error "Not in a Quarto project")))
+         (default-directory root))
     (unless (file-exists-p "slides/cas-einstieg/index.qmd")
       (user-error "This project has no CAS Einstieg deck"))
-    (save-buffer)
+    (save-some-buffers
+     t (lambda ()
+         (and buffer-file-name
+              (file-in-directory-p buffer-file-name root))))
     (compilation-start "quarto render slides/cas-einstieg/index.qmd")))
 
 (map! :leader
