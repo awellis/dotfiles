@@ -655,7 +655,7 @@
   :init
   (setq quarto-ts-panache-auto-start t
         quarto-ts-hide-markup nil
-        quarto-ts-preview-arguments '("--no-browser" "--no-navigate"))
+        quarto-ts-preview-arguments '("--no-browser" "--no-navigate" "--no-watch-inputs"))
   :config
   (map! :map quarto-ts-mode-map
         :n "]r" #'quarto-ts-cell-next
