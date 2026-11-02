@@ -869,28 +869,139 @@ explicit fallback during migration.
 ;;
 ;;; Quarto Support (tree-sitter default, Polymode fallback)
 
-(defun my/render-cas-einstieg ()
-  "Save project files, render the CAS Einstieg deck, and refresh its live wrapper."
+(require 'cl-lib)
+(require 'subr-x)
+(require 'url-util)
+
+(defun my/quarto--ignored-path-p (path)
+  "Return non-nil when PATH is inside a generated or project-internal directory."
+  (string-match-p
+   "/\\(?:\\.git\\|\\.quarto\\|docs\\|_site\\|renv\\)/"
+   path))
+
+(defun my/quarto--project-documents (root)
+  "Return source Quarto documents below ROOT."
+  (cl-remove-if
+   #'my/quarto--ignored-path-p
+   (directory-files-recursively root "\\.qmd\\'")))
+
+(defun my/quarto--included-files (document)
+  "Return existing files included by Quarto DOCUMENT."
+  (with-temp-buffer
+    (insert-file-contents document)
+    (goto-char (point-min))
+    (let (included)
+      (while
+          (re-search-forward
+           "{{<[[:space:]]*include[[:space:]]+\\(?:\"\\([^\"]+\\)\"\\|'\\([^']+\\)'\\|\\([^[:space:]>]+\\)\\)[[:space:]]*>}}"
+           nil t)
+        (let* ((path (or (match-string 1)
+                         (match-string 2)
+                         (match-string 3)))
+               (resolved (expand-file-name path (file-name-directory document))))
+          (when (file-exists-p resolved)
+            (push (file-truename resolved) included))))
+      included)))
+
+(defun my/quarto--reverse-include-graph (root)
+  "Map each included file below ROOT to the Quarto documents that include it."
+  (let ((reverse (make-hash-table :test #'equal)))
+    (dolist (document (my/quarto--project-documents root))
+      (let ((parent (file-truename document)))
+        (dolist (included (my/quarto--included-files parent))
+          (puthash included
+                   (cons parent (gethash included reverse))
+                   reverse))))
+    reverse))
+
+(defun my/quarto--render-targets (file reverse-graph)
+  "Return terminal Quarto documents that transitively include FILE."
+  (let ((visited (make-hash-table :test #'equal))
+        targets)
+    (cl-labels
+        ((visit (node)
+           (unless (gethash node visited)
+             (puthash node t visited)
+             (let ((parents (delete-dups (gethash node reverse-graph))))
+               (if parents
+                   (mapc #'visit parents)
+                 (push node targets))))))
+      (visit file))
+    (sort (delete-dups targets) #'string<)))
+
+(defconst my/quarto--preview-render-command
+  "90B3C9E8-0DBC-4BC0-B164-AA2D5C031B28"
+  "Quarto preview endpoint used to render a file and reload browser clients.")
+
+(defun my/quarto--live-preview-url ()
+  "Return the current project's live Quarto preview URL, when available."
+  (when (require 'quarto-ts-preview nil t)
+    (when-let* ((session (quarto-ts-preview--session))
+                (process (quarto-ts-preview-session-process session))
+                ((process-live-p process)))
+      (quarto-ts-preview-session-url session))))
+
+(defun my/quarto--preview-render-url (preview-url target root)
+  "Return the live-preview render URL for TARGET below ROOT."
+  (let ((path
+         (mapconcat #'url-hexify-string
+                    (split-string (file-relative-name target root) "/" t)
+                    "/")))
+    (format "%s/%s/%s"
+            (string-remove-suffix "/" preview-url)
+            my/quarto--preview-render-command
+            path)))
+
+(defun my/quarto-render-current-and-dependents ()
+  "Render the current file's Quarto dependents and refresh the live preview."
   (interactive)
-  (let* ((root (or (locate-dominating-file default-directory "_quarto.yml")
+  (unless buffer-file-name
+    (user-error "The current buffer is not visiting a file"))
+  (let* ((root (or (locate-dominating-file buffer-file-name "_quarto.yml")
                    (user-error "Not in a Quarto project")))
+         (root (file-truename root))
+         (current (file-truename buffer-file-name))
          (default-directory root))
-    (unless (and (file-exists-p "slides/cas-einstieg/index.qmd")
-                 (file-exists-p "workshop/cas/tag-1/werkzeugnutzung/index.qmd"))
-      (user-error "This project has no CAS Einstieg deck and wrapper"))
     (save-some-buffers
      t (lambda ()
          (and buffer-file-name
               (file-in-directory-p buffer-file-name root))))
-    ;; A separate render does not notify the running preview's browser clients.
-    ;; Touch its wrapper only after success so Quarto rebuilds and reloads it.
-    (compilation-start
-     (concat "quarto render slides/cas-einstieg/index.qmd"
-             " && touch workshop/cas/tag-1/werkzeugnutzung/index.qmd"))))
+    (let* ((reverse-graph (my/quarto--reverse-include-graph root))
+           (targets (my/quarto--render-targets current reverse-graph)))
+      (when (and (equal targets (list current))
+                 (not (string-equal (file-name-extension current) "qmd")))
+        (user-error "No Quarto document includes the current file"))
+      (let* ((preview-url (my/quarto--live-preview-url))
+             (render-command
+              (mapconcat
+               (lambda (target)
+                 (format "quarto render %s"
+                         (shell-quote-argument
+                          (file-relative-name target root))))
+               targets
+               " && "))
+             (reload-command
+              (when preview-url
+                (format "curl --fail --silent --show-error %s"
+                        (shell-quote-argument
+                         (my/quarto--preview-render-url
+                          preview-url (car targets) root)))))
+             (command
+              (if reload-command
+                  (concat render-command " && " reload-command)
+                render-command)))
+        (message "Rendering %s%s"
+                 (mapconcat (lambda (target)
+                              (file-relative-name target root))
+                            targets ", ")
+                 (if reload-command "; refreshing live preview" ""))
+        (compilation-start command 'compilation-mode
+                           (lambda (_) "*quarto render*"))))))
 
 (map! :leader
       (:prefix-map ("o" . "open")
-       :desc "Render CAS Einstieg" "q" #'my/render-cas-einstieg))
+       :desc "Render Quarto dependents" "q"
+       #'my/quarto-render-current-and-dependents))
 
 (defun my/quarto-use-polymode ()
   "Reopen the current Quarto document with the Polymode fallback."
@@ -907,7 +1018,8 @@ explicit fallback during migration.
          ("_quarto\\.ya?ml\\'" . quarto-ts-project-mode))
   :init
   (setq quarto-ts-panache-auto-start t
-        quarto-ts-hide-markup nil)
+        quarto-ts-hide-markup nil
+        quarto-ts-preview-arguments '("--no-browser" "--no-navigate"))
   :config
   (map! :map quarto-ts-mode-map
         :n "]r" #'quarto-ts-cell-next
