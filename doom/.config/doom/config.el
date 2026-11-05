@@ -682,7 +682,7 @@
   :mode (("\\.qmd\\'" . quarto-ts-mode)
          ("_quarto\\.ya?ml\\'" . quarto-ts-project-mode))
   :init
-  (setq quarto-ts-panache-auto-start t
+  (setq quarto-ts-panache-auto-start nil
         quarto-ts-hide-markup nil
         quarto-ts-preview-arguments '("--no-browser" "--no-navigate" "--no-watch-inputs"))
   :config
