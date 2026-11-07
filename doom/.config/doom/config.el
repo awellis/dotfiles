@@ -349,6 +349,9 @@
           (:exports . "both")
           (:eval . "never-export"))))
 
+(use-package! lean4-mode
+  :commands lean4-mode)
+
 ;; macOS-specific app integration
 (when (featurep :system 'macos)
   ;; Add message: link type for macOS Messages.app

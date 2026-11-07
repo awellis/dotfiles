@@ -598,6 +598,16 @@ This configuration adds:
           (:eval . "never-export"))))
 #+end_src
 
+** Lean 4 Support
+
+Use the community Lean 4 mode and its lsp-mode integration. Lean and Lake are
+provided by Elan and discovered from the executable path.
+
+#+begin_src emacs-lisp
+(use-package! lean4-mode
+  :commands lean4-mode)
+#+end_src
+
 ** Custom Link Types and macOS Integration
 
 Configure custom org link types and macOS app integration for enhanced functionality.

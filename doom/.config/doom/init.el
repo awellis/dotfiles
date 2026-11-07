@@ -147,7 +147,7 @@
        (julia +tree-sitter)             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        latex             ; writing papers in Emacs has never been so fun
-       lean              ; for folks with too much to prove
+       ;;lean            ; Lean 4 is configured with lean4-mode in packages.el
        ;;ledger            ; be audit you can be
        lua               ; one-based indices? one-based indices
        (markdown +tree-sitter)          ; writing docs for people to ignore

@@ -55,6 +55,10 @@
 (package! eat :recipe (:host codeberg :repo "akib/emacs-eat"))  ; Terminal emulator for claude-code
 (package! ghostel)
 (package! evil-ghostel)
+(package! lean4-mode
+  :recipe (:host github
+           :repo "leanprover-community/lean4-mode"
+           :files ("*.el" "data")))
 (package! aider :recipe (:host github :repo "tninja/aider.el"))
 ;; First-class Quarto editing under active local development.  Keep
 ;; quarto-emacs installed as a Polymode fallback during migration.
