@@ -351,11 +351,10 @@
 
 (use-package! lean4-mode
   :commands lean4-mode
-  :config
-  ;; Starting LSP synchronously can prompt for a project root before the first
-  ;; GUI frame is ready, leaving macOS with an unusable minibuffer-only frame.
-  (remove-hook 'lean4-mode-hook #'lsp)
-  (add-hook 'lean4-mode-hook #'lsp-deferred))
+  :init
+  ;; Override lean4-mode's synchronous default before the package is loaded.
+  ;; Otherwise project-root prompts can block macOS GUI startup in *Minibuf-1*.
+  (setq lean4-mode-hook '(lsp-deferred)))
 
 ;; macOS-specific app integration
 (when (featurep :system 'macos)
