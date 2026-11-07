@@ -1292,6 +1292,17 @@ Spaces are added around the operator when appropriate."
   ;; Optional: Set buffer name format
   (setq vterm-buffer-name-string "vterm %s"))
 
+(use-package! ghostel
+  :commands ghostel
+  :init
+  (setq ghostel-shell
+        (or (executable-find "fish")
+            (getenv "SHELL"))))
+
+(use-package! evil-ghostel
+  :after (ghostel evil)
+  :hook (ghostel-mode . evil-ghostel-mode))
+
 ;; Define the quick gptel function first
 (defun my/gptel-quick ()
   "Start gptel without prompting for buffer name."

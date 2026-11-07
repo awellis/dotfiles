@@ -1809,6 +1809,24 @@ Configure vterm to use fish shell for a proper terminal experience.
   (setq vterm-buffer-name-string "vterm %s"))
 #+end_src
 
+** Ghostel Configuration
+
+Configure Ghostel as an additional terminal, using fish when available and its
+Evil integration for terminal-aware normal and insert states.
+
+#+begin_src emacs-lisp
+(use-package! ghostel
+  :commands ghostel
+  :init
+  (setq ghostel-shell
+        (or (executable-find "fish")
+            (getenv "SHELL"))))
+
+(use-package! evil-ghostel
+  :after (ghostel evil)
+  :hook (ghostel-mode . evil-ghostel-mode))
+#+end_src
+
 ** GPTel Configuration
 
 Configure gptel as the LLM chat client, with API keys loaded from a local =.env= file.

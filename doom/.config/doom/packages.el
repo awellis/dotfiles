@@ -53,6 +53,8 @@
 (package! nose :disable t)
 (package! transient)  ; Ensure transient is available
 (package! eat :recipe (:host codeberg :repo "akib/emacs-eat"))  ; Terminal emulator for claude-code
+(package! ghostel)
+(package! evil-ghostel)
 (package! aider :recipe (:host github :repo "tninja/aider.el"))
 ;; First-class Quarto editing under active local development.  Keep
 ;; quarto-emacs installed as a Polymode fallback during migration.
