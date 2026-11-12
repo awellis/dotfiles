@@ -79,6 +79,7 @@
 (package! gptel)
 (package! gptel-magit)
 (package! org-make-toc)
+(package! org-fragtog)
 (package! eee
   :recipe (:host github :repo "eval-exec/eee.el"
            :files (:defaults "*.el" "*.sh")))

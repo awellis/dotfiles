@@ -8,12 +8,6 @@ searchPriorities = []
         kind = 'none'
 
     [[catalogs.globalScopes]]
-    catalogIdentifier = 'tuna.applications'
-
-        [catalogs.globalScopes.scope]
-        kind = 'none'
-
-    [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.audio-input-devices'
 
         [catalogs.globalScopes.scope]
@@ -234,19 +228,19 @@ searchPriorities = []
     sortOrder = 'name.asc'
 
 [[comboMode.bindings]]
+iconPath = '/Applications/Ghostty.app'
 key = 't'
 label = 'Ghostty'
-iconPath = '/Applications/Ghostty.app'
 
     [comboMode.bindings.destination]
     type = 'command'
 
         [comboMode.bindings.destination.command]
-        type = 'savedCommand'
-        subjectIdentifiers = ['path:/Applications/Ghostty.app']
         actionIdentifier = 'tuna.common-actions/open'
         behavior = 'run'
         presentation = 'hidden'
+        subjectIdentifiers = [ 'path:/Applications/Ghostty.app' ]
+        type = 'savedCommand'
 
 [[comboMode.bindings]]
 key = 'o'
@@ -256,64 +250,64 @@ label = 'Open'
     type = 'group'
 
         [[comboMode.bindings.destination.bindings]]
+        iconPath = '/Applications/Safari.app'
         key = 's'
         label = 'Safari'
-        iconPath = '/Applications/Safari.app'
 
             [comboMode.bindings.destination.bindings.destination]
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['path:/Applications/Safari.app']
                 actionIdentifier = 'tuna.common-actions/open'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'path:/Applications/Safari.app' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
+        iconPath = '/System/Applications/Mail.app'
         key = 'e'
         label = 'Mail'
-        iconPath = '/System/Applications/Mail.app'
 
             [comboMode.bindings.destination.bindings.destination]
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['path:/System/Applications/Mail.app']
                 actionIdentifier = 'tuna.common-actions/open'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'path:/System/Applications/Mail.app' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
+        iconPath = '/System/Applications/Music.app'
         key = 'i'
         label = 'Music'
-        iconPath = '/System/Applications/Music.app'
 
             [comboMode.bindings.destination.bindings.destination]
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['path:/System/Applications/Music.app']
                 actionIdentifier = 'tuna.common-actions/open'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'path:/System/Applications/Music.app' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
+        iconPath = '/System/Applications/Messages.app'
         key = 'm'
         label = 'Messages'
-        iconPath = '/System/Applications/Messages.app'
 
             [comboMode.bindings.destination.bindings.destination]
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['path:/System/Applications/Messages.app']
                 actionIdentifier = 'tuna.common-actions/open'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'path:/System/Applications/Messages.app' ]
+                type = 'savedCommand'
 
 [[comboMode.bindings]]
 key = 'r'
@@ -417,9 +411,9 @@ label = 'Zettelkasten'
             url = 'obsidian://adv-uri?vault=Zettelkasten&filepath=Assets%2FNotes%2F2025-02-12.md'
 
 [[comboMode.bindings]]
+iconPath = 'rectangle.3.group'
 key = 'd'
 label = 'Dinky'
-iconPath = 'rectangle.3.group'
 
     [comboMode.bindings.destination]
     type = 'group'
@@ -432,11 +426,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 1']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace 1' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = '2'
@@ -446,11 +440,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 2']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace 2' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = '3'
@@ -460,11 +454,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 3']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace 3' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = '4'
@@ -474,11 +468,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 4']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace 4' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = '5'
@@ -488,11 +482,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace 5']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace 5' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'n'
@@ -502,11 +496,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace next']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace next' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'p'
@@ -516,11 +510,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace prev']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace prev' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'b'
@@ -530,11 +524,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky workspace-back-and-forth']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace-back-and-forth' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'h'
@@ -544,11 +538,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky focus left']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky focus left' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'j'
@@ -558,11 +552,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky focus down']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky focus down' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'k'
@@ -572,11 +566,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky focus up']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky focus up' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'l'
@@ -586,11 +580,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky focus right']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky focus right' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'm'
@@ -607,11 +601,11 @@ iconPath = 'rectangle.3.group'
                     type = 'command'
 
                         [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
-                        type = 'savedCommand'
-                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 1']
                         actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                         behavior = 'run'
                         presentation = 'hidden'
+                        subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky move-window-to-workspace 1' ]
+                        type = 'savedCommand'
 
                 [[comboMode.bindings.destination.bindings.destination.bindings]]
                 key = '2'
@@ -621,11 +615,11 @@ iconPath = 'rectangle.3.group'
                     type = 'command'
 
                         [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
-                        type = 'savedCommand'
-                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 2']
                         actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                         behavior = 'run'
                         presentation = 'hidden'
+                        subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky move-window-to-workspace 2' ]
+                        type = 'savedCommand'
 
                 [[comboMode.bindings.destination.bindings.destination.bindings]]
                 key = '3'
@@ -635,11 +629,11 @@ iconPath = 'rectangle.3.group'
                     type = 'command'
 
                         [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
-                        type = 'savedCommand'
-                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 3']
                         actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                         behavior = 'run'
                         presentation = 'hidden'
+                        subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky move-window-to-workspace 3' ]
+                        type = 'savedCommand'
 
                 [[comboMode.bindings.destination.bindings.destination.bindings]]
                 key = '4'
@@ -649,11 +643,11 @@ iconPath = 'rectangle.3.group'
                     type = 'command'
 
                         [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
-                        type = 'savedCommand'
-                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 4']
                         actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                         behavior = 'run'
                         presentation = 'hidden'
+                        subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky move-window-to-workspace 4' ]
+                        type = 'savedCommand'
 
                 [[comboMode.bindings.destination.bindings.destination.bindings]]
                 key = '5'
@@ -663,11 +657,11 @@ iconPath = 'rectangle.3.group'
                     type = 'command'
 
                         [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
-                        type = 'savedCommand'
-                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move-window-to-workspace 5']
                         actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                         behavior = 'run'
                         presentation = 'hidden'
+                        subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky move-window-to-workspace 5' ]
+                        type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'x'
@@ -684,11 +678,11 @@ iconPath = 'rectangle.3.group'
                     type = 'command'
 
                         [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
-                        type = 'savedCommand'
-                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move left']
                         actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                         behavior = 'run'
                         presentation = 'hidden'
+                        subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky move left' ]
+                        type = 'savedCommand'
 
                 [[comboMode.bindings.destination.bindings.destination.bindings]]
                 key = 'j'
@@ -698,11 +692,11 @@ iconPath = 'rectangle.3.group'
                     type = 'command'
 
                         [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
-                        type = 'savedCommand'
-                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move down']
                         actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                         behavior = 'run'
                         presentation = 'hidden'
+                        subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky move down' ]
+                        type = 'savedCommand'
 
                 [[comboMode.bindings.destination.bindings.destination.bindings]]
                 key = 'k'
@@ -712,11 +706,11 @@ iconPath = 'rectangle.3.group'
                     type = 'command'
 
                         [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
-                        type = 'savedCommand'
-                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move up']
                         actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                         behavior = 'run'
                         presentation = 'hidden'
+                        subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky move up' ]
+                        type = 'savedCommand'
 
                 [[comboMode.bindings.destination.bindings.destination.bindings]]
                 key = 'l'
@@ -726,11 +720,11 @@ iconPath = 'rectangle.3.group'
                     type = 'command'
 
                         [comboMode.bindings.destination.bindings.destination.bindings.destination.command]
-                        type = 'savedCommand'
-                        subjectIdentifiers = ['text:/opt/homebrew/bin/dinky move right']
                         actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                         behavior = 'run'
                         presentation = 'hidden'
+                        subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky move right' ]
+                        type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'f'
@@ -740,11 +734,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky fullscreen']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky fullscreen' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 't'
@@ -754,11 +748,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky layout floating tiling']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky layout floating tiling' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 's'
@@ -768,11 +762,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky layout scrolling']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky layout scrolling' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = '='
@@ -782,11 +776,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky balance-sizes']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky balance-sizes' ]
+                type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'r'
@@ -796,11 +790,11 @@ iconPath = 'rectangle.3.group'
             type = 'command'
 
                 [comboMode.bindings.destination.bindings.destination.command]
-                type = 'savedCommand'
-                subjectIdentifiers = ['text:/opt/homebrew/bin/dinky reload-config']
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky reload-config' ]
+                type = 'savedCommand'
 
 [hotkeys]
 custom = []

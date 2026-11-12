@@ -290,6 +290,16 @@ Use the shared prose stylesheet for Org HTML previews and exports.
          my/prose-preview-stylesheet)))
 #+end_src
 
+** LaTeX previews
+
+Reveal a LaTeX fragment's source while editing it and restore its rendered
+preview when point leaves the fragment.
+
+#+begin_src emacs-lisp
+(use-package! org-fragtog
+  :hook (org-mode . org-fragtog-mode))
+#+end_src
+
 ** Babel Sessions
 
 Org mode specific configuration with session management improvements to keep REPLs alive.

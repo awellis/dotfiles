@@ -97,6 +97,9 @@
          "<link rel='stylesheet' type='text/css' href='%s' />\n<script>document.addEventListener('DOMContentLoaded', () => document.body.classList.add('markdown-body'));</script>"
          my/prose-preview-stylesheet)))
 
+(use-package! org-fragtog
+  :hook (org-mode . org-fragtog-mode))
+
 ;; General org-babel session management
 (after! org
   ;; Keep sessions alive and don't kill them immediately
