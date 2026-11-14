@@ -151,8 +151,8 @@
     "metrics": false,
   },
   "base_keymap": "VSCode",
-  "vim_mode": false,
-  "helix_mode": true,
+  "vim_mode": true,
+  "helix_mode": false,
   "jupyter": {
     "kernel_selections": {
       "r": "ark"

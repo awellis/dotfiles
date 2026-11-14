@@ -1251,8 +1251,6 @@ Spaces are added around the operator when appropriate."
 
 ;; Configure indent-bars
 (use-package! indent-bars
-  :hook ((prog-mode . indent-bars-mode)
-         (yaml-mode . indent-bars-mode))
   :config
   (setq indent-bars-treesit-support t
         indent-bars-no-descend-string t
