@@ -5,6 +5,15 @@ return {
     ft = { "julia", "python", "r", "rmd", "quarto" },
     keys = {
       { "<leader>rC", "<cmd>SlimeConfig<cr>", desc = "Slime Config" },
+      {
+        "<leader>rJ",
+        function()
+          local project = vim.fs.root(0, { "Project.toml", "JuliaProject.toml" }) or vim.fn.getcwd()
+          vim.fn["slime#send"]("julia --project=" .. vim.fn.shellescape(project) .. "\r")
+        end,
+        ft = "julia",
+        desc = "Start Julia REPL (Project)",
+      },
       { "<leader>rr", "<Plug>SlimeSendCell<BAR>/^# %%<CR>", desc = "Slime Send Cell" },
       { "<leader>rr", ":<C-u>'<,'>SlimeSend<CR>", mode = "v", desc = "Slime Send Selection" },
       { "<leader>rl", "<Plug>SlimeLineSend", desc = "Slime Send Line" },
