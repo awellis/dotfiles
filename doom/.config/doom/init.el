@@ -57,7 +57,7 @@
        (evil +everywhere); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
-       (format +onsave)  ; automated prettiness
+       (format +onsave +lsp)  ; format through active language servers when available
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
        multiple-cursors  ; editing in many places at once
@@ -137,14 +137,14 @@
        ;;gdscript          ; the language you waited for
        ;;(go +lsp)         ; the hipster dialect
        ;;(graphql +lsp)    ; Give queries a REST
-       (haskell +lsp)    ; a language that's lazier than I am
+       (haskell +lsp +tree-sitter) ; HLS/Eglot plus tree-sitter highlighting
        hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
        json              ; At least it ain't XML
        ;;janet             ; Fun fact: Janet is me!
        ;;(java +lsp)       ; the poster child for carpal tunnel syndrome
        (javascript +tree-sitter)        ; all(hope(abandon(ye(who(enter(here))))))
-       (julia +tree-sitter)             ; a better, faster MATLAB
+       (julia +lsp +tree-sitter)        ; Eglot, REPL, and tree-sitter highlighting
        ;;kotlin            ; a better, slicker Java(Script)
        latex             ; writing papers in Emacs has never been so fun
        lean            ; Lean 4 is configured with lean4-mode in packages.el

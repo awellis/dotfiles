@@ -491,6 +491,24 @@
   (setq-default TeX-engine 'luatex
                 TeX-PDF-mode t))
 
+(defconst my/julia-language-server-project
+  (expand-file-name "~/.julia/environments/emacs-languageserver")
+  "Isolated Julia environment containing LanguageServer.jl.")
+
+(after! eglot-jl
+  ;; eglot-jl's bundled LanguageServer project uses an older server API that is
+  ;; incompatible with the installed Julia release. Prefer the maintained
+  ;; LanguageServer `runserver' entry point from our tooling environment.
+  (set-eglot-client!
+   '(julia-mode julia-ts-mode ess-julia-mode)
+   (list "julia"
+         "--startup-file=no"
+         (concat "--project=" my/julia-language-server-project)
+         "-e" "using LanguageServer; runserver()")))
+
+(after! julia-repl
+  (setq julia-repl-switches "--project=@."))
+
 (after! ess
   ;; Core ESS settings following 2024-2025 best practices
   (setq inferior-R-program-name +r-executable

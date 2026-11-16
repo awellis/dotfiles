@@ -855,6 +855,32 @@ in this repository.
                 TeX-PDF-mode t))
 #+end_src
 
+** Julia
+
+Use the current Julia language server from a dedicated tooling environment.
+The server selects the nearest project environment from Eglot's working
+directory, while the interactive REPL starts with the nearest project active.
+
+#+begin_src emacs-lisp
+(defconst my/julia-language-server-project
+  (expand-file-name "~/.julia/environments/emacs-languageserver")
+  "Isolated Julia environment containing LanguageServer.jl.")
+
+(after! eglot-jl
+  ;; eglot-jl's bundled LanguageServer project uses an older server API that is
+  ;; incompatible with the installed Julia release. Prefer the maintained
+  ;; LanguageServer `runserver' entry point from our tooling environment.
+  (set-eglot-client!
+   '(julia-mode julia-ts-mode ess-julia-mode)
+   (list "julia"
+         "--startup-file=no"
+         (concat "--project=" my/julia-language-server-project)
+         "-e" "using LanguageServer; runserver()")))
+
+(after! julia-repl
+  (setq julia-repl-switches "--project=@."))
+#+end_src
+
 ** R and ESS
 
 Clean ESS configuration following modern best practices.
