@@ -8,6 +8,24 @@ searchPriorities = []
         kind = 'none'
 
     [[catalogs.globalScopes]]
+    catalogIdentifier = 'messages-2fa'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'reminders'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
+    catalogIdentifier = 'reminders.lists'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.audio-input-devices'
 
         [catalogs.globalScopes.scope]
@@ -32,12 +50,6 @@ searchPriorities = []
         kind = 'none'
 
     [[catalogs.globalScopes]]
-    catalogIdentifier = 'tuna.color-tools'
-
-        [catalogs.globalScopes.scope]
-        kind = 'none'
-
-    [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.combo-actions'
 
         [catalogs.globalScopes.scope]
@@ -53,7 +65,8 @@ searchPriorities = []
     catalogIdentifier = 'tuna.commands'
 
         [catalogs.globalScopes.scope]
-        kind = 'none'
+        itemIDs = [ 'checkForUpdates', 'restart' ]
+        kind = 'only'
 
     [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.contacts'
@@ -188,12 +201,6 @@ searchPriorities = []
         kind = 'none'
 
     [[catalogs.globalScopes]]
-    catalogIdentifier = 'tuna.system-settings'
-
-        [catalogs.globalScopes.scope]
-        kind = 'none'
-
-    [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.system-tasks'
 
         [catalogs.globalScopes.scope]
@@ -215,7 +222,25 @@ searchPriorities = []
     catalogIdentifier = 'tuna.window-management'
 
         [catalogs.globalScopes.scope]
-        kind = 'none'
+        itemIDs = [
+            'first-third',
+            'first-two-thirds',
+            'last-third',
+            'last-two-thirds',
+            'left-half',
+            'middle-third',
+            'move-down',
+            'move-left',
+            'move-right',
+            'move-up',
+            'next-display',
+            'next-space',
+            'previous-space',
+            'reasonable-size',
+            'right-half',
+            'windowManagement.browse'
+        ]
+        kind = 'only'
 
     [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.windows'
@@ -801,18 +826,20 @@ custom = []
 
     [hotkeys.app.activate]
     carbonKeyCode = 49
-    carbonModifiers = 2048
-
-    [hotkeys.app.comboMode]
-    carbonKeyCode = 41
-    carbonModifiers = 6912
+    carbonModifiers = 256
 
 [settings]
 activationDoublePressTrigger = 'leftCommand'
+comboModeDoublePressTrigger = 'leftCommand'
 comboModeModifierTrigger = 'rightCommand'
-comboModeThemeStyle = 'breadcrumb'
-fuzzyModeTriggerType = 'doublePress'
+comboModeTriggerType = 'doublePress'
 screenPreference = 'activeWindow'
+
+[[catalogSettings]]
+catalogIdentifier = 'com.brnbw.tuna.plugins.emoji'
+
+    [catalogSettings.values]
+    EmojiSkinTone = 'default'
 
 [[catalogSettings]]
 catalogIdentifier = 'com.brnbw.tuna.themes.default'
