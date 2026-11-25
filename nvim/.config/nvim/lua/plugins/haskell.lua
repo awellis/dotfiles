@@ -8,6 +8,14 @@ return {
     end,
   },
   {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        hls = { mason = false },
+      },
+    },
+  },
+  {
     "stevearc/conform.nvim",
     optional = true,
     opts = {
