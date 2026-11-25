@@ -1100,11 +1100,6 @@ explicit fallback during migration.
         quarto-ts-hide-markup nil
         quarto-ts-preview-arguments '("--no-browser" "--no-navigate" "--no-watch-inputs"))
   :config
-  ;; Quarto's diagram extension uses `.tikz' fenced blocks.  Reuse Emacs's
-  ;; LaTeX font-lock so TikZ commands, arguments, comments, and math are
-  ;; highlighted inside those blocks.
-  (add-to-list 'quarto-ts-code-block-modes '(tikz . latex-mode) t)
-  (quarto-ts--install-code-block-modes)
   (map! :map quarto-ts-mode-map
         :n "]r" #'quarto-ts-cell-next
         :n "[r" #'quarto-ts-cell-previous
