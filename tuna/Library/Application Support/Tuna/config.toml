@@ -193,7 +193,8 @@ searchPriorities = []
     catalogIdentifier = 'tuna.system-tasks'
 
         [catalogs.globalScopes.scope]
-        kind = 'none'
+        itemIDs = [ 'eject-external-disks', 'empty-trash', 'lock-screen' ]
+        kind = 'only'
 
     [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.user-folders'
@@ -244,7 +245,7 @@ searchPriorities = []
 
     [[catalogs.sortOrders]]
     catalogIdentifier = 'tuna.clipboard'
-    sortOrder = 'name.asc'
+    sortOrder = 'capturedAt.desc'
 
 [[comboMode.bindings]]
 iconPath = '/Applications/Ghostty.app'
