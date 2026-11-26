@@ -120,7 +120,7 @@ searchPriorities = []
     catalogIdentifier = 'tuna.modes'
 
         [catalogs.globalScopes.scope]
-        itemIDs = [ 'text' ]
+        itemIDs = [ 'talk', 'text' ]
         kind = 'only'
 
     [[catalogs.globalScopes]]
@@ -167,12 +167,6 @@ searchPriorities = []
 
     [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.settings'
-
-        [catalogs.globalScopes.scope]
-        kind = 'none'
-
-    [[catalogs.globalScopes]]
-    catalogIdentifier = 'tuna.shelf'
 
         [catalogs.globalScopes.scope]
         kind = 'none'
@@ -801,6 +795,10 @@ label = 'Dinky'
 carbonKeyCode = 49
 carbonModifiers = 256
 
+[hotkeys.app.dictation]
+carbonKeyCode = 17
+carbonModifiers = 6912
+
 [[hotkeys.custom]]
 id = '45D557C0-CC73-4A89-9D87-D3A084B2406F'
 
@@ -834,6 +832,8 @@ activationDoublePressTrigger = 'leftCommand'
 comboModeDoublePressTrigger = 'leftCommand'
 comboModeModifierTrigger = 'rightCommand'
 comboModeTriggerType = 'doublePress'
+dictationActivationMode = 'toggle'
+dictationSpokenFormattingEnabled = true
 resultListNavigationBindings = 'macOSStandard'
 resultsRevealDelay = 0.5
 screenPreference = 'activeWindow'
