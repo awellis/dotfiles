@@ -10,8 +10,8 @@ default-tiling = false                  # leave windows at their app-chosen size
 follow-app-activation = true            # Cmd-Tab and Dock clicks switch Spaces the fast way
 float-windows-without-fullscreen = true # progress windows, About, Calculator and the like float
 
-# Workspace 2 is the scrolling workspace. All others—including the manually
-# arranged messaging workspace 4—remain floating by default.
+# Only workspace 2 tiles by default. Messaging windows go to workspace 6,
+# where they remain floating.
 [workspace.2]
 tiling = true
 layout = 'scrolling'
@@ -38,7 +38,7 @@ outer = 8 # or { top = 8, bottom = 8, left = 8, right = 8 }
 # gaps.outer.top = 44
 
 [borders]
-enabled = true
+enabled = false
 width = 2
 active-color = '#e1e3e4'   # '#rrggbb' or '#rrggbbaa'
 inactive-color = '#494d64'
@@ -81,3 +81,19 @@ run = 'layout floating'
 [[rules]]
 app-id = 'com.brnbw.Tuna'
 run = 'layout floating'
+
+[[rules]]
+app-id = 'org.whispersystems.signal-desktop'
+run = 'move-window-to-workspace 6'
+
+[[rules]]
+app-id = 'ch.threema.threema-desktop'
+run = 'move-window-to-workspace 6'
+
+[[rules]]
+app-id = 'net.whatsapp.WhatsApp'
+run = 'move-window-to-workspace 6'
+
+[[rules]]
+app-id = 'ru.keepcoder.Telegram'
+run = 'move-window-to-workspace 6'
