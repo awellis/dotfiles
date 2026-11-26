@@ -38,12 +38,6 @@ searchPriorities = []
         kind = 'none'
 
     [[catalogs.globalScopes]]
-    catalogIdentifier = 'tuna.clipboard'
-
-        [catalogs.globalScopes.scope]
-        kind = 'none'
-
-    [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.color-history'
 
         [catalogs.globalScopes.scope]
@@ -65,17 +59,11 @@ searchPriorities = []
     catalogIdentifier = 'tuna.commands'
 
         [catalogs.globalScopes.scope]
-        itemIDs = [ 'checkForUpdates', 'restart' ]
+        itemIDs = [ 'checkForUpdates', 'openSettings', 'reloadSettings', 'restart' ]
         kind = 'only'
 
     [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.contacts'
-
-        [catalogs.globalScopes.scope]
-        kind = 'none'
-
-    [[catalogs.globalScopes]]
-    catalogIdentifier = 'tuna.current-selection'
 
         [catalogs.globalScopes.scope]
         kind = 'none'
@@ -132,7 +120,8 @@ searchPriorities = []
     catalogIdentifier = 'tuna.modes'
 
         [catalogs.globalScopes.scope]
-        kind = 'none'
+        itemIDs = [ 'text' ]
+        kind = 'only'
 
     [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.network-locations'
@@ -216,28 +205,33 @@ searchPriorities = []
     catalogIdentifier = 'tuna.volumes'
 
         [catalogs.globalScopes.scope]
-        kind = 'none'
+        itemIDs = [ '/Volumes/Vergangenheit', 'volumes.browse' ]
+        kind = 'only'
 
     [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.window-management'
 
         [catalogs.globalScopes.scope]
         itemIDs = [
+            'bottom-left-quarter',
+            'bottom-right-quarter',
             'first-third',
             'first-two-thirds',
             'last-third',
             'last-two-thirds',
             'left-half',
+            'maximize',
             'middle-third',
             'move-down',
             'move-left',
             'move-right',
             'move-up',
-            'next-display',
             'next-space',
             'previous-space',
             'reasonable-size',
             'right-half',
+            'top-left-quarter',
+            'top-right-quarter',
             'windowManagement.browse'
         ]
         kind = 'only'
@@ -265,6 +259,20 @@ label = 'Ghostty'
         behavior = 'run'
         presentation = 'hidden'
         subjectIdentifiers = [ 'path:/Applications/Ghostty.app' ]
+        type = 'savedCommand'
+
+[[comboMode.bindings]]
+key = 'c'
+label = 'Org Capture'
+
+    [comboMode.bindings.destination]
+    type = 'command'
+
+        [comboMode.bindings.destination.command]
+        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+        behavior = 'run'
+        presentation = 'hidden'
+        subjectIdentifiers = [ "text:/opt/homebrew/bin/emacsclient --eval '(+org-capture/open-frame)'" ]
         type = 'savedCommand'
 
 [[comboMode.bindings]]
@@ -333,53 +341,6 @@ label = 'Open'
                 presentation = 'hidden'
                 subjectIdentifiers = [ 'path:/System/Applications/Messages.app' ]
                 type = 'savedCommand'
-
-[[comboMode.bindings]]
-key = 'r'
-label = 'Raycast'
-
-    [comboMode.bindings.destination]
-    type = 'group'
-
-        [[comboMode.bindings.destination.bindings]]
-        key = 'e'
-        label = 'Emoji and symbols'
-
-            [comboMode.bindings.destination.bindings.destination]
-            type = 'url'
-            url = 'raycast://extensions/raycast/emoji-symbols/search-emoji-symbols'
-
-        [[comboMode.bindings.destination.bindings]]
-        key = 'p'
-        label = 'Confetti'
-
-            [comboMode.bindings.destination.bindings.destination]
-            type = 'url'
-            url = 'raycast://confetti'
-
-        [[comboMode.bindings.destination.bindings]]
-        key = 'c'
-        label = 'Camera'
-
-            [comboMode.bindings.destination.bindings.destination]
-            type = 'url'
-            url = 'raycast://extensions/raycast/system/open-camera'
-
-        [[comboMode.bindings.destination.bindings]]
-        key = 'f'
-        label = 'Maximize window'
-
-            [comboMode.bindings.destination.bindings.destination]
-            type = 'url'
-            url = 'raycast://extensions/raycast/window-management/maximize'
-
-        [[comboMode.bindings.destination.bindings]]
-        key = 'g'
-        label = 'Finder to Ghostty'
-
-            [comboMode.bindings.destination.bindings.destination]
-            type = 'url'
-            url = 'raycast://extensions/yedongze/terminalfinder/finderToGhostty'
 
 [[comboMode.bindings]]
 key = 'w'
@@ -511,6 +472,20 @@ label = 'Dinky'
                 behavior = 'run'
                 presentation = 'hidden'
                 subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace 5' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = '6'
+        label = 'Workspace 6'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'hidden'
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace 6' ]
                 type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
@@ -790,7 +765,7 @@ label = 'Dinky'
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'hidden'
-                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky layout scrolling' ]
+                subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky workspace-layout scrolling' ]
                 type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
@@ -821,18 +796,45 @@ label = 'Dinky'
                 subjectIdentifiers = [ 'text:/opt/homebrew/bin/dinky reload-config' ]
                 type = 'savedCommand'
 
-[hotkeys]
-custom = []
+[hotkeys.app.activate]
+carbonKeyCode = 49
+carbonModifiers = 256
 
-    [hotkeys.app.activate]
-    carbonKeyCode = 49
-    carbonModifiers = 256
+[[hotkeys.custom]]
+id = '45D557C0-CC73-4A89-9D87-D3A084B2406F'
+
+    [hotkeys.custom.command]
+    actionIdentifier = 'tuna.common-actions/browse'
+    behavior = 'run'
+    presentation = 'automatic'
+    subjectIdentifiers = [ 'tuna.menu-items/menuItems.search' ]
+    type = 'savedCommand'
+
+    [hotkeys.custom.shortcut]
+    carbonKeyCode = 46
+    carbonModifiers = 6912
+
+[[hotkeys.custom]]
+id = 'AD0F2052-3FB2-4E4B-A73B-DA4DE123ED93'
+
+    [hotkeys.custom.command]
+    actionIdentifier = 'tuna.common-actions/browse'
+    behavior = 'run'
+    presentation = 'automatic'
+    subjectIdentifiers = [ 'tuna.clipboard/clipboard.history.root' ]
+    type = 'savedCommand'
+
+    [hotkeys.custom.shortcut]
+    carbonKeyCode = 9
+    carbonModifiers = 6912
 
 [settings]
 activationDoublePressTrigger = 'leftCommand'
 comboModeDoublePressTrigger = 'leftCommand'
 comboModeModifierTrigger = 'rightCommand'
 comboModeTriggerType = 'doublePress'
+resultListNavigationBindings = 'macOSStandard'
+resultsRevealDelay = 0.5
 screenPreference = 'activeWindow'
 
 [[catalogSettings]]
@@ -852,3 +854,9 @@ catalogIdentifier = 'tuna.prompts'
 
     [catalogSettings.values]
     Provider = 'apple'
+
+[[catalogSettings]]
+catalogIdentifier = 'tuna.smart-links'
+
+    [catalogSettings.values]
+    UseFavicone = 'true'
